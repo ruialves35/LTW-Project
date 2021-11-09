@@ -32,9 +32,16 @@ _____________________________________*/
 	margin: 0 auto;
 }
 
+.cell-container {
+	display: flex;
+	border: 1px solid red;
+
+}
+
 #board {
 	display: grid;
-	grid-template-columns: repeat(6, 1fr); /*1fr 1fr 1fr 1fr 1fr 1fr;*/
+	grid-template-columns: repeat(3, 1fr); /*1fr 1fr 1fr 1fr 1fr 1fr;*/	
+	grid-template-rows: 1fr 1fr;
 
 	background-color: sandybrown;
 	margin: 10px auto;
@@ -42,15 +49,24 @@ _____________________________________*/
 }
 
 .asidecell {
+	grid-row-end: span 2;
 
-}
-
-.boardcell {
 	border-radius: 30%;
 	border: 1px solid red;
 	margin: 5px;
 	text-align: center;
 
 	height: 15em;
+	background: radial-gradient(#000000, #DEB887);
+}
+
+
+
+.boardcell {
+	flex: 1;
+	border-radius: 30%;
+	margin: 5px;
+	text-align: center;
+
 	background: radial-gradient(#000000, #DEB887);
 }
