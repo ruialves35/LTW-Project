@@ -1,0 +1,56 @@
+/*  HEADER AND TOP FORM
+_____________________________________________*/
+header {
+	display: flex;
+	justify-content: space-between;
+	background-color: red;
+	align-items: center;
+	padding: 10px;
+	border: 1px solid gray;
+}
+
+h1 {
+	line-height: 2em;
+	color: darkgray;
+}
+
+#password {
+	margin-left: 5px;
+}
+
+.campo {
+	margin: 2px;
+	width: 12em;
+	border: 1px solid #ada484;
+}
+
+/* BOARD AND GAME
+_____________________________________*/
+
+#container {
+	height: 100%; /* Why is this not working */
+	margin: 0 auto;
+}
+
+#board {
+	display: grid;
+	grid-template-columns: repeat(6, 1fr); /*1fr 1fr 1fr 1fr 1fr 1fr;*/
+
+	background-color: sandybrown;
+	margin: 10px auto;
+	width: 70%;
+}
+
+.asidecell {
+
+}
+
+.boardcell {
+	border-radius: 30%;
+	border: 1px solid red;
+	margin: 5px;
+	text-align: center;
+
+	height: 15em;
+	background: radial-gradient(#000000, #DEB887);
+}
