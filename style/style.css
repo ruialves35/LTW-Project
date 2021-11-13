@@ -6,49 +6,140 @@
     --opal: #9dbebb;
 }
 
+html {
+    height: 100%;
+    overflow-x: hidden;
+}
+
 body {
+    display: flex;
+    flex-direction: column;
     background-color: black;
     margin: 0;
     padding: 0;
+    height: 100%;
+}
+
+.preload {
+    transition: none !important;
+    transition-delay: 0s !important;
 }
 
 /*  HEADER AND TOP FORM
 _____________________________________________*/
 
-.navbar {
-    position: relative;
-}
-
 .navbar-container {
 	display: flex;
 	justify-content: space-between;
 	background-color: var(--independence);
-	align-items: center;
-	padding: 10px;
+	align-items: flex-start;
+	padding: 0;
+    height: 20%;
+    overflow: visible;
+    padding-bottom: 0;
 }
 
-.navbar-container label, .navbar-container legend {
+.navbar-container label, .navbar-container legend, .navbar-container h2 {
     color: var(--champagne);
 }
 
 .navbar-container .content {
-    margin: 10px;
+    height: 100%;
+    margin-bottom: 0;
+}
+
+.navbar-container .config, .navbar-container .login {
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 20%;
+    background-color: var(--independence);
+    justify-content: center;
+    position: relative;
+}
+
+.navbar-container .login:hover #login-form {
+    transform: scaleY(1);
+    border-top-width: 1px;
+    transition-delay: 0s;
+}
+
+#login-form {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    right: 0%;
+    background-color: var(--independence);
+    border-top: 0px solid var(--champagne);
+    transform-origin: top;
+    transform: scaleY(0);
+    transition-property: transform, border-top-width;
+    transition-duration: 0.3s;
+    transition-delay: 0.5s;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.navbar-container .field, .navbar-container .button{
+    font-size: 16px;
+    width: 100%;
+    position: relative;
+}
+
+.navbar-container #login {
+    padding: 2%;
+}
+
+.field {
+    background: none;
+    border: none;
+    color: var(--champagne);
+    border-bottom: 2px solid var(--champagne);
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.field:-moz-focusring {
+    outline: none;
+}
+
+.button {
+    background: none;
+    border: 1px solid var(--champagne);
+    border-radius: 5px;
+    color: var(--champagne);
+    transition: 0.2s;
+}
+
+.button:hover {
+    background-color: var(--champagne);
+    color: var(--independence);
+}
+
+.navbar-container .config h2, .navbar-container .login h2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 2%;
+    padding-right: 5%;
+    height: 100%;
+    margin-top: 35px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 0;
+}
+
+.navbar-container .logo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 #logo {
-    flex: 1;
 	line-height: 2em;
 	color: var(--champagne);
-}
-
-#password {
-	margin-left: 5px;
-}
-
-.campo {
-	margin: 2px;
-	width: 12em;
-	border: 1px solid #ada484;
 }
 
 /* BOARD AND GAME
