@@ -66,13 +66,7 @@ _____________________________________*/
 	overflow: scroll;
 }
 
-.cell-container {
-	display: flex;
-	border: 1px solid red;
-
-}
-
-#game {
+#game-container {
 	height: 100%;
 }
 
@@ -86,28 +80,37 @@ _____________________________________*/
 	height: 90%; 
 }
 
-.asidecell {
-	grid-row-end: span 2;
-
-	border-radius: 30%;
-	border: 1px solid red;
-	margin: 5px;
-	text-align: center;
-
-	height: 15em;
-	background: radial-gradient(#000000, #DEB887);
+.cell-container {
+	display: flex;
 }
 
-
-
-.boardcell {
+.board-cell {
 	flex: 1;
 	border-radius: 30%;
 	margin: 5px;
 	text-align: center;
-
 	background: radial-gradient(#000000, #DEB887);
 }
+
+.storage-container {
+	display: flex;
+	grid-row-end: span 2;
+	border: 1px solid blue;
+}
+
+.storage-cell {
+	border-radius: 35%;
+	height: auto;
+	width: 20%;
+	margin: 5px;
+	background: radial-gradient(#000000, #DEB887);
+}
+
+#left-storage {
+	justify-content: right;
+}
+
+
 
 
 /* Info Containers 
@@ -115,7 +118,7 @@ __________________________________________________________________*/
 
 #game-info-container {
 	width: 100%;
-	height: 10%;  /* O board ocupa 80% do container, este fica a ocupar 20%*/
+	height: 10%;  /* O board ocupa 90% do container, este fica a ocupar 10%*/
 	background-color: var(--seaweed);
 	text-align: center;
 }
@@ -123,7 +126,7 @@ __________________________________________________________________*/
 #info-container {
 	display: flex;
 	width: 100%;
-	height: 50%; /* Com o board e o game-info-container ja temos 100% do container, este ocupa 20%*/
+	height: 50%;
 	background-color: var(--sheen);
 	text-align: center;
 }
