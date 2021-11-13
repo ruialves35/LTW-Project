@@ -138,6 +138,7 @@ _____________________________________________*/
 }
 
 #logo {
+	padding-left: 10px;
 	line-height: 2em;
 	color: var(--champagne);
 }
