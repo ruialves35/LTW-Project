@@ -27,7 +27,12 @@ _____________________________________________*/
 	padding: 10px;
 }
 
+.navbar-container label, .navbar-container legend {
+    color: var(--champagne);
+}
+
 #logo {
+    flex: 1;
 	line-height: 2em;
 	color: var(--champagne);
 }
