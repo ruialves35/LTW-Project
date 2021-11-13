@@ -22,14 +22,14 @@ _____________________________________________*/
 .navbar-container {
 	display: flex;
 	justify-content: space-between;
-	background-color: #3D3A4B;
+	background-color: var(--independence);
 	align-items: center;
 	padding: 10px;
 }
 
 #logo {
 	line-height: 2em;
-	color: #F4E9CD;
+	color: var(--champagne);
 }
 
 #password {
