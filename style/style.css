@@ -31,6 +31,10 @@ _____________________________________________*/
     color: var(--champagne);
 }
 
+.navbar-container .content {
+    margin: 10px;
+}
+
 #logo {
     flex: 1;
 	line-height: 2em;
