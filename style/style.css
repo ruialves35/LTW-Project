@@ -1,3 +1,11 @@
+:root {
+    --champagne: #F4E9CD;
+    --independence: #3D3A4B;
+    --seaweed: #468189;
+    --sheen: #77aca2;
+    --opal: #9dbebb;
+}
+
 body {
     background-color: black;
     margin: 0;
