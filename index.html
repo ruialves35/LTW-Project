@@ -13,6 +13,7 @@
 
 	<body class="preload">
 
+		<!-- Start of Navbar -->
         <div class="navbar-container">
 
             <div class="content logo">
@@ -20,10 +21,46 @@
             </div>
             
 
+            <!-- Start of configurations -->
             <div class="config content">
                 <h2>Configuração</h2>
-            </div>
+                <div id="config-form">
+                	<form id="configuration">
+                		<input class="field" type="number" name="cavities_number" placeholder="Initial cavities number">
+                		<br>
+                	
+                		<input class="field" type="number" name="seeds_number" placeholder="Initial seeds number per cavity">
+                		<br>
+             	
+             			<div>
+	                		<input type="radio" name="opponent" id="computer"> <span class="opponent-field">Computer</span>
+                		</div>
+                		<div>
+	               			<input type="radio" name="opponent" id="player"> <span class="opponent-field">Player</span>
+             			</div>
 
+             			<label>
+					    	First Turn: <br>
+						    <select name="first_turn">
+					        	<option value="player">Player</option>
+					        	<option value="computer">Computer</option>
+						    </select>
+					    </label>
+					    <br>
+
+					    <label>
+					    	Computer Level: <br>
+						    <select name="AI_level">
+					        	<option value="easy">Easy</option>
+					        	<option value="hard">Hard</option>
+						    </select>
+					    </label>
+
+                	</form>
+                </div>
+            </div> <!-- End of Configurations -->
+
+            <!-- Start of Login -->
             <div class="login content">
                 <h2>Login</h2>
                 <div id="login-form">
@@ -39,11 +76,12 @@
                             <button type="submit" class="button">Login</button>
                     </form>
                 </div>
-            </div>
-        </div>
+            </div> <!-- End of login -->
+
+        </div>	<!-- End of Navbar -->
 
 
-
+       	<!-- Start of Container -->
 		<div id="container">
 
 			<section id="board">
@@ -72,11 +110,7 @@
 
 			</section>
 
-
-				
-			
-		</div>
-
+		</div> <!-- End of Container -->
 
 	</body>
 

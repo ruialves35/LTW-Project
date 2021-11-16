@@ -20,6 +20,11 @@ body {
     height: 100%;
 }
 
+input, label, select {
+    margin: 0.5em;
+}
+
+
 .preload {
     transition: none !important;
     transition-delay: 0s !important;
@@ -39,7 +44,8 @@ _____________________________________________*/
     padding-bottom: 0;
 }
 
-.navbar-container label, .navbar-container legend, .navbar-container h2 {
+.navbar-container label, .navbar-container legend, .navbar-container h2, 
+.navbar-container .config #config-form #configuration input {
     color: var(--champagne);
 }
 
@@ -59,13 +65,14 @@ _____________________________________________*/
     position: relative;
 }
 
-.navbar-container .login:hover #login-form {
+.navbar-container .login:hover #login-form,
+.navbar-container .config:hover #config-form {
     transform: scaleY(1);
     border-top-width: 1px;
     transition-delay: 0s;
 }
 
-#login-form {
+#login-form, #config-form {
     position: absolute;
     top: 100%;
     width: 100%;
@@ -76,14 +83,14 @@ _____________________________________________*/
     transform: scaleY(0);
     transition-property: transform, border-top-width;
     transition-duration: 0.3s;
-    transition-delay: 0.5s;
+    transition-delay: 0.1s;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
 }
 
 .navbar-container .field, .navbar-container .button{
     font-size: 16px;
-    width: 100%;
+    width: 93%;
     position: relative;
 }
 
@@ -141,6 +148,10 @@ _____________________________________________*/
 	padding-left: 10px;
 	line-height: 2em;
 	color: var(--champagne);
+}
+
+.opponent-field {
+    color: var(--champagne);
 }
 
 /* BOARD AND GAME
