@@ -58,10 +58,10 @@ _____________________________________________*/
     z-index: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
     width: 20%;
     background-color: var(--independence);
     justify-content: center;
+    align-items: center;
     position: relative;
 }
 
@@ -90,11 +90,19 @@ _____________________________________________*/
 
 .navbar-container .field, .navbar-container .button{
     font-size: 16px;
-    width: 93%;
     position: relative;
 }
 
-.navbar-container #login {
+.navbar-container .field {
+    width: 93%;
+}
+
+.navbar-container .button {
+    width: 100%;
+}
+
+.navbar-container #login, 
+.navbar-container #configuration {
     padding: 2%;
 }
 
