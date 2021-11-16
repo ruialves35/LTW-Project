@@ -204,11 +204,8 @@ _____________________________________*/
 
 .board-cell {
     background: url("../img/cell.jpg") no-repeat;
-
     flex: 1;
     margin: 5px;
-
-    text-indent: -99999px;
 }
 
 .storage-cell {
@@ -217,8 +214,6 @@ _____________________________________*/
     height: auto;
     width: 100%;
     margin: 3% 3%;
-
-    text-indent: -99999px;
 }
 
 .board-cell, .storage-cell {
