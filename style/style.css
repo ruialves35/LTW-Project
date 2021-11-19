@@ -60,9 +60,12 @@ _____________________________________*/
 	margin: 0 auto;
 	height: 80%; /*80% da janela toda*/
 	overflow-y: scroll;
+    padding: 0;
 }
 
 #game-container {
+    display: flex;
+    flex-direction: row;
 	height: 100%;
 }
 
