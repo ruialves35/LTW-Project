@@ -1,9 +1,9 @@
 :root {
     --champagne: #F4E9CD;
-    --independence: #3D3A4B;
-    --seaweed: #468189;
-    --sheen: #77aca2;
-    --opal: #9dbebb;
+    --dark-electric: #446579;
+    --light-indigo: #274F6B;
+    --dark-indigo: #09395D;
+    --prussian: #16364C;
 }
 
 html {
@@ -40,7 +40,7 @@ _____________________________________________*/
 .navbar-container {
 	display: flex;
 	justify-content: space-between;
-	background-color: var(--independence);
+	background-color: var(--prussian);
 	align-items: flex-start;
 	padding: 0;
     height: 20%;
@@ -63,7 +63,7 @@ _____________________________________________*/
     display: flex;
     flex-direction: column;
     width: 20%;
-    background-color: var(--independence);
+    background-color: var(--prussian);
     justify-content: center;
     align-items: center;
     position: relative;
@@ -81,7 +81,7 @@ _____________________________________________*/
     top: 100%;
     width: 100%;
     right: 0%;
-    background-color: var(--independence);
+    background-color: var(--prussian);
     border-top: 0px solid var(--champagne);
     transform-origin: top;
     transform: scaleY(0);
@@ -133,7 +133,7 @@ _____________________________________________*/
 
 .button:hover {
     background-color: var(--champagne);
-    color: var(--independence);
+    color: var(--prussian);
 }
 
 .navbar-container .config h2, .navbar-container .login h2 {
