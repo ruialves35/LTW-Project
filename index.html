@@ -11,36 +11,76 @@
 	</head>
 	
 
-	<body>
+	<body class="preload">
 
-		<header class="navbar">
-            <div class="navbar-container">
-                
-                <h1 class="content" id="logo">Mancala</h1>
+		<!-- Start of Navbar -->
+        <div class="navbar-container">
 
-                <div class="config content">
-                    <h2>Configuração</h2>
-                </div>
-                <form action="save.php" method="get" class="content">
-                    <fieldset>
-                        <legend>Login</legend>
-    
-                        <label for="username">Username:</label>
-                        <input class="campo" type="text" name="username" id="username">
-    
-                        <br>
-    
-                        <label for="password">Password:</label>
-                        <input class="campo" type="password" name="password" id="password">
-    
-                        <br>
-    
-                        <button type="submit">Submit</button>
-                    </fieldset>
-                </form>
+            <div class="content logo">
+                <h1 id="logo">Mancala</h1>
             </div>
+            
 
-		</header>
+            <!-- Start of configurations -->
+            <div class="config content">
+                <h2>Configuration</h2>
+                <div id="config-form">
+                	<form id="configuration">
+                		<input class="field" type="number" name="cavities_number" placeholder="Initial cavities number">
+                		<br>
+                	
+                		<input class="field" type="number" name="seeds_number" placeholder="Initial seeds number per cavity">
+                		<br>
+             	
+             			<div>
+	                		<input type="radio" name="opponent" id="computer"> <span class="opponent-field">Computer</span>
+                		</div>
+                		<div>
+	               			<input type="radio" name="opponent" id="player"> <span class="opponent-field">Player</span>
+             			</div>
+
+             			<label>
+					    	First Turn: <br>
+						    <select name="first_turn">
+					        	<option value="player">Player</option>
+					        	<option value="computer">Computer</option>
+						    </select>
+					    </label>
+					    <br>
+
+					    <label>
+					    	Computer Level: <br>
+						    <select name="AI_level">
+					        	<option value="easy">Easy</option>
+					        	<option value="hard">Hard</option>
+						    </select>
+					    </label>
+
+					    <button type="submit" class="button">Confirm</button>
+
+                	</form>
+                </div>
+            </div> <!-- End of Configurations -->
+
+            <!-- Start of Login -->
+            <div class="login content">
+                <h2>Login</h2>
+                <div id="login-form">
+                    <form action="save.php" method="get" id="login">        
+                            <input class="field" type="text" name="username" id="username" placeholder="Username">
+        
+                            <br>
+        
+                            <input class="field" type="password" name="password" id="password" placeholder="Password">
+        
+                            <br>
+        
+                            <button type="submit" class="button">Login</button>
+                    </form>
+                </div>
+            </div> <!-- End of login -->
+
+        </div>	<!-- End of Navbar -->
 
 
 		<!-- Start of Container -->
@@ -81,5 +121,11 @@
 		</div> <!--End of container -->
 
 	</body>
+
+    <script>
+        $(window).load( function () {
+            $("body").removeClass("preload");
+        })
+    </script>
 
 </html>
