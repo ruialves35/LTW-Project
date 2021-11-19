@@ -230,6 +230,23 @@ _____________________________________*/
 	margin: 0.5em;
 
     text-indent: -99999px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+
+    overflow: hidden;
+}
+
+.seed {
+    width: 3em;
+    height: 2em;
+    background: radial-gradient(var(--champagne), 5%, var(--prussian));
+    border-end-start-radius: 100px;
+    border-start-end-radius: 100px;
+    margin: 5px;
 }
 
 .storage-cell {
