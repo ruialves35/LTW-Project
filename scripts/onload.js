@@ -8,10 +8,39 @@ function getNumSeeds () {
     load();
 }
 
+function getNumCavs() {
+    DEFAULT_CAVS_NUM = document.getElementById("cavs_number").value;
+    load();
+}
+
+/**
+ * Must replace childIdx for the child board_children, then just call it for the respective children
+ * 
+ */
+function createCellContainer(childIdx) {
+    const board = document.getElementById("board");
+    const board_children = board.children[childIdx];
+
+    const newChild = document.createElement("div");
+    newChild.className = "cell-container";
+
+    for (let i = 0; i < DEFAULT_CAVS_NUM; i++) {
+        const new_cell = document.createElement("div");
+        new_cell.className = "board-cell";
+
+        newChild.appendChild(new_cell);
+    }
+
+    board.replaceChild(newChild, board_children);
+}
+
 function load () {
     document.getElementById("body").classList.remove("preload");
     const board_children = document.getElementById("board").getElementsByClassName("cell-container");
-    
+
+    createCellContainer(1);
+    createCellContainer(3);
+
     for (var i = 0; i < board_children.length; i++) {
         const cells = board_children[i].children;
 
@@ -33,3 +62,6 @@ function load () {
 };
 
 window.load(load);
+
+
+
