@@ -185,7 +185,7 @@ _____________________________________*/
     
     background: url("../img/cell.jpg") no-repeat;
     background-size: 100% 100%;
-    overflow: hidden;
+    overflow: scroll;
 }
 
 #game-container {
@@ -196,7 +196,7 @@ _____________________________________*/
 #board {
     background: url("../img/cell.jpg") no-repeat;
     background-size: 100% 100%;
-    
+
 	display: grid;
 	grid-template-columns: 1fr 6fr 1fr;
 	grid-template-rows: 1fr 1fr;
@@ -224,7 +224,6 @@ _____________________________________*/
     background: url("../img/board.jpg") no-repeat;
     box-shadow: 0 0 5px 5px rgba(0,0,0,0.3);
 
-
     filter:saturate(150%);
     flex: 1;
 	margin: 0.5em;
@@ -241,6 +240,7 @@ _____________________________________*/
 }
 
 .seed {
+    position: absolute;
     width: 3em;
     height: 2em;
     background: radial-gradient(var(--champagne), 5%, var(--prussian));

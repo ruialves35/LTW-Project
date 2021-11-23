@@ -8,6 +8,8 @@
 
 		<link rel="stylesheet" type="text/css" href="style/style.css">
 
+    	<script type="text/javascript" src="scripts/onload.js" defer></script>
+
 	</head>
 	
 
@@ -29,7 +31,7 @@
                 		<input class="field" type="number" name="cavities_number" placeholder="Initial cavities number">
                 		<br>
                 	
-                		<input class="field" type="number" name="seeds_number" placeholder="Initial seeds number per cavity">
+                		<input class="field" type="number" id="seeds_number" name="seeds_number" placeholder="Initial seeds number per cavity">
                 		<br>
              	
              			<div>
@@ -41,7 +43,7 @@
 
              			<label>
 					    	First Turn: <br>
-						    <select name="first_turn">
+						    <select name="first_turn" id="first_turn">
 					        	<option value="player">Player</option>
 					        	<option value="computer">Computer</option>
 						    </select>
@@ -56,7 +58,7 @@
 						    </select>
 					    </label>
 
-					    <button type="submit" class="button">Confirm</button>
+					    <button type="button" class="button" onclick="getNumSeeds()">Confirm</button>
 
                 	</form>
                 </div>
@@ -121,8 +123,6 @@
 		</div> <!--End of container -->
 
 	</body>
-
-    <script type="text/javascript" src="scripts/onload.js"></script>
     
 
 </html>
