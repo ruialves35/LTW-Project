@@ -28,7 +28,7 @@
                 <h2>Configuration</h2>
                 <div id="config-form">
                 	<form id="configuration">
-                		<input class="field" type="number" name="cavities_number" placeholder="Initial cavities number" min="1" max="10">
+                		<input class="field" type="number" id="cavs_number" name="cavs_number" placeholder="Initial cavities number" min="1" max="10">
                 		<br>
                 	
                 		<input class="field" type="number" id="seeds_number" name="seeds_number" placeholder="Initial seeds number per cavity" min="1" max="10">
@@ -58,7 +58,7 @@
 						    </select>
 					    </label>
 
-					    <button type="button" class="button" onclick="getNumSeeds()">Confirm</button>
+					    <button type="button" class="button" onclick="getNumSeeds(); getNumCavs();">Confirm</button>
 
                 	</form>
                 </div>

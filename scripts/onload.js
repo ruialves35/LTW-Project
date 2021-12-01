@@ -138,6 +138,7 @@ function getNumSeeds () {
 
 function getNumCavs() {
     DEFAULT_CAVS_NUM = document.getElementById("cavs_number").value;
+    console.log(DEFAULT_CAVS_NUM);
     load();
 }
 
@@ -146,7 +147,6 @@ function load () {
     document.getElementById("body").classList.remove("preload");
     const game_container = document.getElementById("game-container");
 
-    console.log(game_container);
     game_board = new GameBoard(DEFAULT_SEEDS_NUM, DEFAULT_CAVS_NUM);
     if(game_container.hasChildNodes()) {
         game_container.replaceChild(game_board.getElement(), game_container.children[0]); //just has 1
