@@ -297,3 +297,20 @@ __________________________________________________________________*/
 	width: 50%;
 	border-right: 1px solid gray;
 }
+
+#side-bar-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    padding-bottom: 0;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    position: absolute;
+    font-size: 30px;
+    top: 85%;
+    right: 0;
+    background-color: var(--prussian);
+    color: var(--champagne);
+    z-index: 1;
+}
