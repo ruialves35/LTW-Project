@@ -132,13 +132,23 @@ class GameBoard {
 }
 
 function getNumSeeds () {
-    DEFAULT_SEEDS_NUM = document.getElementById("seeds_number").value;
+    const seeds = document.getElementById("seeds_number").value;
+    if (seeds > 0) {
+        DEFAULT_SEEDS_NUM = seeds;
+    } else {
+        alert("You must have at least 1 seed in each cavity");
+    }
     load();
 }
 
 function getNumCavs() {
-    DEFAULT_CAVS_NUM = document.getElementById("cavs_number").value;
-    console.log(DEFAULT_CAVS_NUM);
+    const cavs = document.getElementById("cavs_number").value;
+    
+    if (cavs > 0) { 
+        DEFAULT_CAVS_NUM = cavs;
+    } else {
+        alert("You must have at least 1 cavity");
+    }
     load();
 }
 
