@@ -146,7 +146,11 @@ class PlayerContainer {
     build() {
         this.element = document.createElement("div");
         this.element.className = "player-container";
-        this.element.value.style.content = this.name;
+        this.element.style.content = "ola";
+        const title = document.createElement("h2");
+        title.innerHTML = this.name;
+        this.element.appendChild(title);
+        console.log(title);
     }
 
     getElement() { return this.element; }
