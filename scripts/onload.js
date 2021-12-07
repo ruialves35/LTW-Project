@@ -37,7 +37,7 @@ class Cell {
         this.element = document.createElement("div");
         this.element.className = "board-cell";
 
-        for (let i = 0; i < DEFAULT_SEEDS_NUM; i++) {
+        for (let i = 0; i < this.numSeeds; i++) {
             const seed = new Seed();
             this.element.appendChild(seed.element);
         }
@@ -85,7 +85,7 @@ class CellContainer {
         this.element = document.createElement("div");
         this.element.className = "cell-container";
 
-        for (let i = 0; i < DEFAULT_CAVS_NUM; i++) {
+        for (let i = 0; i < this.numCavs; i++) {
             const new_cell = new Cell(DEFAULT_SEEDS_NUM);
 
             this.element.appendChild(new_cell.getElement());
@@ -116,8 +116,8 @@ class GameBoard {
         this.leftStorage.id = "left-storage";
 
         this.rightStorage = new StorageContainer();
-        this.upCellContainer = new CellContainer(DEFAULT_CAVS_NUM);
-        this.downCellContainer = new CellContainer(DEFAULT_CAVS_NUM);
+        this.upCellContainer = new CellContainer(this.numCavs);
+        this.downCellContainer = new CellContainer(this.numCavs);
 
         this.element = document.createElement("section");
         this.element.id = "board";
@@ -130,6 +130,82 @@ class GameBoard {
 
     getElement() { return this.element; }
 }
+
+class PlayerContainer {
+    #element;
+    #points;
+    #name;
+
+    constructor(name) {
+        this.name = name;
+        this.points = 0;
+
+        this.build();
+    }
+
+    build() {
+        this.element = document.createElement("div");
+        this.element.className = "player-container";
+        this.element.value.style.content = this.name;
+    }
+
+    getElement() { return this.element; }
+}
+
+class GameContainer {
+    #numSeeds;
+    #numCavs;
+    #element;
+    #game_board;
+
+    constructor(numSeeds, numCavs) {
+        this.numCavs = numCavs;
+        this.numSeeds = numSeeds;
+        this.build();
+    }
+
+    build() {
+        this.element = document.createElement("div");
+        this.element.id = "game-container";
+        this.game_board = new GameBoard(this.numSeeds, this.numCavs);
+        this.element.appendChild(this.game_board.getElement());
+    }
+
+    getElement() { return this.element; }
+}
+
+class Game {
+    #player1Container;
+    #player2Container; //can be pc
+    #gameContainer;
+    #numSeeds;
+    #numCavs;
+
+    constructor(num_seeds, num_cavs) {
+        this.numCavs = num_cavs;
+        this.numSeeds = num_seeds;
+        this.build();
+    }
+
+    build() {
+        this.player1Container = new PlayerContainer('player1');
+        this.gameContainer = new GameContainer(this.numSeeds, this.numCavs);
+        this.player2Container = new PlayerContainer('computer');
+    }
+
+    getPlayer1Container() {
+        return this.player1Container;
+    }
+
+    getPlayer2Container() {
+        return this.player2Container;
+    }
+
+    getGameContainer() {
+        return this.gameContainer;
+    }
+}
+
 
 function getNumSeeds () {
     const seeds = document.getElementById("seeds_number").value;
@@ -154,14 +230,21 @@ function getNumCavs() {
 
 
 function load () {
-    document.getElementById("body").classList.remove("preload");
-    const game_container = document.getElementById("game-container");
 
-    game_board = new GameBoard(DEFAULT_SEEDS_NUM, DEFAULT_CAVS_NUM);
-    if(game_container.hasChildNodes()) {
-        game_container.replaceChild(game_board.getElement(), game_container.children[0]); //just has 1
+    document.getElementById("body").classList.remove("preload");
+    const container = document.getElementById("container");
+    
+
+    const game = new Game(DEFAULT_SEEDS_NUM, DEFAULT_CAVS_NUM);
+
+    if(container.hasChildNodes()) {
+        container.replaceChild(game.getPlayer1Container().getElement(), container.children[0]); 
+        container.replaceChild(game.getGameContainer().getElement(), container.children[1]);
+        container.replaceChild(game.getPlayer2Container().getElement(), container.children[2]);
     } else {
-        game_container.appendChild(game_board);
+        container.appendChild(game.getPlayer1Container().getElement());
+        container.appendChild(game.getGameContainer().getElement());
+        container.appendChild(game.getPlayer2Container().getElement());
     }
 };
 

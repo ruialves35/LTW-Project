@@ -182,15 +182,27 @@ _____________________________________*/
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    
+
+    display: grid;
+    grid-template-columns: 1fr 8fr 1fr;
+
     background: url("../img/cell.jpg") no-repeat;
     background-size: 100% 100%;
-    overflow: scroll;
+    overflow: hidden;
+    border: 1px solid red;
+}
+
+.player-container {
+    display: flex;
+    background: red;
+    
+    height: 90%;
+    margin: 1em;
 }
 
 #game-container {
 	height: 90%;
-    width: 90%;
+    width: 100%;
 }
 
 #board {
@@ -273,7 +285,6 @@ _____________________________________*/
 
 
 
-
 /* Info Containers 
 __________________________________________________________________*/
 
@@ -297,6 +308,7 @@ __________________________________________________________________*/
 	width: 50%;
 	border-right: 1px solid gray;
 }
+
 
 #side-bar-btn {
     display: flex;
