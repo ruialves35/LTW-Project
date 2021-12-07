@@ -176,7 +176,7 @@ _____________________________________________*/
 _____________________________________*/
 
 #container {
-	height: 80%; /*80% da janela toda*/
+	height: 80%; 
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -328,6 +328,7 @@ __________________________________________________________________*/
 
 #side-menu {
     display: flex;
+    flex-direction: column;
     position: absolute;
     top: 20%;
     background: var(--light-indigo);
@@ -337,7 +338,6 @@ __________________________________________________________________*/
     height: 80%;
     z-index: 2;
     transition: left 0.3s ease;
-    justify-content: center;
 }
 
 #side-menu .inline {
@@ -348,6 +348,12 @@ __________________________________________________________________*/
     align-items: center;
     flex-direction: row;
 }
+
+#side-menu button {
+    margin: 1em;
+    height: 30%;
+}
+
 
 #side-menu .inline h2, #side-menu .inline i{
     margin: 10px;
