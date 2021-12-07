@@ -194,7 +194,7 @@ class Game {
     build() {
         this.player1Container = new PlayerContainer('player1');
         this.gameContainer = new GameContainer(this.numSeeds, this.numCavs);
-        this.player2Container = new PlayerContainer('computer');
+        this.player2Container = new PlayerContainer('computer'); // it's hard coded yet
     }
 
     getPlayer1Container() {

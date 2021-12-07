@@ -189,13 +189,12 @@ _____________________________________*/
     background: url("../img/cell.jpg") no-repeat;
     background-size: 100% 100%;
     overflow: hidden;
-    border: 1px solid red;
 }
 
 .player-container {
     display: flex;
     background: red;
-    
+
     height: 90%;
     margin: 1em;
 }
