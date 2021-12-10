@@ -238,30 +238,41 @@ class GameBoard {
         }
         
         if (turn == "p1") {
-            if (new_idx == 7) {
+            if (new_idx == this.numCavs + 1) {
                 return true;
-            } else if (this.cells[new_idx].getSeeds() == 1 && onPlayerBounds("p1", idx, this.numCavs)) {
-                this.cells[7].setSeeds(this.cells[7].getSeeds() + this.cells[this.numCavs * 2 + 2 - new_idx].getSeeds());
-                this.cells[this.numCavs * 2 + 2 - new_idx].setSeeds(0);
+            } else if (this.cells[new_idx].getSeeds() == 1 && onPlayerBounds("p1", new_idx, this.numCavs)) {
+                this.cells[this.numCavs + 1].setSeeds(this.cells[this.numCavs + 1].getSeeds() + this.cells[correspondentUp(new_idx, this.numCavs)].getSeeds() + 1);
+                this.cells[correspondentUp(new_idx, this.numCavs)].setSeeds(0);
+                this.cells[new_idx].setSeeds(0);
             }
         } else if (turn == "p2") {
             if (new_idx == 0) {
                 return true;
-            } else if (this.cells[new_idx].getSeeds() == 1 && onPlayerBounds("p2", idx, this.numCavs)) {
-                this.cells[0].setSeeds(this.cells[0].getSeeds() + this.cells[new_idx % 7].getSeeds());
-                this.cells[new_idx % 7].setSeeds(0);
+            } else if (this.cells[new_idx].getSeeds() == 1 && onPlayerBounds("p2", new_idx, this.numCavs)) {
+                this.cells[0].setSeeds(this.cells[0].getSeeds() + this.cells[correspondentDown(new_idx, this.numCavs)].getSeeds() + 1);
+                this.cells[correspondentDown(new_idx, this.numCavs)].setSeeds(0);
+                this.cells[new_idx].setSeeds(0);
             }
         }
         return false;
     }
 
+    
     addCellOnClick(game) {
         for (var i = 0; i < this.cells.length; i++) {
             this.cells[i].addCellOnClick(game);
         }
     }
-
+    
     getElement() { return this.element; }
+}
+
+function correspondentDown(idx, numCavs) {
+    return 1 + numCavs - (idx % (numCavs + 1));
+}
+
+function correspondentUp(idx, numCavs) {
+    return numCavs * 2 + 2 - idx;
 }
 
 class PlayerContainer {
@@ -366,7 +377,7 @@ class Game {
 }
 
 function getNumSeeds () {
-    const seeds = document.getElementById("seeds_number").value;
+    const seeds = parseInt(document.getElementById("seeds_number").value);
     if (seeds > 0) {
         DEFAULT_SEEDS_NUM = seeds;
     } else {
@@ -376,7 +387,7 @@ function getNumSeeds () {
 }
 
 function getNumCavs() {
-    const cavs = document.getElementById("cavs_number").value;
+    const cavs = parseInt(document.getElementById("cavs_number").value);
     
     if (cavs > 0) { 
         DEFAULT_CAVS_NUM = cavs;
