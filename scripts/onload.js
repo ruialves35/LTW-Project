@@ -39,7 +39,7 @@ class Cell {
 
         for (let i = 0; i < this.numSeeds; i++) {
             const seed = new Seed();
-            this.element.appendChild(seed.element);
+            this.element.appendChild(seed.getElement());
         }
     }
 
