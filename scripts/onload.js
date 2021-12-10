@@ -21,59 +21,133 @@ class Seed {
 }
 
 class Cell {
-    #numSeeds;
+    #seeds;
     #element;
+    #id;
 
-    constructor(numSeeds) {
-        this.numSeeds = numSeeds;
+    constructor(seeds, id) {
+        this.seeds = seeds;
+        this.id = id;
         this.build();
     }
 
-    setNumSeeds(numSeeds) {
-        this.numSeeds = numSeeds;
-    } 
+    setSeeds(seeds) {
+        this.seeds = seeds;
+        this.update();
+    }
+
+    getSeeds() {
+        return this.seeds;
+    }
 
     build() {
         this.element = document.createElement("div");
         this.element.className = "board-cell";
+        this.element.id = this.id;
 
-        for (let i = 0; i < this.numSeeds; i++) {
+        for (let i = 0; i < this.seeds; i++) {
             const seed = new Seed();
             this.element.appendChild(seed.getElement());
         }
+    }
+
+    update() {
+        while (this.element.firstChild) {
+            this.element.removeChild(this.element.firstChild);
+        }
+
+        for (let i = 0; i < this.seeds; i++) {
+            const seed = new Seed();
+            this.element.appendChild(seed.getElement());
+        }
+    }
+
+    addCellOnClick(game) {
+        this.element.onclick = function () { game.sow_at(parseInt(this.id)); };
+    }
+
+    getElement() { return this.element; }
+}
+
+class StorageCell {
+    #seeds;
+    #element;
+    #id;
+
+    constructor (id) {
+        this.seeds = 0;
+        this.id = id;
+        this.build();
+    }
+
+    setSeeds(seeds) {
+        this.seeds = seeds;
+        this.update();
+    }
+
+    getSeeds() {
+        return this.seeds;
+    }
+
+    build() {
+        this.element = document.createElement("div");
+        this.element.className = "storage-cell";
+        this.element.id = this.id;
+    }
+
+    update() {
+        while (this.element.firstChild) {
+            this.element.removeChild(this.element.firstChild);
+        }
+
+        for (let i = 0; i < this.seeds; i++) {
+            const seed = new Seed();
+            this.element.appendChild(seed.getElement());
+        }
+    }
+
+    addCellOnClick(game) {
+        this.element.onclick = function () { game.sow_at(parseInt(this.id)); };
     }
 
     getElement() { return this.element; }
 }
 
 class StorageContainer {
-    #seeds;
     #element;
-    #storage_cell;
+    #storageCell;
+    #id;
 
-    constructor() {
-        this.seeds = 0;
+    constructor(id) {
+        this.id = id;
         this.build();
     }
 
     build() {
         this.element = document.createElement("div");
         this.element.className = "storage-container";
-
-        this.storage_cell = document.createElement("div");
-        this.storage_cell.className = "storage-cell";
-        this.element.appendChild(this.storage_cell);
+        
+        this.storageCell = new StorageCell(this.id);
+        this.element.appendChild(this.storageCell.getElement());
     }
 
     getElement() { return this.element; }
+
+    getCell() { return this.storageCell; };
 }
 
 class CellContainer {
     #element;
     #numCavs;
+    #startId;
+    #cells;
+    #asc;
 
-    constructor(numCavs, childIdx) {
+    constructor(numCavs, startId, asc) {
         this.numCavs = numCavs;
+        this.startId = startId;
+        this.asc = asc;
+        this.cells = [];
         this.build();
     }
 
@@ -86,13 +160,23 @@ class CellContainer {
         this.element.className = "cell-container";
 
         for (let i = 0; i < this.numCavs; i++) {
-            const new_cell = new Cell(DEFAULT_SEEDS_NUM);
+            let id = 0;
+            if (this.asc) {
+                id = this.startId + i;
+            } else {
+                id = this.startId + this.numCavs - 1 - i;
+            }
+            const new_cell = new Cell(DEFAULT_SEEDS_NUM, id.toString());
+            
+            this.cells.push(new_cell);
 
             this.element.appendChild(new_cell.getElement());
         }
     }
 
     getElement() { return this.element; }
+
+    getCells() { return this.cells; }
 }
 
 class GameBoard {
@@ -103,21 +187,35 @@ class GameBoard {
     #rightStorage;
     #upCellContainer;
     #downCellContainer;
+    #cells;
 
     constructor(numSeeds, numCavs) {
         this.numSeeds = numSeeds;
         this.numCavs = numCavs;
-
+        this.cells = [];
         this.build();
     } 
 
     build() {
-        this.leftStorage = new StorageContainer();
-        this.leftStorage.id = "left-storage";
-
-        this.rightStorage = new StorageContainer();
-        this.upCellContainer = new CellContainer(this.numCavs);
-        this.downCellContainer = new CellContainer(this.numCavs);
+        this.leftStorage = new StorageContainer("0");
+        this.rightStorage = new StorageContainer((this.numCavs + 1).toString());
+        
+        this.upCellContainer = new CellContainer(this.numCavs, this.numCavs + 2, false);
+        this.downCellContainer = new CellContainer(this.numCavs, 1, true);        
+        
+        this.cells.push(this.leftStorage.getCell());
+        
+        var downCells = this.downCellContainer.getCells();
+        for (var i = 0; i < downCells.length; i++) {
+            this.cells.push(downCells[i]);
+        }
+        
+        this.cells.push(this.rightStorage.getCell());
+        
+        var upCells = this.upCellContainer.getCells();
+        for (var i = upCells.length - 1; i >= 0; i--) {
+            this.cells.push(upCells[i]);
+        }
 
         this.element = document.createElement("section");
         this.element.id = "board";
@@ -126,6 +224,41 @@ class GameBoard {
         this.element.appendChild(this.upCellContainer.getElement()); 
         this.element.appendChild(this.rightStorage.getElement());
         this.element.appendChild(this.downCellContainer.getElement());
+    }
+
+    sow_at (idx, turn) {
+
+        let seeds = this.cells[idx].getSeeds();
+        this.cells[idx].setSeeds(0);
+
+        let new_idx = 0;
+        for (var i = 1; i <= seeds; i++) {
+            new_idx = (idx + i) % (this.numCavs * 2 + 2);
+            this.cells[new_idx].setSeeds(this.cells[new_idx].getSeeds() + 1);
+        }
+        
+        if (turn == "p1") {
+            if (new_idx == 7) {
+                return true;
+            } else if (this.cells[new_idx].getSeeds() == 1 && onPlayerBounds("p1", idx, this.numCavs)) {
+                this.cells[7].setSeeds(this.cells[7].getSeeds() + this.cells[this.numCavs * 2 + 2 - new_idx].getSeeds());
+                this.cells[this.numCavs * 2 + 2 - new_idx].setSeeds(0);
+            }
+        } else if (turn == "p2") {
+            if (new_idx == 0) {
+                return true;
+            } else if (this.cells[new_idx].getSeeds() == 1 && onPlayerBounds("p2", idx, this.numCavs)) {
+                this.cells[0].setSeeds(this.cells[0].getSeeds() + this.cells[new_idx % 7].getSeeds());
+                this.cells[new_idx % 7].setSeeds(0);
+            }
+        }
+        return false;
+    }
+
+    addCellOnClick(game) {
+        for (var i = 0; i < this.cells.length; i++) {
+            this.cells[i].addCellOnClick(game);
+        }
     }
 
     getElement() { return this.element; }
@@ -162,38 +295,42 @@ class GameContainer {
     #element;
     #game_board;
 
-    constructor(numSeeds, numCavs) {
+    constructor(numSeeds, numCavs, game) {
         this.numCavs = numCavs;
         this.numSeeds = numSeeds;
-        this.build();
+        this.build(game);
     }
 
-    build() {
+    build(game) {
         this.element = document.createElement("div");
         this.element.id = "game-container";
         this.game_board = new GameBoard(this.numSeeds, this.numCavs);
+        this.game_board.addCellOnClick(game);
         this.element.appendChild(this.game_board.getElement());
     }
 
     getElement() { return this.element; }
+
+    getBoard() { return this.game_board; }
 }
 
 class Game {
     #player1Container;
     #player2Container; //can be pc
     #gameContainer;
-    #numSeeds;
     #numCavs;
+    #turn;
 
     constructor(num_seeds, num_cavs) {
         this.numCavs = num_cavs;
         this.numSeeds = num_seeds;
+        this.turn = "p1";
         this.build();
     }
 
     build() {
         this.player1Container = new PlayerContainer('player1');
-        this.gameContainer = new GameContainer(this.numSeeds, this.numCavs);
+        this.gameContainer = new GameContainer(this.numSeeds, this.numCavs, this);
         this.player2Container = new PlayerContainer('computer'); // it's hard coded yet
     }
 
@@ -208,8 +345,25 @@ class Game {
     getGameContainer() {
         return this.gameContainer;
     }
-}
 
+    sow_at(idx) {
+        if (this.turn == "p1") {
+            if (onPlayerBounds("p1", idx, this.numCavs)) {
+                let replay = this.getGameContainer().getBoard().sow_at(idx, this.turn);
+                if (!replay) {
+                    this.turn = "p2";
+                }
+            }
+        } else if (this.turn == "p2") {
+            if (onPlayerBounds("p2", idx, this.numCavs)) {
+                let replay = this.getGameContainer().getBoard().sow_at(idx, this.turn);
+                if (!replay) {
+                    this.turn = "p1";
+                }
+            }
+        }
+    }
+}
 
 function getNumSeeds () {
     const seeds = document.getElementById("seeds_number").value;
@@ -230,6 +384,15 @@ function getNumCavs() {
         alert("You must have at least 1 cavity");
     }
     load();
+}
+
+function onPlayerBounds(player, idx, numCavs) {
+    if (player == "p1") {
+        return idx >= 1 && idx <= numCavs;
+    } else if (player == "p2") {
+        return idx >= numCavs + 2 && idx <= numCavs*2 + 1;    
+    }
+    return false;
 }
 
 
