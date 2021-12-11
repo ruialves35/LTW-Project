@@ -234,6 +234,10 @@ class GameBoard {
         let new_idx = 0;
         for (var i = 1; i <= seeds; i++) {
             new_idx = (idx + i) % (this.numCavs * 2 + 2);
+            if ((new_idx == 0 && turn == "p1") || (new_idx == this.numSeeds + 1 && turn == "p2")) {
+                seeds++;
+                continue;
+            }
             this.cells[new_idx].setSeeds(this.cells[new_idx].getSeeds() + 1);
         }
         
