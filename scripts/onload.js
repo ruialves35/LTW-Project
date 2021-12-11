@@ -51,7 +51,7 @@ class Cell {
         }
     }
 
-    update() {
+    update() { 
         while (this.element.firstChild) {
             this.element.removeChild(this.element.firstChild);
         }
@@ -205,15 +205,15 @@ class GameBoard {
         
         this.cells.push(this.leftStorage.getCell());
         
-        var downCells = this.downCellContainer.getCells();
-        for (var i = 0; i < downCells.length; i++) {
+        let downCells = this.downCellContainer.getCells();
+        for (let i = 0; i < downCells.length; i++) {
             this.cells.push(downCells[i]);
         }
         
         this.cells.push(this.rightStorage.getCell());
         
-        var upCells = this.upCellContainer.getCells();
-        for (var i = upCells.length - 1; i >= 0; i--) {
+        let upCells = this.upCellContainer.getCells();
+        for (let i = upCells.length - 1; i >= 0; i--) {
             this.cells.push(upCells[i]);
         }
 
@@ -254,6 +254,7 @@ class GameBoard {
                 this.cells[new_idx].setSeeds(0);
             }
         }
+
         return false;
     }
 
