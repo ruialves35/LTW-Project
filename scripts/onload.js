@@ -262,7 +262,6 @@ class GameBoard {
         return false;
     }
 
-    
     addCellOnClick(game) {
         for (var i = 0; i < this.cells.length; i++) {
             this.cells[i].addCellOnClick(game);

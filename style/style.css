@@ -349,6 +349,8 @@ __________________________________________________________________*/
     flex-direction: row;
 }
 
+
+
 #side-menu button {
     margin: 1em;
     height: 30%;
@@ -362,4 +364,28 @@ __________________________________________________________________*/
 #side-menu .inline i {
     font-size: 30px;
     font-weight: bold;
+}
+
+#instructions {
+    display: none;
+    overflow-y: scroll;
+    padding: 5px;
+    margin: 5px;
+    position: absolute;
+    background: white;
+
+    top: 25%;
+    left: 25%;
+    width: 50%;
+    height: 50%;
+}
+
+.close-menu {
+    height: 5%;
+    margin-top: 5px;
+}
+
+#instructions .inline {
+    display: flex;
+    flex-direction: row;
 }
