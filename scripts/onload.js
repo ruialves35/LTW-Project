@@ -25,24 +25,24 @@ class Cell {
     #element;
     #id;
 
-    constructor(seeds, id) {
+    constructor(seeds, id, className) {
         this.seeds = seeds;
         this.id = id;
-        this.build();
+        this.build(className);
     }
 
     setSeeds(seeds) {
         this.seeds = seeds;
-        this.update();
+        this.update_element();
     }
 
     getSeeds() {
         return this.seeds;
     }
 
-    build() {
+    build(className) {
         this.element = document.createElement("div");
-        this.element.className = "board-cell";
+        this.element.className = className;
         this.element.id = this.id;
 
         for (let i = 0; i < this.seeds; i++) {
@@ -51,51 +51,7 @@ class Cell {
         }
     }
 
-    update() {
-        while (this.element.firstChild) {
-            this.element.removeChild(this.element.firstChild);
-        }
-
-        for (let i = 0; i < this.seeds; i++) {
-            const seed = new Seed();
-            this.element.appendChild(seed.getElement());
-        }
-    }
-
-    addCellOnClick(game) {
-        this.element.onclick = function () { game.sow_at(parseInt(this.id)); };
-    }
-
-    getElement() { return this.element; }
-}
-
-class StorageCell {
-    #seeds;
-    #element;
-    #id;
-
-    constructor (id) {
-        this.seeds = 0;
-        this.id = id;
-        this.build();
-    }
-
-    setSeeds(seeds) {
-        this.seeds = seeds;
-        this.update();
-    }
-
-    getSeeds() {
-        return this.seeds;
-    }
-
-    build() {
-        this.element = document.createElement("div");
-        this.element.className = "storage-cell";
-        this.element.id = this.id;
-    }
-
-    update() {
+    update_element() {
         while (this.element.firstChild) {
             this.element.removeChild(this.element.firstChild);
         }
@@ -127,7 +83,7 @@ class StorageContainer {
         this.element = document.createElement("div");
         this.element.className = "storage-container";
         
-        this.storageCell = new StorageCell(this.id);
+        this.storageCell = new  Cell(0, this.id, "storage-cell");
         this.element.appendChild(this.storageCell.getElement());
     }
 
@@ -166,7 +122,7 @@ class CellContainer {
             } else {
                 id = this.startId + this.numCavs - 1 - i;
             }
-            const new_cell = new Cell(DEFAULT_SEEDS_NUM, id.toString());
+            const new_cell = new Cell(DEFAULT_SEEDS_NUM, id.toString(), "board-cell");
             
             this.cells.push(new_cell);
 
