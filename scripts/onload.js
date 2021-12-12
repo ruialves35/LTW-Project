@@ -1,5 +1,6 @@
 var DEFAULT_SEEDS_NUM = 5;
 var DEFAULT_CAVS_NUM = 6;
+var FIRST_TURN = "p1"; // by default
 
 const $ = (selector) => document.querySelector(selector)
 
@@ -51,6 +52,7 @@ class Cell {
         }
     }
 
+    // Testar isto so a fazer build, sem precisar de dar remove, para reutilizar o for
     update_element() {
         while (this.element.firstChild) {
             this.element.removeChild(this.element.firstChild);
@@ -83,7 +85,7 @@ class StorageContainer {
         this.element = document.createElement("div");
         this.element.className = "storage-container";
         
-        this.storageCell = new  Cell(0, this.id, "storage-cell");
+        this.storageCell = new Cell(0, this.id, "storage-cell");
         this.element.appendChild(this.storageCell.getElement());
     }
 
@@ -116,12 +118,8 @@ class CellContainer {
         this.element.className = "cell-container";
 
         for (let i = 0; i < this.numCavs; i++) {
-            let id = 0;
-            if (this.asc) {
-                id = this.startId + i;
-            } else {
-                id = this.startId + this.numCavs - 1 - i;
-            }
+            let id = this.asc ? this.startId + i : this.startId + this.numCavs - 1 - i;
+
             const new_cell = new Cell(DEFAULT_SEEDS_NUM, id.toString(), "board-cell");
             
             this.cells.push(new_cell);
@@ -193,13 +191,6 @@ class GameBoard {
     getElement() { return this.element; }
 }
 
-function correspondentDown(idx, numCavs) {
-    return 1 + numCavs - (idx % (numCavs + 1));
-}
-
-function correspondentUp(idx, numCavs) {
-    return numCavs * 2 + 2 - idx;
-}
 
 class PlayerContainer {
     #element;
@@ -216,11 +207,10 @@ class PlayerContainer {
     build() {
         this.element = document.createElement("div");
         this.element.className = "player-container";
-        this.element.style.content = "ola";
+
         const title = document.createElement("h2");
         title.innerHTML = this.name;
         this.element.appendChild(title);
-        console.log(title);
     }
 
     getElement() { return this.element; }
@@ -228,7 +218,7 @@ class PlayerContainer {
 
 class GameController {
     #player1Container;
-    #player2Container; //can be pc
+    #player2Container;
     #gameController;
     #numCavs;
     #numSeeds;
@@ -335,25 +325,43 @@ class GameBoardController {
     }
 }
 
+
+function correspondentDown(idx, numCavs) {
+    return 1 + numCavs - (idx % (numCavs + 1));
+}
+
+function correspondentUp(idx, numCavs) {
+    return numCavs * 2 + 2 - idx;
+}
+
+function getFirstPlayer() {
+    const first = document.getElementById("first_turn");
+    if (first !== null) {
+        FIRST_PLAYER = first.value;
+    }
+}
+
 function getNumSeeds () {
-    const seeds = parseInt(document.getElementById("seeds_number").value);
+    const getSeedsElem = document.getElementById("seeds_number");
+    const seeds = parseInt(getSeedsElem.value);
+    if (isNaN(seeds)) return;
     if (seeds > 0) {
         DEFAULT_SEEDS_NUM = seeds;
     } else {
         alert("You must have at least 1 seed in each cavity");
     }
-    load();
+    
 }
 
 function getNumCavs() {
     const cavs = parseInt(document.getElementById("cavs_number").value);
     
+    if (isNaN(cavs)) return;
     if (cavs > 0) { 
         DEFAULT_CAVS_NUM = cavs;
     } else {
         alert("You must have at least 1 cavity");
     }
-    load();
 }
 
 function onPlayerBounds(player, idx, numCavs) {
