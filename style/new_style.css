@@ -32,6 +32,7 @@ body {
 }
 
 #bg {
+    z-index: 0;
     position: fixed;
     top: 0;
     left: 0;
@@ -45,17 +46,14 @@ input, label, select {
     margin: 0.5em;
 }
 
-#game-container, .player-container {
-    display:none !important;
-}
-
 .preload {
     transition: none !important;
     transition-delay: 0s !important;
 }
 
 .navbar {
-    z-index: 1;
+    position: absolute;
+    z-index: 2;
 
     display: flex;
     flex-direction: column;
@@ -86,5 +84,27 @@ input, label, select {
 .navbar .item {
     font-size: 20px;
     flex-shrink: 0;
+}
+
+#container {
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+}
+
+#container #game-container {
+    width: 100%;
+    height: 100%;
+}
+
+.player-container {
+    display: none !important;
+}
+
+#container #game-container #board {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
 }
 
