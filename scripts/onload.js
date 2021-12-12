@@ -1,6 +1,7 @@
 var DEFAULT_SEEDS_NUM = 5;
 var DEFAULT_CAVS_NUM = 6;
 var FIRST_TURN = "p1"; // by default
+var gameController;
 
 const $ = (selector) => document.querySelector(selector)
 
@@ -64,8 +65,8 @@ class Cell {
         }
     }
 
-    addCellOnClick(fn, id) {
-        this.element.onclick = function () { fn(id); };
+    addCellOnClick(gameController, id) {
+        this.element.onclick = function () { gameController.sow_at(id); };
     }
 
     getElement() { return this.element; }
@@ -184,6 +185,10 @@ class GameBoard {
         this.element.appendChild(child);
     }
 
+    getNumCavs() { return this.numCavs; }
+
+    getNumSeeds() { return this.numSeeds; }
+
     getCells() {
         return this.cells;
     }
@@ -234,6 +239,7 @@ class GameController {
     build() {
         this.player1Container = new PlayerContainer('player1');
         this.gameBoardController = new GameBoardController(this.numSeeds, this.numCavs);
+        this.gameBoardController.addCellOnClick(this);
         this.player2Container = new PlayerContainer('player2'); // Must change the name after that;
     }
 
@@ -259,6 +265,7 @@ class GameController {
             }
         } 
     }
+
 }
 
 class GameBoardController {
@@ -266,31 +273,30 @@ class GameBoardController {
 
     constructor(numSeeds, numCavs) {
         this.board = new GameBoard(numSeeds, numCavs);
-        this.addCellOnClick(this.sow_at);
     }
 
     sow_at (idx, turn) {
-
         let cells = this.board.getCells();
         let seeds = cells[idx].getSeeds();
         cells[idx].setSeeds(0);
 
+
         let new_idx = 0;
         for (let i = 1; i <= seeds; i++) {
-            new_idx = (idx + i) % (this.numCavs * 2 + 2);
-            if ((new_idx == 0 && turn == "p1") || (new_idx == this.numSeeds + 1 && turn == "p2")) {
+            new_idx = (idx + i) % (this.board.getNumCavs() * 2 + 2);
+            if ((new_idx == 0 && turn == "p1") || (new_idx == this.board.getNumSeeds() + 1 && turn == "p2")) {
                 seeds++;
                 continue;
             }
             cells[new_idx].setSeeds(cells[new_idx].getSeeds() + 1);
         }
         
-        let cellIdx = turn == "p1" ? this.numCavs + 1 : 0;
+        let cellIdx = turn == "p1" ? this.board.getNumCavs() + 1 : 0;
         if (new_idx == cellIdx) {
             return true;
-        } else if (cells[new_idx].getSeeds() == 1 && onPlayerBounds(turn, new_idx, this.numCavs)) {
+        } else if (cells[new_idx].getSeeds() == 1 && onPlayerBounds(turn, new_idx, this.board.getNumCavs())) {
 
-            let correspondentIdx = turn == "p1" ? correspondentUp(new_idx, this.numCavs) : correspondentDown(new_idx, this.numCavs);
+            let correspondentIdx = turn == "p1" ? correspondentUp(new_idx, this.board.getNumCavs()) : correspondentDown(new_idx, this.board.getNumCavs());
 
             cells[cellIdx].setSeeds(cells[cellIdx].getSeeds() + cells[correspondentIdx].getSeeds() + 1);
             cells[correspondentIdx].setSeeds(0);
@@ -300,10 +306,10 @@ class GameBoardController {
         return false;
     }
 
-    addCellOnClick(fn) {
+    addCellOnClick(gameController) {
         let cells = this.board.getCells();
         for (let i = 0; i < cells.length; i++) {
-            cells[i].addCellOnClick(fn, i);
+            cells[i].addCellOnClick(gameController, i);
         }
     }
 
@@ -366,8 +372,7 @@ function load () {
     document.getElementById("body").classList.remove("preload");
     const container = document.getElementById("container");
     
-
-    const gameController = new GameController(DEFAULT_SEEDS_NUM, DEFAULT_CAVS_NUM);
+    gameController = new GameController(DEFAULT_SEEDS_NUM, DEFAULT_CAVS_NUM);
 
     if(container.hasChildNodes()) {
         container.replaceChild(gameController.getPlayer1Container().getElement(), container.children[0]); 
