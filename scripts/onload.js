@@ -219,7 +219,7 @@ class PlayerContainer {
 class GameController {
     #player1Container;
     #player2Container;
-    #gameController;
+    #gameBoardController;
     #numCavs;
     #numSeeds;
     #turn;
@@ -227,15 +227,14 @@ class GameController {
     constructor(num_seeds, num_cavs) {
         this.numCavs = num_cavs;
         this.numSeeds = num_seeds;
-        this.turn = "p1";
+        this.turn = FIRST_TURN;
         this.build();
     }
 
     build() {
         this.player1Container = new PlayerContainer('player1');
-        this.gameController = new GameBoardController(this.numSeeds, this.numCavs);
-        this.gameController.addCellOnClick(function (id) {this.sow_at(id)});
-        this.player2Container = new PlayerContainer('player2'); // it's hard coded yet
+        this.gameBoardController = new GameBoardController(this.numSeeds, this.numCavs);
+        this.player2Container = new PlayerContainer('player2'); // Must change the name after that;
     }
 
     getPlayer1Container() {
@@ -247,25 +246,18 @@ class GameController {
     }
 
     getGameBoardController() {
-        return this.gameController;
+        return this.gameBoardController;
     }
 
     sow_at(idx) {
-        if (this.turn == "p1") {
-            if (onPlayerBounds("p1", idx, this.numCavs)) {
-                let replay = this.getGameContainer().getBoard().sow_at(idx, this.turn);
-                if (!replay) {
-                    this.turn = "p2";
-                }
+        let nextPlayer = this.turn == "p1" ? "p2" : "p1";
+
+        if (onPlayerBounds(this.turn, idx, this.numCavs)) {
+            let replay = this.gameBoardController.sow_at(idx, this.turn);
+            if (!replay) {
+                this.turn = nextPlayer;
             }
-        } else if (this.turn == "p2") {
-            if (onPlayerBounds("p2", idx, this.numCavs)) {
-                let replay = this.getGameContainer().getBoard().sow_at(idx, this.turn);
-                if (!replay) {
-                    this.turn = "p1";
-                }
-            }
-        }
+        } 
     }
 }
 
@@ -274,12 +266,12 @@ class GameBoardController {
 
     constructor(numSeeds, numCavs) {
         this.board = new GameBoard(numSeeds, numCavs);
+        this.addCellOnClick(this.sow_at);
     }
 
     sow_at (idx, turn) {
 
         let cells = this.board.getCells();
-
         let seeds = cells[idx].getSeeds();
         cells[idx].setSeeds(0);
 
@@ -293,23 +285,18 @@ class GameBoardController {
             cells[new_idx].setSeeds(cells[new_idx].getSeeds() + 1);
         }
         
-        if (turn == "p1") {
-            if (new_idx == this.numCavs + 1) {
-                return true;
-            } else if (cells[new_idx].getSeeds() == 1 && onPlayerBounds("p1", new_idx, this.numCavs)) {
-                cells[this.numCavs + 1].setSeeds(cells[this.numCavs + 1].getSeeds() + cells[correspondentUp(new_idx, this.numCavs)].getSeeds() + 1);
-                cells[correspondentUp(new_idx, this.numCavs)].setSeeds(0);
-                cells[new_idx].setSeeds(0);
-            }
-        } else if (turn == "p2") {
-            if (new_idx == 0) {
-                return true;
-            } else if (cells[new_idx].getSeeds() == 1 && onPlayerBounds("p2", new_idx, this.numCavs)) {
-                cells[0].setSeeds(cells[0].getSeeds() + cells[correspondentDown(new_idx, this.numCavs)].getSeeds() + 1);
-                cells[correspondentDown(new_idx, this.numCavs)].setSeeds(0);
-                cells[new_idx].setSeeds(0);
-            }
+        let cellIdx = turn == "p1" ? this.numCavs + 1 : 0;
+        if (new_idx == cellIdx) {
+            return true;
+        } else if (cells[new_idx].getSeeds() == 1 && onPlayerBounds(turn, new_idx, this.numCavs)) {
+
+            let correspondentIdx = turn == "p1" ? correspondentUp(new_idx, this.numCavs) : correspondentDown(new_idx, this.numCavs);
+
+            cells[cellIdx].setSeeds(cells[cellIdx].getSeeds() + cells[correspondentIdx].getSeeds() + 1);
+            cells[correspondentIdx].setSeeds(0);
+            cells[new_idx].setSeeds(0);
         }
+
         return false;
     }
 
@@ -337,7 +324,7 @@ function correspondentUp(idx, numCavs) {
 function getFirstPlayer() {
     const first = document.getElementById("first_turn");
     if (first !== null) {
-        FIRST_PLAYER = first.value;
+        FIRST_TURN = first.value;
     }
 }
 
