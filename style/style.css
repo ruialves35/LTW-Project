@@ -1,4 +1,13 @@
 :root {
+    --bistre: #3F220F;
+    --kobe: #923008;
+    --flame: #E53D00;
+    --pumpkin: #E57832;
+    --seashell: #FEF3F0;
+    --sunray: #E4B363;
+    --sunburst: #8E7939;
+    --bronze: #635C24;
+    --army-green: #383E0E;
     --champagne: #F4E9CD;
     --dark-electric: #446579;
     --light-indigo: #274F6B;
@@ -24,9 +33,8 @@ input, label, select {
     margin: 0.5em;
 }
 
-.navbar {
-    position: relative;
-    height: 20%; /* 20% da janela toda*/
+#game-container, .player-container {
+    display:none !important;
 }
 
 .preload {
@@ -43,7 +51,8 @@ _____________________________________________*/
 	background-color: var(--prussian);
 	align-items: flex-start;
 	padding: 0;
-    height: 20%;
+    height: 100%;
+    width: 10%;
     overflow: visible;
     padding-bottom: 0;
 }

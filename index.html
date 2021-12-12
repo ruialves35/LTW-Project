@@ -6,9 +6,12 @@
 		<meta charset="utf-8">
 		<title>LTW Mancala</title>
 
-		<link rel="stylesheet" type="text/css" href="style/style.css">
+		<link rel="stylesheet" type="text/css" href="style/new_style.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
 
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap');
+        </style> 
     	<script type="text/javascript" src="scripts/onload.js" defer></script>
     	<script type="text/javascript" src="scripts/side_menu.js" defer></script>
 	</head>
@@ -16,120 +19,15 @@
 
 	<body class="preload" id="body">
 
+        <div id="bg"></div>
+
 		<!-- Start of Navbar -->
-        <div class="navbar-container">
-
-            <div class="content logo">
-                <h1 id="logo">Mancala</h1>
-            </div>
-            
-
-            <!-- Start of configurations -->
-            <div class="config content">
-                <h2>Configuration</h2>
-                <div id="config-form">
-                	<form id="configuration">
-                		<input class="field" type="number" id="cavs_number" name="cavs_number" placeholder="Initial cavities number"
-                		value="6" min="1" max="10">
-                		<br>
-                	
-                		<input class="field" type="number" id="seeds_number" name="seeds_number" placeholder="Initial seeds number per cavity" value="5" min="1" max="10">
-                		<br>
-             	
-             			<div>
-	                		<input type="radio" name="opponent" id="computer"> <span class="opponent-field">Computer</span>
-                		</div>
-                		<div>
-	               			<input type="radio" name="opponent" id="player"> <span class="opponent-field">Player</span>
-             			</div>
-
-             			<label>
-					    	First Turn: <br>
-						    <select name="first_turn" id="first_turn">
-					        	<option value="player">Player</option>
-					        	<option value="computer">Computer</option>
-						    </select>
-					    </label>
-					    <br>
-
-					    <label>
-					    	Computer Level: <br>
-						    <select name="AI_level">
-					        	<option value="easy">Easy</option>
-					        	<option value="hard">Hard</option>
-						    </select>
-					    </label>
-
-					    <button type="button" class="button" onclick="getNumSeeds(); getNumCavs();">Confirm</button>
-
-                	</form>
-                </div>
-            </div> <!-- End of Configurations -->
-
-            <!-- Start of Login -->
-            <div class="login content">
-                <h2>Login</h2>
-                <div id="login-form">
-                    <form action="save.php" method="get" id="login">        
-                            <input class="field" type="text" name="username" id="username" placeholder="Username">
-        
-                            <br>
-        
-                            <input class="field" type="password" name="password" id="password" placeholder="Password">
-        
-                            <br>
-        
-                            <button type="submit" class="button">Login</button>
-                    </form>
-                </div>
-            </div> <!-- End of login -->
-
+        <div class="navbar">
+            <h1 id="logo">Mancala</h1>
+            <p class="item">Login</p>
+            <p class="item">Configuration</p>
         </div>	<!-- End of Navbar -->
 
-		<!-- Start of Container -->
-		<div id="container">
-
-			<div class="player-container">
-			</div>
-
-			<!-- Start of Game-->
-			<div id="game-container">
-				<!-- Start of Board -->
-				<section id="board">
-					
-					<div class="storage-container" id="left-storage">
-						<div class="storage-cell"></div>
-					</div>
-					<div class="cell-container">
-					</div>
-
-					<div class="storage-container">
-						<div class="storage-cell"></div>
-					</div>
-					<div class="cell-container">
-					</div>
-
-				</section> <!-- End of Board-->
-			</div> <!-- End of Game Container -->
-
-			<div class="player-container">
-			</div>
-			
-            <div id="side-bar-btn" onclick="side_menu_open()">
-                <i class="bi bi-arrow-bar-left"></i>
-            </div>
-            <div id="side-menu">
-                <div class="inline">
-                    <h2>Side Menu</h2>
-                    <i class="bi bi-x" onclick="side_menu_close()"></i>
-                </div>
-
-
-                <button type="button" class="button">Start Game</button>
-                <button type="button" class="button">Instructions</button>
-                <button type="button" class="button">Scoreboard</button>
-            </div>
-		</div> <!--End of container -->
 
 	</body>
     
