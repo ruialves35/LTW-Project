@@ -1,7 +1,4 @@
-var DEFAULT_SEEDS_NUM = 5;
-var DEFAULT_CAVS_NUM = 6;
-var FIRST_TURN = "p1"; // by default
-var gameController;
+let FIRST_TURN = "p1"; // by default
 
 const $ = (selector) => document.querySelector(selector)
 
@@ -65,8 +62,13 @@ class Cell {
         }
     }
 
-    addCellOnClick(gameController, id) {
-        this.element.onclick = function () { gameController.sow_at(id); };
+    addCellOnClick(gameController, board, id) {
+        this.element.onclick = function () { 
+            gameController.sow_at(board, id); 
+            if (gameController.checkEndGame(board)) {
+                gameController.endGame(board);
+            }
+        };
     }
 
     getElement() { return this.element; }
@@ -93,6 +95,8 @@ class StorageContainer {
     getElement() { return this.element; }
 
     getCell() { return this.storageCell; };
+
+    addSeeds(seeds) { this.storageCell.setSeeds(this.storageCell.getSeeds() + seeds); }
 }
 
 class CellContainer {
@@ -121,7 +125,7 @@ class CellContainer {
         for (let i = 0; i < this.numCavs; i++) {
             let id = this.asc ? this.startId + i : this.startId + this.numCavs - 1 - i;
 
-            const new_cell = new Cell(DEFAULT_SEEDS_NUM, id.toString(), "board-cell");
+            const new_cell = new Cell(GameBoard.DEFAULT_SEEDS_NUM, id.toString(), "board-cell");
             
             this.cells.push(new_cell);
 
@@ -135,8 +139,10 @@ class CellContainer {
 }
 
 class GameBoard {
+    static DEFAULT_SEEDS_NUM = 5;
+    static DEFAULT_CAVS_NUM = 6;
     #numSeeds;
-    #numCavs;
+    #numCavs
     #element;
     #leftStorage;
     #rightStorage;
@@ -144,9 +150,9 @@ class GameBoard {
     #downCellContainer;
     #cells;
 
-    constructor(numSeeds, numCavs) {
-        this.numSeeds = numSeeds;
-        this.numCavs = numCavs;
+    constructor() {
+        this.numSeeds = GameBoard.DEFAULT_SEEDS_NUM;
+        this.numCavs = GameBoard.DEFAULT_CAVS_NUM;
         this.cells = [];
         this.build();
     } 
@@ -189,6 +195,14 @@ class GameBoard {
 
     getNumSeeds() { return this.numSeeds; }
 
+    getUpCellContainer() { return this.upCellContainer; }
+
+    getDownCellContainer() { return this.downCellContainer; }
+
+    getLeftStorage() { return this.leftStorage; }
+
+    getRightStorage() { return this.rightStorage; }
+
     getCells() {
         return this.cells;
     }
@@ -222,6 +236,7 @@ class PlayerContainer {
 }
 
 class GameController {
+    static DEFAULT_FIRST_PLAYER = "p1";
     #player1Container;
     #player2Container;
     #gameBoardController;
@@ -229,16 +244,16 @@ class GameController {
     #numSeeds;
     #turn;
 
-    constructor(num_seeds, num_cavs) {
-        this.numCavs = num_cavs;
-        this.numSeeds = num_seeds;
-        this.turn = FIRST_TURN;
-        this.build();
+    constructor(board) {
+        this.turn = GameController.DEFAULT_FIRST_PLAYER;
+        this.numCavs = board.getNumCavs();
+        this.numSeeds = board.getNumSeeds();
+        this.build(board);
     }
 
-    build() {
+    build(board) {
         this.player1Container = new PlayerContainer('player1');
-        this.gameBoardController = new GameBoardController(this.numSeeds, this.numCavs);
+        this.gameBoardController = new GameBoardController(board);
         this.gameBoardController.addCellOnClick(this);
         this.player2Container = new PlayerContainer('player2'); // Must change the name after that;
     }
@@ -255,15 +270,72 @@ class GameController {
         return this.gameBoardController;
     }
 
-    sow_at(idx) {
+    sow_at(board, idx) {
         let nextPlayer = this.turn == "p1" ? "p2" : "p1";
-
+        
         if (onPlayerBounds(this.turn, idx, this.numCavs)) {
-            let replay = this.gameBoardController.sow_at(idx, this.turn);
+            let replay = this.gameBoardController.sow_at(board, idx, this.turn);
             if (!replay) {
                 this.turn = nextPlayer;
             }
         } 
+    }
+
+
+    checkEndGame(board) {
+
+        let canPlayP1 = false;
+        let canPlayP2 = false;
+
+        let downCells = board.getDownCellContainer().getCells();
+        for (let i = 0; i < downCells.length; i++) {
+            let seeds = downCells[i].getSeeds();
+
+            if (seeds > 0) {
+                canPlayP1 = true;
+                break;
+            }
+        }
+
+        let upCells = board.getUpCellContainer().getCells();
+        for (let i = upCells.length - 1; i >= 0; i--) {
+            let seeds = upCells[i].getSeeds();
+
+            if (seeds > 0) {
+                canPlayP2 = true;
+                break;
+            }
+        }
+
+        return !(canPlayP1 && canPlayP2);
+    }
+
+    endGame(board) {
+        console.log("END GAME");
+
+
+        let p1StorageCell = board.getLeftStorage();
+        
+        let downCells = board.getDownCellContainer().getCells();
+        for (let i = 0; i < downCells.length; i++) {
+            let seeds = downCells[i].getSeeds();
+
+            p1StorageCell.addSeeds(seeds);
+            downCells[i].setSeeds(0);
+        }
+        console.log("Player1: " + p1StorageCell.getCell().getSeeds());
+
+        let p2StorageCell = board.getRightStorage();
+
+        let upCells = board.getUpCellContainer().getCells();
+        for (let i = upCells.length - 1; i >= 0; i--) {
+            let seeds = upCells[i].getSeeds();
+
+            p2StorageCell.addSeeds(seeds);
+            upCells[i].setSeeds(0);
+        }
+        console.log("Player2: " + p2StorageCell.getCell().getSeeds());
+
     }
 
 }
@@ -271,32 +343,32 @@ class GameController {
 class GameBoardController {
     #board;
 
-    constructor(numSeeds, numCavs) {
-        this.board = new GameBoard(numSeeds, numCavs);
+    constructor(board) {
+        this.board = board;
     }
 
-    sow_at (idx, turn) {
-        let cells = this.board.getCells();
+    sow_at (board, idx, turn) {
+        let cells = board.getCells();
         let seeds = cells[idx].getSeeds();
         cells[idx].setSeeds(0);
 
 
         let new_idx = 0;
         for (let i = 1; i <= seeds; i++) {
-            new_idx = (idx + i) % (this.board.getNumCavs() * 2 + 2);
-            if ((new_idx == 0 && turn == "p1") || (new_idx == this.board.getNumSeeds() + 1 && turn == "p2")) {
+            new_idx = (idx + i) % (board.getNumCavs() * 2 + 2);
+            if ((new_idx == 0 && turn == "p1") || (new_idx == board.getNumSeeds() + 1 && turn == "p2")) {
                 seeds++;
                 continue;
             }
             cells[new_idx].setSeeds(cells[new_idx].getSeeds() + 1);
         }
         
-        let cellIdx = turn == "p1" ? this.board.getNumCavs() + 1 : 0;
+        let cellIdx = turn == "p1" ? board.getNumCavs() + 1 : 0;
         if (new_idx == cellIdx) {
             return true;
-        } else if (cells[new_idx].getSeeds() == 1 && onPlayerBounds(turn, new_idx, this.board.getNumCavs())) {
+        } else if (cells[new_idx].getSeeds() == 1 && onPlayerBounds(turn, new_idx, board.getNumCavs())) {
 
-            let correspondentIdx = turn == "p1" ? correspondentUp(new_idx, this.board.getNumCavs()) : correspondentDown(new_idx, this.board.getNumCavs());
+            let correspondentIdx = turn == "p1" ? correspondentUp(new_idx, board.getNumCavs()) : correspondentDown(new_idx, board.getNumCavs());
 
             cells[cellIdx].setSeeds(cells[cellIdx].getSeeds() + cells[correspondentIdx].getSeeds() + 1);
             cells[correspondentIdx].setSeeds(0);
@@ -309,7 +381,7 @@ class GameBoardController {
     addCellOnClick(gameController) {
         let cells = this.board.getCells();
         for (let i = 0; i < cells.length; i++) {
-            cells[i].addCellOnClick(gameController, i);
+            cells[i].addCellOnClick(gameController, this.board, i);
         }
     }
 
@@ -339,7 +411,7 @@ function getNumSeeds () {
     const seeds = parseInt(getSeedsElem.value);
     if (isNaN(seeds)) return;
     if (seeds > 0) {
-        DEFAULT_SEEDS_NUM = seeds;
+        GameBoard.DEFAULT_SEEDS_NUM = seeds;
     } else {
         alert("You must have at least 1 seed in each cavity");
     }
@@ -351,7 +423,7 @@ function getNumCavs() {
     
     if (isNaN(cavs)) return;
     if (cavs > 0) { 
-        DEFAULT_CAVS_NUM = cavs;
+        GameBoard.DEFAULT_CAVS_NUM = cavs;
     } else {
         alert("You must have at least 1 cavity");
     }
@@ -372,7 +444,8 @@ function load () {
     document.getElementById("body").classList.remove("preload");
     const container = document.getElementById("container");
     
-    gameController = new GameController(DEFAULT_SEEDS_NUM, DEFAULT_CAVS_NUM);
+    let board = new GameBoard();
+    let gameController = new GameController(board);
 
     if(container.hasChildNodes()) {
         container.replaceChild(gameController.getPlayer1Container().getElement(), container.children[0]); 
