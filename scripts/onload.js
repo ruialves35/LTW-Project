@@ -274,7 +274,6 @@ class GameController {
         if (onPlayerBounds(this.turn, idx, this.numCavs)) {
             let replay = this.gameBoardController.sow_at(board, idx, this.turn);
             if (!replay) {
-                console.log(nextPlayer);
                 this.turn = nextPlayer;
             }
         } 
