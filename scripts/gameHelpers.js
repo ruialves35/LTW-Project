@@ -29,10 +29,10 @@ function getNumCavs() {
     const cavs = parseInt(document.getElementById("cavs_number").value);
     
     if (isNaN(cavs)) return;
-    if (cavs > 0) { 
+    if (cavs > 1) { 
         GameBoard.DEFAULT_CAVS_NUM = cavs;
     } else {
-        alert("You must have at least 1 cavity");
+        alert("You must have at least 2 cavity on each side");
     }
 }
 
