@@ -37,12 +37,12 @@
                 		<input class="field" type="number" id="seeds_number" name="seeds_number" placeholder="Initial seeds number per cavity" value="5" min="1" max="10">
                 		<br>
              	
-             			<div>
-	                		<input type="radio" name="opponent" id="computer"> <span class="opponent-field">Computer</span>
-                		</div>
-                		<div>
-	               			<input type="radio" name="opponent" id="player"> <span class="opponent-field">Player</span>
+             	        <div>
+	               			<input type="radio" name="opponent" id="player" value="Player"> <span class="opponent-field">Player</span>
              			</div>
+             			<div>
+	                		<input type="radio" name="opponent" id="computer" value="Computer"> <span class="opponent-field">Computer</span>
+                		</div>
 
              			<label>
 					    	First Turn: <br>
@@ -61,7 +61,7 @@
 						    </select>
 					    </label>
 
-					    <button type="button" class="button" onclick="getNumSeeds(); getNumCavs(); load();">Confirm</button>
+					    <button type="button" class="button" onclick="getNumSeeds(); getNumCavs(); getOpponent(); load();">Confirm</button>
 
                 	</form>
                 </div>

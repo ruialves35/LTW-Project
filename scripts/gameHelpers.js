@@ -36,6 +36,15 @@ function getNumCavs() {
     }
 }
 
+function getOpponent() {
+    const opponent = document.getElementsByName("opponent");
+
+    for(let i = 0; i < opponent.length; i++) {
+        if(opponent[i].checked)
+            GameController.OPPONENT = opponent[i].value;
+        }
+}
+
 function onPlayerBounds(player, idx, numCavs) {
     if (player == "p1") {
         return idx >= 1 && idx <= numCavs;
@@ -43,4 +52,9 @@ function onPlayerBounds(player, idx, numCavs) {
         return idx >= numCavs + 2 && idx <= numCavs*2 + 1;    
     }
     return false;
+}
+
+//random index between [min, max]
+function computerEasyStrategy(min, max) {
+    return Math.floor(Math.random() * ((max + 1) - min) + min);
 }
