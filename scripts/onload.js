@@ -1,5 +1,3 @@
-let FIRST_TURN = "p1"; // by default
-
 const $ = (selector) => document.querySelector(selector)
 
 class Seed {
@@ -276,6 +274,7 @@ class GameController {
         if (onPlayerBounds(this.turn, idx, this.numCavs)) {
             let replay = this.gameBoardController.sow_at(board, idx, this.turn);
             if (!replay) {
+                console.log(nextPlayer);
                 this.turn = nextPlayer;
             }
         } 
@@ -402,7 +401,7 @@ function correspondentUp(idx, numCavs) {
 function getFirstPlayer() {
     const first = document.getElementById("first_turn");
     if (first !== null) {
-        FIRST_TURN = first.value;
+        GameController.DEFAULT_FIRST_PLAYER = first.value;
     }
 }
 
