@@ -197,12 +197,12 @@ class GameBoard {
 
     getDownCellContainer() { return this.downCellContainer; }
 
-    getEmptyUpCellsIndexes() {
+    getNotEmptyUpCellsIndexes() {
         let indexes = [];
         let upCells = this.upCellContainer.getCells();
         for (let i = upCells.length - 1; i >= 0; i--) {
             if (upCells[i].getSeeds() != 0) {
-                indexes.push(upCells[i].getId());
+                indexes.push(parseInt(upCells[i].getId()));
             }
         }
         return indexes;
@@ -269,7 +269,8 @@ class GameController {
             const strategy = new Strategy();         
             return strategy.easyStrategy();
         } else if (GameController.LEVEL == "Medium") {
-
+            const strategy = new Strategy();         
+            return strategy.mediumStrategy();
         } else {
             // hard level 
         }
@@ -369,6 +370,8 @@ class GameController {
         }
         console.log("P2: " + p2StorageCell.getCell().getSeeds());
 
+        let winner = p1StorageCell.getCell().getSeeds() > p2StorageCell.getCell().getSeeds() ? "P1" : "P2";
+        console.log("The winner is...", winner, "! Congratulations");
     }
 
 }
@@ -383,13 +386,14 @@ class GameBoardController {
     sow_at (board, idx, turn) {
         let cells = board.getCells();
         let seeds = cells[idx].getSeeds();
+        let numCavs = board.getNumCavs();
         cells[idx].setSeeds(0);
 
         let new_idx = 0;
         for (let i = 1; i <= seeds; i++) {
-            new_idx = (idx + i) % (board.getNumCavs() * 2 + 2);
+            new_idx = (idx + i) % (numCavs * 2 + 2);
             //jump enemy storage
-            if ((new_idx == 0 && turn == "p1") || (new_idx == board.getNumSeeds() + 1 && turn == "p2")) {
+            if ((new_idx == 0 && turn == "p1") || (new_idx == numCavs + 1 && turn == "p2")) {
                 seeds++;
                 continue;
             }
@@ -397,14 +401,14 @@ class GameBoardController {
             cells[new_idx].setSeeds(cells[new_idx].getSeeds() + 1);
         }
         
-        let cellIdx = turn == "p1" ? board.getNumCavs() + 1 : 0;
+        let cellIdx = turn == "p1" ? numCavs + 1 : 0;
 
-        console.log("Turn: ", turn, " Idx: ", idx, " New_idx: ", new_idx);
+        //console.log("Turn: ", turn, " Idx: ", idx, " New_idx: ", new_idx);
         if (new_idx == cellIdx) {
             return true;
-        } else if (cells[new_idx].getSeeds() == 1 && onPlayerBounds(turn, new_idx, board.getNumCavs())) {
+        } else if (cells[new_idx].getSeeds() == 1 && onPlayerBounds(turn, new_idx, numCavs)) {
 
-            let correspondentIdx = turn == "p1" ? correspondentUp(new_idx, board.getNumCavs()) : correspondentDown(new_idx, board.getNumCavs());
+            let correspondentIdx = turn == "p1" ? correspondentUp(new_idx, numCavs) : correspondentDown(new_idx, board.getNumCavs());
 
             cells[cellIdx].setSeeds(cells[cellIdx].getSeeds() + cells[correspondentIdx].getSeeds() + 1);
             cells[correspondentIdx].setSeeds(0);

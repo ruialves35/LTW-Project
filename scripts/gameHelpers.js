@@ -6,14 +6,28 @@ function correspondentUp(idx, numCavs) {
     return numCavs * 2 + 2 - idx;
 }
 
-function getFirstPlayer() {
+function getNewIndex(idx, seeds, numCavs, turn) {
+    let new_idx = 0;
+    for (let i = 1; i <= seeds; i++) {
+        new_idx = (idx + i) % (numCavs * 2 + 2);
+        //jump enemy storage
+        if ((new_idx == 0 && turn == "p1") || (new_idx == numCavs + 1 && turn == "p2")) {
+            seeds++;
+            continue;
+        }
+    }
+        
+    return new_idx;
+}
+
+function setFirstPlayer() {
     const first = document.getElementById("first_turn");
     if (first !== null) {
         GameController.DEFAULT_FIRST_PLAYER = first.value;
     }
 }
 
-function getNumSeeds () {
+function setNumSeeds () {
     const getSeedsElem = document.getElementById("seeds_number");
     const seeds = parseInt(getSeedsElem.value);
     if (isNaN(seeds)) return;
@@ -25,7 +39,7 @@ function getNumSeeds () {
     
 }
 
-function getNumCavs() {
+function setNumCavs() {
     const cavs = parseInt(document.getElementById("cavs_number").value);
     
     if (isNaN(cavs)) return;
@@ -36,13 +50,18 @@ function getNumCavs() {
     }
 }
 
-function getOpponent() {
+function setOpponent() {
     const opponent = document.getElementsByName("opponent");
 
     for(let i = 0; i < opponent.length; i++) {
         if(opponent[i].checked)
             GameController.OPPONENT = opponent[i].value;
         }
+}
+
+function setAILevel() {
+    const level = document.getElementById("AI_level");
+    GameController.LEVEL = level.value;
 }
 
 function onPlayerBounds(player, idx, numCavs) {
@@ -54,7 +73,11 @@ function onPlayerBounds(player, idx, numCavs) {
     return false;
 }
 
-//random index between [min, max]
-function computerEasyStrategy(min, max) {
-    return Math.floor(Math.random() * ((max + 1) - min) + min);
+function makePlay(gameController, board, idx) {
+    gameController.sow_at(board, idx); 
+    if (gameController.checkEndGame(board)) {
+        gameController.endGame(board);
+        return false;
+    }
+    return true;
 }

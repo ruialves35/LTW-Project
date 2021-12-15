@@ -56,13 +56,14 @@
 
 					    <label>
 					    	Computer Level: <br>
-						    <select name="AI_level">
-					        	<option value="easy">Easy</option>
-					        	<option value="hard">Hard</option>
+						    <select name="AI_level" id="AI_level">
+					        	<option value="Easy">Easy</option>
+					        	<option value="Medium">Medium</option>
+					        	<option value="Hard">Hard</option>
 						    </select>
 					    </label>
 
-					    <button type="button" class="button" onclick="getNumSeeds(); getNumCavs(); getOpponent(); load();">Confirm</button>
+					    <button type="button" class="button" onclick="setNumSeeds(); setNumCavs(); setOpponent(); setAILevel(); load();">Confirm</button>
 
                 	</form>
                 </div>
