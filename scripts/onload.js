@@ -52,7 +52,6 @@ class Cell {
         }
     }
 
-    // Testar isto so a fazer build, sem precisar de dar remove, para reutilizar o for
     update_element() {
         while (this.element.firstChild) {
             this.element.removeChild(this.element.firstChild);
@@ -404,7 +403,6 @@ class GameBoardController {
         }
         
         let cellIdx = turn == "p1" ? board.getNumCavs() + 1 : 0;
-        console.log("Turn: ", turn, " Idx: ", new_idx);
 
         if (new_idx == cellIdx) {
             return true;
