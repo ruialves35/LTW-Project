@@ -278,12 +278,8 @@ class GameController {
 
     setStrategy() {
         if (GameController.OPPONENT == "Player") {
-            this.strategy = (gameController, board, idx) => { 
-                gameController.sow_at(board, idx); 
-                if (gameController.checkEndGame(board)) {
-                    gameController.endGame(board);
-                }
-            }
+            const strategy = new Strategy();
+            this.strategy = strategy.playerStrategy();
         } else {
             this.strategy = (gameController, board, idx) => { 
                 gameController.getComputerStrategy()(gameController, board, idx); 
@@ -351,9 +347,8 @@ class GameController {
     endGame(board) {
         console.log("END GAME");
 
+        let p1StorageCell = board.getRightStorage();
 
-        let p1StorageCell = board.getLeftStorage();
-        
         let downCells = board.getDownCellContainer().getCells();
         for (let i = 0; i < downCells.length; i++) {
             let seeds = downCells[i].getSeeds();
@@ -361,9 +356,9 @@ class GameController {
             p1StorageCell.addSeeds(seeds);
             downCells[i].setSeeds(0);
         }
-        console.log("Player1: " + p1StorageCell.getCell().getSeeds());
+        console.log("P1: " + p1StorageCell.getCell().getSeeds());
 
-        let p2StorageCell = board.getRightStorage();
+        let p2StorageCell = board.getLeftStorage();
 
         let upCells = board.getUpCellContainer().getCells();
         for (let i = upCells.length - 1; i >= 0; i--) {
@@ -372,7 +367,7 @@ class GameController {
             p2StorageCell.addSeeds(seeds);
             upCells[i].setSeeds(0);
         }
-        console.log("Player2: " + p2StorageCell.getCell().getSeeds());
+        console.log("P2: " + p2StorageCell.getCell().getSeeds());
 
     }
 
@@ -404,6 +399,7 @@ class GameBoardController {
         
         let cellIdx = turn == "p1" ? board.getNumCavs() + 1 : 0;
 
+        console.log("Turn: ", turn, " Idx: ", idx, " New_idx: ", new_idx);
         if (new_idx == cellIdx) {
             return true;
         } else if (cells[new_idx].getSeeds() == 1 && onPlayerBounds(turn, new_idx, board.getNumCavs())) {
