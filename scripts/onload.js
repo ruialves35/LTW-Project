@@ -264,33 +264,11 @@ class GameController {
         this.build(board);
     }
 
-    easyStrategy() {
-
-        let play = function (gameController, board, idx) {
-            //player play
-            
-            gameController.sow_at(board, idx); 
-
-            if (gameController.checkEndGame(board)) {
-                gameController.endGame(board);
-            }
-
-            //computer play
-            let indexes = board.getEmptyUpCellsIndexes();
-            let randomIdx = Math.floor(Math.random() * indexes.length);
-            gameController.sow_at(board, parseInt(indexes[randomIdx]));
-
-            if (gameController.checkEndGame(board)) {
-                gameController.endGame(board);
-            }
-
-        }
-        return play;
-    }
 
     getComputerStrategy() {
-        if (GameController.LEVEL == "Easy") {            
-            return this.easyStrategy();
+        if (GameController.LEVEL == "Easy") {   
+            const strategy = new Strategy();         
+            return strategy.easyStrategy();
         } else if (GameController.LEVEL == "Medium") {
 
         } else {
@@ -308,7 +286,9 @@ class GameController {
                 }
             }
         } else {
-            this.strategy = (gameController, board, idx) => { gameController.getComputerStrategy()(gameController, board, idx); };
+            this.strategy = (gameController, board, idx) => { 
+                gameController.getComputerStrategy()(gameController, board, idx); 
+            };
         }
     }
 
@@ -414,7 +394,6 @@ class GameBoardController {
         let new_idx = 0;
         for (let i = 1; i <= seeds; i++) {
             new_idx = (idx + i) % (board.getNumCavs() * 2 + 2);
-            if (turn == "p2") console.log("Idx: ", idx, "N: ", idx + i);
             //jump enemy storage
             if ((new_idx == 0 && turn == "p1") || (new_idx == board.getNumSeeds() + 1 && turn == "p2")) {
                 seeds++;
@@ -425,6 +404,7 @@ class GameBoardController {
         }
         
         let cellIdx = turn == "p1" ? board.getNumCavs() + 1 : 0;
+        console.log("Turn: ", turn, " Idx: ", new_idx);
 
         if (new_idx == cellIdx) {
             return true;
