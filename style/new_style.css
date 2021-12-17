@@ -142,12 +142,17 @@ input, label, select {
     overflow: hidden;
 }
 
+.board-cell:hover {
+    box-shadow: 0 0 8px 3px rgba(255, 255, 255, 0.1);
+}
+
 .seed {
     position: absolute;
     width: 3em;
     height: 2em;
     background: url(../img/seed.png);
     background-size: 100% 100%;
+    filter: brightness(90%);
 
     margin: 5px;
 }
@@ -170,7 +175,7 @@ input, label, select {
 
 .board-cell, .storage-cell {
     border-radius: 10vh;
-}
+}   
 
 #left-storage {
 	justify-content: right;
