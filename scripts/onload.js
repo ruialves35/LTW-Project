@@ -44,11 +44,22 @@ class Cell {
         this.element = document.createElement("div");
         this.element.className = className;
         this.element.id = this.id;
-
+        
         for (let i = 0; i < this.seeds; i++) {
             const seed = new Seed();
             this.element.appendChild(seed.getElement());
         }
+    }
+
+    change_borders() {
+        var rand = (Math.random() * 20 + 35);
+        this.element.style.borderTopLeftRadius = rand.toString() + "vh";
+        rand = (Math.random() * 20 + 35);
+        this.element.style.borderTopRightRadius = rand.toString() + "vh";
+        rand = (Math.random() * 20 + 35);
+        this.element.style.borderBottomLeftRadius = rand.toString() + "vh";
+        rand = (Math.random() * 20 + 35);
+        this.element.style.borderBottomRightRadius = rand.toString() + "vh";
     }
 
     update_element() {
@@ -123,7 +134,7 @@ class CellContainer {
                 id = this.startId + this.numCavs - 1 - i;
             }
             const new_cell = new Cell(DEFAULT_SEEDS_NUM, id.toString(), "board-cell");
-            
+            new_cell.change_borders();
             this.cells.push(new_cell);
 
             this.element.appendChild(new_cell.getElement());
