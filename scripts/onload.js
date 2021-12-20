@@ -213,6 +213,14 @@ class GameBoard {
     }
     
     getElement() { return this.element; }
+
+    getLeftStorage() {
+        return this.element.firstChild.children[0];
+    }
+
+    getRightStorage() {
+        return this.element.firstChild.children[2];
+    }
 }
 
 
@@ -258,6 +266,7 @@ class GameController {
     build() {
         this.player1Container = new PlayerContainer('player1');
         this.gameBoardController = new GameBoardController(this.numSeeds, this.numCavs);
+        this.gameBoardController.highlightStorage("p1"); // hardcoded due to FIRST_TURN not being implemented yet
         this.gameBoardController.addCellOnClick(this);
         this.player2Container = new PlayerContainer('player2'); // Must change the name after that;
     }
@@ -281,6 +290,7 @@ class GameController {
             let replay = this.gameBoardController.sow_at(idx, this.turn);
             if (!replay) {
                 this.turn = nextPlayer;
+                this.gameBoardController.highlightStorage(this.turn);
             }
         } 
     }
@@ -334,6 +344,17 @@ class GameBoardController {
 
     getBoard() {
         return this.board;
+    }
+
+    highlightStorage(turn) {
+        console.log("hello");
+        if (turn == "p1") {
+            this.board.getRightStorage().firstChild.classList.add("highlighted");
+            this.board.getLeftStorage().firstChild.classList.remove("highlighted");
+        } else {
+            this.board.getLeftStorage().firstChild.classList.add("highlighted");
+            this.board.getRightStorage().firstChild.classList.remove("highlighted");
+        }
     }
 }
 

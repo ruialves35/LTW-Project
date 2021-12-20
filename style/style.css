@@ -187,6 +187,10 @@ input, label, select {
     width: 9%;
 }
 
+.highlighted {
+    background-color: var(--flame) !important;
+}
+
 .board-cell, .storage-cell, .storage-wrapper {
     border-radius: 10vh;
 }   
