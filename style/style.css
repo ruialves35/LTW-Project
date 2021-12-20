@@ -1,5 +1,6 @@
 :root {
     --bistre: #3F220F;
+    --seal-brown: #69290C;
     --kobe: #923008;
     --flame: #E53D00;
     --pumpkin: #E57832;
@@ -8,16 +9,13 @@
     --sunburst: #8E7939;
     --bronze: #635C24;
     --army-green: #383E0E;
-    --champagne: #F4E9CD;
-    --dark-electric: #446579;
-    --light-indigo: #274F6B;
-    --dark-indigo: #09395D;
-    --prussian: #16364C;
 }
 
 html {
     height: 100%;
     overflow-x: hidden;
+    overflow-y:hidden;
+    width: 100%;
 }
 
 body {
@@ -27,14 +25,23 @@ body {
     margin: 0;
     padding: 0;
     height: 100%;
+    width: 100%;
+    font-family:'Rock Salt', cursive;
+}
+
+#bg {
+    z-index: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("../img/bg.jpg") no-repeat center center;
+    filter:brightness(100%);
 }
 
 input, label, select {
     margin: 0.5em;
-}
-
-#game-container, .player-container {
-    display:none !important;
 }
 
 .preload {
@@ -42,192 +49,69 @@ input, label, select {
     transition-delay: 0s !important;
 }
 
-/*  HEADER AND TOP FORM
-_____________________________________________*/
-
-.navbar-container {
-	display: flex;
-	justify-content: space-between;
-	background-color: var(--prussian);
-	align-items: flex-start;
-	padding: 0;
-    height: 100%;
-    width: 10%;
-    overflow: visible;
-    padding-bottom: 0;
-}
-
-.navbar-container label, .navbar-container legend, .navbar-container h2, 
-.navbar-container .config #config-form #configuration input {
-    color: var(--champagne);
-}
-
-.navbar-container .content {
-    height: 100%;
-    margin-bottom: 0;
-}
-
-.navbar-container .config, .navbar-container .login {
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    width: 20%;
-    background-color: var(--prussian);
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-
-.navbar-container .login:hover #login-form,
-.navbar-container .config:hover #config-form {
-    transform: scaleY(1);
-    border-top-width: 1px;
-    transition-delay: 0s;
-}
-
-#login-form, #config-form {
+.navbar {
     position: absolute;
-    top: 100%;
-    width: 100%;
-    right: 0%;
-    background-color: var(--prussian);
-    border-top: 0px solid var(--champagne);
-    transform-origin: top;
-    transform: scaleY(0);
-    transition-property: transform, border-top-width;
-    transition-duration: 0.3s;
-    transition-delay: 0.1s;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
+    z-index: 2;
 
-.navbar-container .field, .navbar-container .button{
-    font-size: 16px;
-    position: relative;
-}
-
-.navbar-container .field {
-    width: 93%;
-}
-
-.navbar-container .button {
-    width: 100%;
-}
-
-.navbar-container #login, 
-.navbar-container #configuration {
-    padding: 2%;
-}
-
-.field {
-    background: none;
-    border: none;
-    color: var(--champagne);
-    border-bottom: 2px solid var(--champagne);
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-.field:-moz-focusring {
-    outline: none;
-}
-
-.button {
-    background: none;
-    border: 1px solid var(--champagne);
-    border-radius: 5px;
-    color: var(--champagne);
-    transition: 0.2s;
-}
-
-.button:hover {
-    background-color: var(--champagne);
-    color: var(--prussian);
-}
-
-.navbar-container .config h2, .navbar-container .login h2 {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding-left: 2%;
-    padding-right: 5%;
+    align-items: center;
+    padding: 0;
     height: 100%;
-    margin-top: 35px;
-    flex-grow: 0;
+    width: 20%;
+    
+    background: linear-gradient(to right, var(--seal-brown) 25%, transparent 100%);
+    color: var(--seashell);
+}
+
+.navbar #logo, .navbar .item {
+    position: relative;
+    right: 37%;
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.navbar #logo {
+    flex-shrink: 1;
+    height: 100%;
+    margin-top: 50px;
+}
+
+.navbar .item {
+    font-size: 20px;
     flex-shrink: 0;
-    flex-basis: 0;
 }
-
-.navbar-container .logo {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.campo {
-	margin: 2px;
-	width: 12em;
-	border: 1px solid #ada484;
-}
-
-#logo {
-	padding-left: 10px;
-	line-height: 2em;
-	color: var(--champagne);
-}
-
-.opponent-field {
-    color: var(--champagne);
-}
-
-/* BOARD AND GAME
-_____________________________________*/
 
 #container {
-	height: 80%; 
-    width: 100%;
+    z-index: 1;
+    position: relative;
+    left: 10%;
+    width: 90%;
+    height: 100%;
+}
+
+#container #game-container {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    width: 100%;
+    height: 100%;
+
     align-items: center;
-
-    display: grid;
-    grid-template-columns: 1fr 8fr 1fr;
-
-    background: url("../img/cell.jpg") no-repeat;
-    background-size: 100% 100%;
-    overflow: hidden;
+    justify-content: center;
 }
 
 .player-container {
-    display: flex;
-    background: red;
-
-    height: 90%;
-    margin: 1em;
-}
-
-#game-container {
-	height: 90%;
-    width: 100%;
+    display: none !important;
 }
 
 #board {
-    background: url("../img/cell.jpg") no-repeat;
-    background-size: 100% 100%;
-
-	display: grid;
+    display: grid;
 	grid-template-columns: 1fr 6fr 1fr;
 	grid-template-rows: 1fr 1fr;
-    
-	width: 100%;
-	height: 100%; 
-    border-radius: 10vh;
-    border: 3px solid var(--champagne);
-    box-shadow: 0 0 100px 100px rgba(0, 0, 0, 0.35);
 
-    overflow: hidden;
+    width: 90%;
+    height: 60%;
 }
 
 .cell-container {
@@ -241,13 +125,11 @@ _____________________________________*/
 }
 
 .board-cell {
-    background: url("../img/board.jpg") no-repeat;
-    background-size: 100% 100%;
-    box-shadow: 0 0 5px 5px rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 8px 3px rgba(0,0,0,0.3);
 
-    filter:saturate(150%);
-    flex: 1;
-	margin: 0.5em;
+    flex-grow: 1;
+	margin: 0.6em;
 
     text-indent: -99999px;
 
@@ -260,115 +142,42 @@ _____________________________________*/
     overflow: hidden;
 }
 
+.board-cell:hover {
+    box-shadow: 0 0 8px 3px rgba(255, 255, 255, 0.1);
+}
+
 .seed {
     position: absolute;
     width: 3em;
     height: 2em;
-    background: radial-gradient(var(--champagne), 5%, var(--prussian));
-    border-end-start-radius: 100px;
-    border-start-end-radius: 100px;
+    background: url(../img/seed.png);
+    background-size: 100% 100%;
+    filter: brightness(90%);
+
     margin: 5px;
 }
 
 .storage-cell {
-    background: url("../img/board.jpg") no-repeat;
-    background-size: 100% 100%;
-    filter:saturate(150%);
-    box-shadow: 0 0 5px 5px rgba(0,0,0,0.3);
+    background: var(--bistre);
 
-	height: auto;
+    border-radius: 1000px;
+    border: var(--sunray) 10px solid;
+    box-shadow: -10px 10px 7px 0 rgba(0, 0, 0, 0.3);
+
+
+	height: 50%;
     width: 100%;
 	margin: 1em 1em;
+    align-self: center;
 
     text-indent: -99999px;
 }
 
 .board-cell, .storage-cell {
     border-radius: 10vh;
-}
+}   
 
 #left-storage {
 	justify-content: right;
 }
 
-
-
-/* Info Containers 
-__________________________________________________________________*/
-
-#game-info-container {
-	width: 100%;
-	height: 10%;  /* O board ocupa 90% do container, este fica a ocupar 10%*/
-	background-color: var(--seaweed);
-	text-align: center;
-}
-
-#info-container {
-	display: flex;
-	width: 100%;
-	height: 50%;
-	background-color: var(--sheen);
-	text-align: center;
-}
-
-.info {
-	color: var(--champagne);
-	width: 50%;
-	border-right: 1px solid gray;
-}
-
-
-#side-bar-btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 5px;
-    padding-bottom: 0;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-    position: absolute;
-    font-size: 30px;
-    top: 85%;
-    right: 0;
-    background-color: var(--prussian);
-    color: var(--champagne);
-    z-index: 1;
-}
-
-#side-menu {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 20%;
-    background: var(--light-indigo);
-    color: var(--champagne);
-    left: 100%;
-    width: 20%;
-    height: 80%;
-    z-index: 2;
-    transition: left 0.3s ease;
-}
-
-#side-menu .inline {
-    display: flex;
-    height: 10%;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-}
-
-#side-menu button {
-    margin: 1em;
-    height: 30%;
-}
-
-
-#side-menu .inline h2, #side-menu .inline i{
-    margin: 10px;
-}
-
-#side-menu .inline i {
-    font-size: 30px;
-    font-weight: bold;
-}
