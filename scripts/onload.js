@@ -9,10 +9,10 @@ class Seed {
     #element;
 
     constructor() {
-        const angle = Math.floor(Math.random() * 360)
-        const offsetX = Math.floor(Math.random() * 100 - 50)
-        const offsetY = Math.floor(Math.random() * 200 - 50)
-        const offsetMultiplier = Math.floor(Math.random()*2 - 1);
+        const angle = Math.floor(Math.random() * 360);
+        const offsetX = Math.floor(Math.random() * 100 - 50);
+        const offsetY = Math.floor(Math.random() * 200 - 50);
+        const offsetMultiplier = Math.floor(Math.random()*3 - 1);
         
         this.element = document.createElement('div');
         this.element.classList.add("seed");
@@ -96,8 +96,16 @@ class StorageContainer {
     build() {
         this.element = document.createElement("div");
         this.element.className = "storage-container";
+
+        var wrapper = document.createElement("div");
+        wrapper.className = "storage-wrapper";
+
+        var line = document.createElement("div");
+        line.className = "storage-line";
         
         this.storageCell = new Cell(0, this.id, "storage-cell");
+        this.element.appendChild(wrapper);
+        this.element.appendChild(line);
         this.element.appendChild(this.storageCell.getElement());
     }
 
