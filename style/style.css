@@ -1,15 +1,4 @@
-:root {
-    --bistre: #3F220F;
-    --seal-brown: #69290C;
-    --kobe: #923008;
-    --flame: #E53D00;
-    --pumpkin: #E57832;
-    --seashell: #FEF3F0;
-    --sunray: #E4B363;
-    --sunburst: #8E7939;
-    --bronze: #635C24;
-    --army-green: #383E0E;
-}
+@import "color.css";
 
 html {
     height: 100%;
@@ -91,6 +80,7 @@ input, label, select {
     left: 10%;
     width: 90%;
     height: 100%;
+    transition: filter 0.4s linear;
 }
 
 #container #game-container {
