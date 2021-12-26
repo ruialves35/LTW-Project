@@ -1,6 +1,6 @@
 @import "color.css";
 
-.config {
+.config, .login {
     z-index: 50;
 
     position: absolute;
@@ -23,9 +23,18 @@
     bottom: 20%;
 }
 
+.login-show {
+    bottom: 40%;
+}
+
+.login h2 {
+    margin: 0;
+}
+
 .form-header {
     display: inline-flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 .form-header i {
@@ -38,7 +47,7 @@
     pointer-events: none;
 }
 
-#config-form, #configuration {
+#config-form, #configuration, #login-form, #login {
     display: flex;
     flex-direction: column;
 }
