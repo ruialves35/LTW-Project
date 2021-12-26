@@ -1,8 +1,3 @@
-var DEFAULT_SEEDS_NUM = 5;
-var DEFAULT_CAVS_NUM = 6;
-var FIRST_TURN = "p1"; // by default
-var gameController;
-
 const $ = (selector) => document.querySelector(selector)
 
 class Seed {
@@ -38,6 +33,10 @@ class Cell {
         this.update_element();
     }
 
+    getId() {
+        return this.id;
+    }
+
     getSeeds() {
         return this.seeds;
     }
@@ -64,7 +63,6 @@ class Cell {
         this.element.style.borderBottomRightRadius = rand.toString() + "vh";
     }
 
-    // Testar isto so a fazer build, sem precisar de dar remove, para reutilizar o for
     update_element() {
         while (this.element.firstChild) {
             this.element.removeChild(this.element.firstChild);
@@ -76,8 +74,10 @@ class Cell {
         }
     }
 
-    addCellOnClick(gameController, id) {
-        this.element.onclick = function () { gameController.sow_at(id); };
+    addCellOnClick(gameController, fn, board, id) {
+        this.element.onclick = function () { 
+            fn(gameController, board, id);
+        };
     }
 
     getElement() { return this.element; }
@@ -104,6 +104,8 @@ class StorageContainer {
     getElement() { return this.element; }
 
     getCell() { return this.storageCell; };
+
+    addSeeds(seeds) { this.storageCell.setSeeds(this.storageCell.getSeeds() + seeds); }
 }
 
 class CellContainer {
@@ -132,8 +134,9 @@ class CellContainer {
         for (let i = 0; i < this.numCavs; i++) {
             let id = this.asc ? this.startId + i : this.startId + this.numCavs - 1 - i;
 
-            const new_cell = new Cell(DEFAULT_SEEDS_NUM, id.toString(), "board-cell");
+            const new_cell = new Cell(GameBoard.DEFAULT_SEEDS_NUM, id.toString(), "board-cell");
             new_cell.change_borders();
+            
             this.cells.push(new_cell);
 
             this.element.appendChild(new_cell.getElement());
@@ -146,8 +149,10 @@ class CellContainer {
 }
 
 class GameBoard {
+    static DEFAULT_SEEDS_NUM = 5;
+    static DEFAULT_CAVS_NUM = 6;
     #numSeeds;
-    #numCavs;
+    #numCavs
     #element;
     #leftStorage;
     #rightStorage;
@@ -155,9 +160,9 @@ class GameBoard {
     #downCellContainer;
     #cells;
 
-    constructor(numSeeds, numCavs) {
-        this.numSeeds = numSeeds;
-        this.numCavs = numCavs;
+    constructor() {
+        this.numSeeds = GameBoard.DEFAULT_SEEDS_NUM;
+        this.numCavs = GameBoard.DEFAULT_CAVS_NUM;
         this.cells = [];
         this.build();
     } 
@@ -200,6 +205,25 @@ class GameBoard {
 
     getNumSeeds() { return this.numSeeds; }
 
+    getUpCellContainer() { return this.upCellContainer; }
+
+    getDownCellContainer() { return this.downCellContainer; }
+
+    getNotEmptyUpCellsIndexes() {
+        let indexes = [];
+        let upCells = this.upCellContainer.getCells();
+        for (let i = upCells.length - 1; i >= 0; i--) {
+            if (upCells[i].getSeeds() != 0) {
+                indexes.push(parseInt(upCells[i].getId()));
+            }
+        }
+        return indexes;
+    }
+
+    getLeftStorage() { return this.leftStorage; }
+
+    getRightStorage() { return this.rightStorage; }
+
     getCells() {
         return this.cells;
     }
@@ -216,7 +240,6 @@ class PlayerContainer {
     constructor(name) {
         this.name = name;
         this.points = 0;
-
         this.build();
     }
 
@@ -233,24 +256,53 @@ class PlayerContainer {
 }
 
 class GameController {
+    static DEFAULT_FIRST_PLAYER = "p1";
+    static OPPONENT = "Computer";
+    static LEVEL = "Easy";
     #player1Container;
     #player2Container;
     #gameBoardController;
     #numCavs;
     #numSeeds;
     #turn;
+    #strategy;
 
-    constructor(num_seeds, num_cavs) {
-        this.numCavs = num_cavs;
-        this.numSeeds = num_seeds;
-        this.turn = FIRST_TURN;
-        this.build();
+    constructor(board) {
+        this.turn = GameController.DEFAULT_FIRST_PLAYER;
+        this.numCavs = board.getNumCavs();
+        this.numSeeds = board.getNumSeeds();
+        this.setStrategy();
+        this.build(board);
     }
 
-    build() {
+
+    getComputerStrategy() {
+        const strategy = new Strategy();         
+        if (GameController.LEVEL == "Easy") {   
+            return strategy.easyStrategy();
+        } else if (GameController.LEVEL == "Medium") {
+            return strategy.mediumStrategy();
+        } else {
+            // hard level 
+        }
+    }
+
+
+    setStrategy() {
+        if (GameController.OPPONENT == "Player") {
+            const strategy = new Strategy();
+            this.strategy = strategy.playerStrategy();
+        } else {
+            this.strategy = (gameController, board, idx) => { 
+                gameController.getComputerStrategy()(gameController, board, idx); 
+            };
+        }
+    }
+
+    build(board) {
         this.player1Container = new PlayerContainer('player1');
-        this.gameBoardController = new GameBoardController(this.numSeeds, this.numCavs);
-        this.gameBoardController.addCellOnClick(this);
+        this.gameBoardController = new GameBoardController(board);
+        this.gameBoardController.addCellOnClick(this, this.strategy);
         this.player2Container = new PlayerContainer('player2'); // Must change the name after that;
     }
 
@@ -266,15 +318,71 @@ class GameController {
         return this.gameBoardController;
     }
 
-    sow_at(idx) {
+    sow_at(board, idx) {
         let nextPlayer = this.turn == "p1" ? "p2" : "p1";
-
         if (onPlayerBounds(this.turn, idx, this.numCavs)) {
-            let replay = this.gameBoardController.sow_at(idx, this.turn);
+            let replay = this.gameBoardController.sow_at(board, idx, this.turn);
             if (!replay) {
                 this.turn = nextPlayer;
             }
         } 
+    }
+
+    checkEndGame(board) {
+
+        let canPlayP1 = false;
+        let canPlayP2 = false;
+
+        let downCells = board.getDownCellContainer().getCells();
+        for (let i = 0; i < downCells.length; i++) {
+            let seeds = downCells[i].getSeeds();
+
+            if (seeds > 0) {
+                canPlayP1 = true;
+                break;
+            }
+        }
+
+        let upCells = board.getUpCellContainer().getCells();
+        for (let i = upCells.length - 1; i >= 0; i--) {
+            let seeds = upCells[i].getSeeds();
+
+            if (seeds > 0) {
+                canPlayP2 = true;
+                break;
+            }
+        }
+
+        return !(canPlayP1 && canPlayP2);
+    }
+
+    endGame(board) {
+        console.log("END GAME");
+
+        let p1StorageCell = board.getRightStorage();
+
+        let downCells = board.getDownCellContainer().getCells();
+        for (let i = 0; i < downCells.length; i++) {
+            let seeds = downCells[i].getSeeds();
+
+            p1StorageCell.addSeeds(seeds);
+            downCells[i].setSeeds(0);
+        }
+        console.log("P1: " + p1StorageCell.getCell().getSeeds());
+
+        let p2StorageCell = board.getLeftStorage();
+
+        let upCells = board.getUpCellContainer().getCells();
+        for (let i = upCells.length - 1; i >= 0; i--) {
+            let seeds = upCells[i].getSeeds();
+
+            p2StorageCell.addSeeds(seeds);
+            upCells[i].setSeeds(0);
+        }
+        console.log("P2: " + p2StorageCell.getCell().getSeeds());
+
+        let winner = p1StorageCell.getCell().getSeeds() > p2StorageCell.getCell().getSeeds() ? "P1" : "P2";
+        console.log("The winner is...", winner, "! Congratulations");
     }
 
 }
@@ -282,32 +390,36 @@ class GameController {
 class GameBoardController {
     #board;
 
-    constructor(numSeeds, numCavs) {
-        this.board = new GameBoard(numSeeds, numCavs);
+    constructor(board) {
+        this.board = board;
     }
 
-    sow_at (idx, turn) {
-        let cells = this.board.getCells();
+    sow_at (board, idx, turn) {
+        let cells = board.getCells();
         let seeds = cells[idx].getSeeds();
+        let numCavs = board.getNumCavs();
         cells[idx].setSeeds(0);
-
 
         let new_idx = 0;
         for (let i = 1; i <= seeds; i++) {
-            new_idx = (idx + i) % (this.board.getNumCavs() * 2 + 2);
-            if ((new_idx == 0 && turn == "p1") || (new_idx == this.board.getNumSeeds() + 1 && turn == "p2")) {
+            new_idx = (idx + i) % (numCavs * 2 + 2);
+            //jump enemy storage
+            if ((new_idx == 0 && turn == "p1") || (new_idx == numCavs + 1 && turn == "p2")) {
                 seeds++;
                 continue;
             }
+
             cells[new_idx].setSeeds(cells[new_idx].getSeeds() + 1);
         }
         
-        let cellIdx = turn == "p1" ? this.board.getNumCavs() + 1 : 0;
+        let cellIdx = turn == "p1" ? numCavs + 1 : 0;
+
+        //console.log("Turn: ", turn, " Idx: ", idx, " New_idx: ", new_idx);
         if (new_idx == cellIdx) {
             return true;
-        } else if (cells[new_idx].getSeeds() == 1 && onPlayerBounds(turn, new_idx, this.board.getNumCavs())) {
+        } else if (cells[new_idx].getSeeds() == 1 && onPlayerBounds(turn, new_idx, numCavs)) {
 
-            let correspondentIdx = turn == "p1" ? correspondentUp(new_idx, this.board.getNumCavs()) : correspondentDown(new_idx, this.board.getNumCavs());
+            let correspondentIdx = turn == "p1" ? correspondentUp(new_idx, numCavs) : correspondentDown(new_idx, board.getNumCavs());
 
             cells[cellIdx].setSeeds(cells[cellIdx].getSeeds() + cells[correspondentIdx].getSeeds() + 1);
             cells[correspondentIdx].setSeeds(0);
@@ -317,10 +429,10 @@ class GameBoardController {
         return false;
     }
 
-    addCellOnClick(gameController) {
+    addCellOnClick(gameController, fn) {
         let cells = this.board.getCells();
         for (let i = 0; i < cells.length; i++) {
-            cells[i].addCellOnClick(gameController, i);
+            cells[i].addCellOnClick(gameController, fn, this.board, i);
         }
     }
 
@@ -330,60 +442,15 @@ class GameBoardController {
 }
 
 
-function correspondentDown(idx, numCavs) {
-    return 1 + numCavs - (idx % (numCavs + 1));
-}
-
-function correspondentUp(idx, numCavs) {
-    return numCavs * 2 + 2 - idx;
-}
-
-function getFirstPlayer() {
-    const first = document.getElementById("first_turn");
-    if (first !== null) {
-        FIRST_TURN = first.value;
-    }
-}
-
-function getNumSeeds () {
-    const getSeedsElem = document.getElementById("seeds_number");
-    const seeds = parseInt(getSeedsElem.value);
-    if (isNaN(seeds)) return;
-    if (seeds > 0) {
-        DEFAULT_SEEDS_NUM = seeds;
-    } else {
-        alert("You must have at least 1 seed in each cavity");
-    }
-    
-}
-
-function getNumCavs() {
-    const cavs = parseInt(document.getElementById("cavs_number").value);
-    
-    if (isNaN(cavs)) return;
-    if (cavs > 0) { 
-        DEFAULT_CAVS_NUM = cavs;
-    } else {
-        alert("You must have at least 1 cavity");
-    }
-}
-
-function onPlayerBounds(player, idx, numCavs) {
-    if (player == "p1") {
-        return idx >= 1 && idx <= numCavs;
-    } else if (player == "p2") {
-        return idx >= numCavs + 2 && idx <= numCavs*2 + 1;    
-    }
-    return false;
-}
-
 
 function load () {
 
     document.getElementById("body").classList.remove("preload");
     const container = document.getElementById("container");
     
-    gameController = new GameController(DEFAULT_SEEDS_NUM, DEFAULT_CAVS_NUM);
+    let board = new GameBoard();
+    let gameController = new GameController(board);
+    gameController.setStrategy();
 
     if(container.hasChildNodes()) {
         container.replaceChild(gameController.getPlayer1Container().getElement(), container.children[0]); 

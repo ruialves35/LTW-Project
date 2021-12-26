@@ -14,7 +14,7 @@
 html {
     height: 100%;
     overflow-x: hidden;
-    overflow-y:hidden;
+    overflow-y: hidden;
     width: 100%;
 }
 
@@ -43,6 +43,7 @@ body {
 input, label, select {
     margin: 0.5em;
 }
+
 
 .preload {
     transition: none !important;
