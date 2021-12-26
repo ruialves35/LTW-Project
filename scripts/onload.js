@@ -4,10 +4,10 @@ class Seed {
     #element;
 
     constructor() {
-        const angle = Math.floor(Math.random() * 360)
-        const offsetX = Math.floor(Math.random() * 100 - 50)
-        const offsetY = Math.floor(Math.random() * 200 - 50)
-        const offsetMultiplier = Math.floor(Math.random()*2 - 1);
+        const angle = Math.floor(Math.random() * 360);
+        const offsetX = Math.floor(Math.random() * 100 - 50);
+        const offsetY = Math.floor(Math.random() * 200 - 50);
+        const offsetMultiplier = Math.floor(Math.random()*3 - 1);
         
         this.element = document.createElement('div');
         this.element.classList.add("seed");
@@ -97,7 +97,15 @@ class StorageContainer {
         this.element = document.createElement("div");
         this.element.className = "storage-container";
         
+        var wrapper = document.createElement("div");
+        wrapper.className = "storage-wrapper";
+
+        var line = document.createElement("div");
+        line.className = "storage-line";
+
         this.storageCell = new Cell(0, this.id, "storage-cell");
+        this.element.appendChild(wrapper);
+        this.element.appendChild(line);
         this.element.appendChild(this.storageCell.getElement());
     }
 
@@ -255,7 +263,7 @@ class PlayerContainer {
 
 class GameController {
     static DEFAULT_FIRST_PLAYER = "p1";
-    static OPPONENT = "Computer";
+    static OPPONENT = "Player";
     static LEVEL = "Easy";
     #player1Container;
     #player2Container;
@@ -300,6 +308,7 @@ class GameController {
     build(board) {
         this.player1Container = new PlayerContainer('player1');
         this.gameBoardController = new GameBoardController(board);
+        this.gameBoardController.highlightStorage(this.turn);
         this.gameBoardController.addCellOnClick(this, this.strategy);
         this.player2Container = new PlayerContainer('player2'); // Must change the name after that;
     }
@@ -322,6 +331,7 @@ class GameController {
             let replay = this.gameBoardController.sow_at(board, idx, this.turn);
             if (!replay) {
                 this.turn = nextPlayer;
+                this.gameBoardController.highlightStorage(this.turn);
             }
         } 
     }
@@ -437,8 +447,21 @@ class GameBoardController {
     getBoard() {
         return this.board;
     }
-}
 
+    highlightStorage(turn) {
+        let rightStorage = this.board.getRightStorage().getElement().firstChild;
+        let leftStorage = this.board.getLeftStorage().getElement().firstChild;
+
+        console.log(this.board.getRightStorage());
+        if (turn == "p1") {
+            rightStorage.classList.add("highlighted");
+            leftStorage.classList.remove("highlighted");
+        } else {
+            leftStorage.classList.add("highlighted");
+            rightStorage.classList.remove("highlighted");
+        }
+    }
+}
 
 
 function load () {

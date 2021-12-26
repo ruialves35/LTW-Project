@@ -51,7 +51,7 @@ input, label, select {
 
 .navbar {
     position: absolute;
-    z-index: 2;
+    z-index: 4;
 
     display: flex;
     flex-direction: column;
@@ -109,36 +109,37 @@ input, label, select {
     display: grid;
 	grid-template-columns: 1fr 6fr 1fr;
 	grid-template-rows: 1fr 1fr;
-
+    
     width: 90%;
     height: 60%;
 }
 
 .cell-container {
-	display: flex;
+    display: flex;
     margin: 0.5em 1em;
 }
 
 .storage-container {
     display: flex;
     grid-row-end: span 2;
+    justify-content: center;
 }
 
 .board-cell {
     background: rgba(0, 0, 0, 0.3);
     box-shadow: 0 0 8px 3px rgba(0,0,0,0.3);
-
+    
     flex-grow: 1;
 	margin: 0.6em;
-
+    
     text-indent: -99999px;
-
+    
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 10px;
-
+    
     overflow: hidden;
 }
 
@@ -153,31 +154,47 @@ input, label, select {
     background: url(../img/seed.png);
     background-size: 100% 100%;
     filter: brightness(90%);
-
+    
     margin: 5px;
 }
 
 .storage-cell {
+    z-index: 3;
     background: var(--bistre);
+    overflow: hidden;
 
-    border-radius: 1000px;
-    border: var(--sunray) 10px solid;
-    box-shadow: -10px 10px 7px 0 rgba(0, 0, 0, 0.3);
-
-
-	height: 50%;
-    width: 100%;
+    display: flex;
+    
 	margin: 1em 1em;
     align-self: center;
-
+    
+    align-items: center;
+    
     text-indent: -99999px;
+    height: 29%;
+    width: 7%;
 }
 
-.board-cell, .storage-cell {
+.storage-cell, .storage-wrapper {
+    position: fixed;
+}
+
+.storage-wrapper {
+    background-color: var(--sunray);
+    align-self: center;
+    box-shadow: -10px 10px 7px 0 rgba(0, 0, 0, 0.3);
+    height: 33%;
+    width: 9%;
+}
+
+.highlighted {
+    background-color: var(--flame) !important;
+}
+
+.board-cell, .storage-cell, .storage-wrapper {
     border-radius: 10vh;
 }   
 
 #left-storage {
-    justify-content: right;
+	justify-content: right;
 }
-
