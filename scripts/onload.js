@@ -224,9 +224,7 @@ class GameBoard {
 
     getRightStorage() { return this.rightStorage; }
 
-    getCells() {
-        return this.cells;
-    }
+    getCells() { return this.cells; }
     
     getElement() { return this.element; }
 }

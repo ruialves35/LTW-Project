@@ -14,9 +14,8 @@ class Strategy {
 
         let play = function (gameController, board, idx) {
             //player play
-			if (gameController.turn == "p2") {
-            	makePlay(gameController, board, idx);
-			}
+			
+           	if (!makePlay(gameController, board, idx)) return;
 
             // computer play
             // plays while and if its computer's turn
