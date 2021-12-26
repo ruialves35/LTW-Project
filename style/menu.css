@@ -1,0 +1,69 @@
+@import "color.css";
+
+.config {
+    z-index: 50;
+
+    position: absolute;
+    bottom: 100%;
+    left: 45%;
+    
+    padding: 10px;
+    
+    background-color: rgba(228, 179, 99, 0.75);
+    border-radius: 10px;
+    border: 2px solid var(--bistre);
+
+    box-shadow: 0 0 10px 3px var(--bistre);
+
+    transition: bottom 0.4s linear;
+    color: var(--bistre);
+}
+
+.config-show {
+    bottom: 20%;
+}
+
+.form-header {
+    display: inline-flex;
+    align-items: center;
+}
+
+.form-header i {
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.blur {
+    filter: blur(4px);
+    pointer-events: none;
+}
+
+#config-form, #configuration {
+    display: flex;
+    flex-direction: column;
+}
+
+.field, select {
+    background: none;
+    border: none;
+    text-align: center;
+    border-bottom: 2px solid var(--bistre);
+    width: 90%;
+}
+
+.button {
+    background: none;
+    
+    padding: 5px;
+    border: 2px solid var(--bistre);
+    border-radius: 10px;
+    transition: 0.1s ease-in;
+    cursor:pointer;
+
+    font-family: "Rock Salt", cursive;
+}
+
+.button:hover {
+    background: var(--bistre);
+    color: var(--sunray)
+}
