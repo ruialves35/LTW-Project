@@ -82,6 +82,7 @@ input, label, select {
 .navbar .item {
     font-size: 20px;
     flex-shrink: 0;
+    cursor: pointer;
 }
 
 #container {
@@ -141,6 +142,8 @@ input, label, select {
     padding: 10px;
     
     overflow: hidden;
+
+    cursor: pointer;
 }
 
 .board-cell:hover {
