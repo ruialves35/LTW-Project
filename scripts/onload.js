@@ -452,7 +452,6 @@ class GameBoardController {
         let rightStorage = this.board.getRightStorage().getElement().firstChild;
         let leftStorage = this.board.getLeftStorage().getElement().firstChild;
 
-        console.log(this.board.getRightStorage());
         if (turn == "p1") {
             rightStorage.classList.add("highlighted");
             leftStorage.classList.remove("highlighted");
