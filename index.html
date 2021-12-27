@@ -52,31 +52,31 @@
                 <br>
 
                 <div>
-                    <input type="radio" name="opponent" id="computer"> <span class="opponent-field">Computer</span>
+                    <input type="radio" name="opponent" id="Computer"> <span class="opponent-field">Computer</span>
                 </div>
                 <div>
-                    <input type="radio" name="opponent" id="player"> <span class="opponent-field">Player</span>
+                    <input type="radio" name="opponent" id="Player"> <span class="opponent-field">Player</span>
                 </div>
 
                 <label>
                     First Turn: <br>
                     <select name="first_turn" id="first_turn">
-                        <option value="player">Player</option>
-                        <option value="computer">Computer</option>
+                        <option value="P1">Player</option>
+                        <option value="P2">Opponent</option>
                     </select>
                 </label>
 
                 <label>
                     Computer Level: <br>
-                    <select name="AI_level">
-                        <option value="easy">Easy</option>
-                        <option value="hard">Hard</option>
+                    <select name="AI_level" id="AI_level">
+                        <option value="Easy">Easy</option>
+                        <option value="Hard">Hard</option>
                     </select>
                 </label>
                 <!--
                     <button type="button" class="button" onclick="getNumSeeds(); getNumCavs(); hide_config_form();">Confirm</button>         
                 -->
-                <button type="button" class="button" onclick="hide_config_form();">Confirm</button>
+                <button type="button" class="button" onclick="setNumSeeds(); setNumCavs(); setOpponent(); setAILevel(); load(); hide_config_form();">Confirm</button>
 
             </form>
         </div>

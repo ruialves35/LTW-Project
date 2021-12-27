@@ -11,7 +11,7 @@ function getNewIndex(idx, seeds, numCavs, turn) {
     for (let i = 1; i <= seeds; i++) {
         new_idx = (idx + i) % (numCavs * 2 + 2);
         //jump enemy storage
-        if ((new_idx == 0 && turn == "p1") || (new_idx == numCavs + 1 && turn == "p2")) {
+        if ((new_idx == 0 && turn == "P1") || (new_idx == numCavs + 1 && turn == "P2")) {
             seeds++;
             continue;
         }
@@ -65,9 +65,9 @@ function setAILevel() {
 }
 
 function onPlayerBounds(player, idx, numCavs) {
-    if (player == "p1") {
+    if (player == "P1") {
         return idx >= 1 && idx <= numCavs;
-    } else if (player == "p2") {
+    } else if (player == "P2") {
         return idx >= numCavs + 2 && idx <= numCavs*2 + 1;    
     }
     return false;

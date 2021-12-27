@@ -262,7 +262,7 @@ class PlayerContainer {
 }
 
 class GameController {
-    static DEFAULT_FIRST_PLAYER = "p1";
+    static DEFAULT_FIRST_PLAYER = "P1";
     static OPPONENT = "Player";
     static LEVEL = "Easy";
     #player1Container;
@@ -326,7 +326,7 @@ class GameController {
     }
 
     sow_at(board, idx) {
-        let nextPlayer = this.turn == "p1" ? "p2" : "p1";
+        let nextPlayer = this.turn == "P1" ? "P2" : "P1";
         if (onPlayerBounds(this.turn, idx, this.numCavs)) {
             let replay = this.gameBoardController.sow_at(board, idx, this.turn);
             if (!replay) {
@@ -412,7 +412,7 @@ class GameBoardController {
         for (let i = 1; i <= seeds; i++) {
             new_idx = (idx + i) % (numCavs * 2 + 2);
             //jump enemy storage
-            if ((new_idx == 0 && turn == "p1") || (new_idx == numCavs + 1 && turn == "p2")) {
+            if ((new_idx == 0 && turn == "P1") || (new_idx == numCavs + 1 && turn == "P2")) {
                 seeds++;
                 continue;
             }
@@ -420,14 +420,13 @@ class GameBoardController {
             cells[new_idx].setSeeds(cells[new_idx].getSeeds() + 1);
         }
         
-        let cellIdx = turn == "p1" ? numCavs + 1 : 0;
+        let cellIdx = turn == "P1" ? numCavs + 1 : 0;
 
-        //console.log("Turn: ", turn, " Idx: ", idx, " New_idx: ", new_idx);
         if (new_idx == cellIdx) {
             return true;
         } else if (cells[new_idx].getSeeds() == 1 && onPlayerBounds(turn, new_idx, numCavs)) {
 
-            let correspondentIdx = turn == "p1" ? correspondentUp(new_idx, numCavs) : correspondentDown(new_idx, board.getNumCavs());
+            let correspondentIdx = turn == "P1" ? correspondentUp(new_idx, numCavs) : correspondentDown(new_idx, board.getNumCavs());
 
             cells[cellIdx].setSeeds(cells[cellIdx].getSeeds() + cells[correspondentIdx].getSeeds() + 1);
             cells[correspondentIdx].setSeeds(0);
@@ -452,7 +451,7 @@ class GameBoardController {
         let rightStorage = this.board.getRightStorage().getElement().firstChild;
         let leftStorage = this.board.getLeftStorage().getElement().firstChild;
 
-        if (turn == "p1") {
+        if (turn == "P1") {
             rightStorage.classList.add("highlighted");
             leftStorage.classList.remove("highlighted");
         } else {
@@ -470,7 +469,6 @@ function load () {
     
     let board = new GameBoard();
     let gameController = new GameController(board);
-    gameController.setStrategy();
 
     if(container.hasChildNodes()) {
         container.replaceChild(gameController.getPlayer1Container().getElement(), container.children[0]); 
