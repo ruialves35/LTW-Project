@@ -4,8 +4,9 @@
     z-index: 50;
 
     position: absolute;
-    bottom: 100%;
+    bottom: 110%;
     left: 45%;
+    opacity: 0;
     
     padding: 10px;
     
@@ -15,12 +16,16 @@
 
     box-shadow: 0 0 10px 3px var(--bistre);
 
-    transition: bottom 0.4s linear;
+    transition: 0.4s linear;
     color: var(--bistre);
 }
 
+.config-show, .login-show {
+    opacity: 100%;
+}
+
 .config-show {
-    bottom: 20%;
+    bottom: 30%;
 }
 
 .login-show {
