@@ -1,6 +1,6 @@
 @import "color.css";
 
-.config, .login, .instructions {
+.config, .login, .instructions, .ranking {
     z-index: 50;
 
     position: absolute;
@@ -20,16 +20,7 @@
     color: var(--bistre);
 }
 
-.instructions {
-    left: 20% !important;
-    width: 60%;
-}
-
-.instructions-show {
-    bottom: 15%;
-}
-
-.config-show, .login-show, .instructions-show {
+.config-show, .login-show, .instructions-show, .ranking-show {
     opacity: 100%;
 }
 
@@ -37,8 +28,29 @@
     bottom: 30%;
 }
 
+.instructions-show, .ranking-show {
+    bottom: 15%;
+}
+
 .login-show {
     bottom: 40%;
+}
+
+.ranking-show {
+    bottom: 45%;
+}
+
+#ranking-table {
+    text-align: center;
+}
+
+#ranking-table td, th {
+    border: 2px solid var(--bistre);
+}
+
+.instructions {
+    left: 20% !important;
+    width: 60%;
 }
 
 .login h2 {
