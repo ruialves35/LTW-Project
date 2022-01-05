@@ -220,3 +220,19 @@ input, label, select {
 #left-storage {
 	justify-content: right;
 }
+
+.score-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.score {
+    font-size: 25px;
+    font-weight: bold;
+    color: var(--bistre);
+    border-radius: 1000px;
+    background-color: rgba(228, 179, 99, 0.3);
+    box-shadow: 0 0 10px 10px rgba(228, 179, 99, 0.3);
+    margin: 0;
+}
