@@ -13,6 +13,7 @@ body {
     padding: 0;
     height: 100%;
     width: 100%;
+    font-family: 'Patrick Hand SC', cursive;
 }
 
 #bg {
@@ -38,10 +39,13 @@ input, label, select {
 .navbar {
     position: fixed;
     z-index: 4;
+    top: 0;
+    left:0;
     
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-evenly;
     padding: 0;
     height: 100%;
     width: 20%;
@@ -50,22 +54,52 @@ input, label, select {
     color: var(--seashell);
 }
 
-.navbar #logo, .navbar .item {
-    position: relative;
-    right: 37%;
+.navbar #logo, .navbar .item, .navbar .button {
     writing-mode: vertical-lr;
     text-orientation: upright;
     margin-top: 20px;
     margin-bottom: 20px;
 }
 
+.navbar .item {
+    letter-spacing: -5px;
+    font-weight: bold;
+}
+
+.navbar #logo, .navbar .button, .navbar .item-list {
+    position: relative;
+    right: 37%;
+}
+
+.navbar .item-list {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+
+    align-items: center;
+}
+
+#play {
+    background: none;
+    border: 5px solid var(--sunray);
+    
+    padding: 15px;
+    border-radius: 1000px;
+    transition: 0.1s ease-in;
+    color: var(--seashell);
+    cursor:pointer;
+}
+
+#play:hover {
+    background: var(--bistre);
+}
+
 .navbar #logo {
-    height: 100%;
     margin-top: 50px;
     font-family:'Rock Salt', cursive;
 }
 
-.navbar .item {
+.navbar .item, .navbar .button {
     font-size: 20px;
     cursor: pointer;
 }
