@@ -2,13 +2,12 @@
 
 html {
     height: 100%;
-    overflow-x: hidden;
     width: 100%;
 }
 
 body {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     background-color: black;
     margin: 0;
     padding: 0;
@@ -37,7 +36,7 @@ input, label, select {
 }
 
 .navbar {
-    position: absolute;
+    position: fixed;
     z-index: 4;
     
     display: flex;
@@ -61,7 +60,6 @@ input, label, select {
 }
 
 .navbar #logo {
-    flex-shrink: 1;
     height: 100%;
     margin-top: 50px;
     font-family:'Rock Salt', cursive;
@@ -69,7 +67,6 @@ input, label, select {
 
 .navbar .item {
     font-size: 20px;
-    flex-shrink: 0;
     cursor: pointer;
 }
 
