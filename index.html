@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand+SC&display=swap" rel="stylesheet">
     <script type="text/javascript" src="scripts/client.js" defer></script>
     <script type="text/javascript" src="scripts/classes.js" defer></script>
     <script type="text/javascript" src="scripts/gameHelpers.js" defer></script>
@@ -32,15 +32,18 @@
     <!-- Start of Navbar -->
     <div class="navbar" id="navbar">
         <h1 id="logo">Mancala</h1>
-        <p class="item" onclick="show_login_form()">Login</p>
-        <p class="item" onclick="show_config_form()">Configuration</p>
+        <button type="button" class="button" id="play">Play</button>
+        <div class="item-list">
+            <p class="item" onclick="show('login')">Login</p>
+            <p class="item" onclick="show('config')">Configuration</p>
+        </div>
     </div> <!-- End of Navbar -->
 
     <!-- Start of configurations -->
     <div class="config content" id="config">
         <span class="form-header">
             <h2>Configuration</h2>
-            <i class="bi bi-x-circle" onclick="hide_config_form()"></i>
+            <i class="bi bi-x-circle" onclick="hide('config');"></i>
         </span>
         <div id="config-form">
             <form id="configuration">
@@ -53,7 +56,8 @@
                 <br>
 
                 <div>
-                    <input type="radio" name="opponent" id="Computer" value="Computer"> <span class="opponent-field">Computer</span>
+                    <input type="radio" name="opponent" id="Computer" value="Computer"> <span
+                        class="opponent-field">Computer</span>
                 </div>
                 <div>
                     <input type="radio" name="opponent" id="Player" value="NormalPlayer"> <span class="opponent-field">Player</span>
@@ -80,18 +84,103 @@
                 <!--
                     <button type="button" class="button" onclick="getNumSeeds(); getNumCavs(); hide_config_form();">Confirm</button>         
                 -->
-                <button type="button" class="button" onclick="setNumSeeds(); setNumCavs(); setOpponent(); setAILevel(); load(); hide_config_form();">Confirm</button>
+                <button type="button" class="button"
+                    onclick="setNumSeeds(); setNumCavs(); setOpponent(); setAILevel(); load(); hide('config');">Confirm</button>
 
             </form>
         </div>
     </div> <!-- End of Configurations -->
 
+    <div id="ranking" class="ranking">
+        <span class="form-header">
+            <h2>Ranking</h2>
+            <i class="bi bi-x-circle" onclick="hide('ranking');"></i>
+        </span>
+        <table id="ranking-table">
+            <tr id="ranking-table-header">
+                <th>Vencedor</th>
+                <th>Perdedor</th>
+                <th>Pontuação do Vencedor</th>
+            </tr>
+            <tr class="ranking-table-entry">
+                <td>João</td>
+                <td>Tozé</td>
+                <td>50</td>
+            </tr>
+            <tr class="ranking-table-entry">
+                <td>João</td>
+                <td>Tozé</td>
+                <td>50</td>
+            </tr>
+            <tr class="ranking-table-entry">
+                <td>João</td>
+                <td>Tozé</td>
+                <td>50</td>
+            </tr>
+            <tr class="ranking-table-entry">
+                <td>João</td>
+                <td>Tozé</td>
+                <td>50</td>
+            </tr>
+            <tr class="ranking-table-entry">
+                <td>João</td>
+                <td>Tozé</td>
+                <td>50</td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="instructions" class="instructions">
+        <span class="form-header">
+            <h2>Regras do Jogo</h2>
+            <i class="bi bi-x-circle" onclick="hide('instructions');"></i>
+        </span>
+        <h3 style="margin-top: 0;">Objetivo</h3>
+        <p>
+            O objetivo do jogo é coletar o máximo número de sementes. Para tal, cada jogador dispõe de um conjunto de
+            cavidades, nas quais têm sementes em cada uma delas.
+        </p>
+
+        <h3>Forma de jogar e Semeadura</h3>
+        <p>
+            De forma a semear, o jogador deve escolher uma cavidade do seu lado do tabuleiro de onde serão recolhidas
+            todas
+            as sementes e semeadas, 1 a 1, nas cavidades seguintes, até o utilizador não ter mais sementes na mão. Esta
+            semeadura é feita no sentido anti-horário e segundo as seguintes condições:
+        <ul>
+            <li>Se a cavidade seguinte for o seu armazém, também deve semear</li>
+            <li>Sobrando sementes, continuar no lado do adversário</li>
+            <li>Se atingir o armazém do adversário, não semear</li>
+            <li>Caso atinja o armazém do adversário e ainda tenha sementes para semear, continuar do seu lado</li>
+        </ul>
+        </p>
+
+        <h3>Ultima semente no Armazem e em Cavidade</h3>
+        <p>
+            Caso a última semente for semeada no seu próprio armazém, o jogador volta a jogar.
+            Por outro lado, se a última semente semeada calhar numa cavidade vazia do próprio jogador, então este deve
+            colher tanto a ultima semente semeada como as sementes na cavidade oposta, ou seja, as sementes na cavidade
+            do
+            adversário, e transferi-las para o seu armazém.
+        </p>
+
+        <h3>Fim do jogo</h3>
+        <p>
+            O jogo termina quando um dos jogadores não pode jogar, ou seja, quando não tiver nenhuma semente nas suas
+            cavidades. Quando isto acontece, o outro jogador recolhe todas as sementes das suas cavidades e coloca-as no
+            armazém.
+            Finalmente, ganha o jogador que tiver mais sementes no seu armazém.
+        </p>
+    </div>
+
+    <i id="ranking-btn" onclick="sendMessage('Hello, I am a message! :D');" class="bi bi-trophy"></i>
+    <i id="instructions-btn" onclick="show('instructions');" class="bi bi-info-circle"></i>
 
     <!-- Start of Login -->
     <div class="login content" id="login">
         <span class="form-header">
             <h2>Login</h2>
-            <i class="bi bi-x-circle" onclick="hide_login_form()"></i>
+            <i class="bi bi-x-circle" onclick="hide('login');"></i>
         </span>
         <div id="login-form">
             <form id="login">
@@ -102,7 +191,7 @@
                 <input class="field" type="password" name="password" id="password" placeholder="Password">
 
                 <br>
-            
+
                 <button type="button" class="button" onclick="makeRegister();">Login</button>
             </form>
 

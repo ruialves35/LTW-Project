@@ -1,11 +1,12 @@
 @import "color.css";
 
-.config, .login {
+.config, .login, .instructions, .ranking, .message {
     z-index: 50;
 
     position: absolute;
-    bottom: 100%;
+    bottom: 110%;
     left: 45%;
+    opacity: 0;
     
     padding: 10px;
     
@@ -15,16 +16,45 @@
 
     box-shadow: 0 0 10px 3px var(--bistre);
 
-    transition: bottom 0.4s linear;
+    transition: 0.4s linear;
     color: var(--bistre);
 }
 
+.config-show, .login-show, .instructions-show, .ranking-show, .message-show {
+    opacity: 100%;
+}
+
 .config-show {
-    bottom: 20%;
+    bottom: 30%;
+}
+
+.instructions-show, .ranking-show {
+    bottom: 15%;
 }
 
 .login-show {
     bottom: 40%;
+}
+
+.ranking-show, .message-show {
+    bottom: 45%;
+}
+
+#ranking-table {
+    text-align: center;
+}
+
+#ranking-table td, th {
+    border: 2px solid var(--bistre);
+}
+
+.message {
+    left: 40% !important;
+}
+
+.instructions {
+    left: 20% !important;
+    width: 60%;
 }
 
 .login h2 {
@@ -36,6 +66,7 @@
     align-items: center;
     justify-content: space-between;
     font-family: "Rock Salt", cursive;
+    width: 100%;
 }
 
 .form-header i {
@@ -108,4 +139,30 @@
 .button:hover {
     background: var(--bistre);
     color: var(--sunray)
+}
+
+#ranking-btn, #instructions-btn {
+    z-index: 4;
+    position: absolute;
+    font-size: 40px;
+    right: 10px;
+    border-radius: 1000px;
+    color: var(--bistre);
+    background-color: rgba(228, 179, 99, 0.5);
+    box-shadow: 0 0 10px 10px rgba(228, 179, 99, 0.5);
+    transition: 0.1s linear;
+}
+
+#ranking-btn:hover, #instructions-btn:hover {
+    color: var(--kobe);
+    box-shadow: 0 0 12px 12px rgba(228, 179, 99, 0.5);
+    cursor: pointer;
+}
+
+#ranking-btn {
+    top: 50px;
+}
+
+#instructions-btn {
+    bottom: 50px;
 }

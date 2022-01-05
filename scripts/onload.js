@@ -275,6 +275,10 @@ class PlayerContainer {
         this.element.appendChild(title);
     }
 
+    setPoints(points) {
+        this.points = points;
+    }
+
     getElement() { return this.element; }
 }
 
@@ -381,10 +385,12 @@ class GameController {
 
     build(board) {
         this.player1Container = new PlayerContainer('player1');
-        this.gameBoardController = new GameBoardController(board);
-        this.gameBoardController.highlightStorage(this.turn);
-        this.gameBoardController.addCellOnClick(this, this.strategy);
         this.player2Container = new PlayerContainer('player2'); // Must change the name after that;
+        this.gameBoardController = new GameBoardController(board);
+
+        this.gameBoardController.highlightStorage(this.turn);
+        this.gameBoardController.addScores(this.player1Container.name, this.player2Container.name);
+        this.gameBoardController.addCellOnClick(this, this.strategy);
     }
 
     getPlayer1Container() {
@@ -403,6 +409,14 @@ class GameController {
         let nextPlayer = this.turn == "P1" ? "P2" : "P1";
         if (onPlayerBounds(this.turn, idx, this.numCavs)) {
             let replay = this.gameBoardController.sow_at(board, idx, this.turn);
+
+            let player = this.turn == "P1" ? this.player1Container : this.player2Container;
+
+            let score = this.turn == "P1" ? this.gameBoardController.getRightStorageSeeds() : this.gameBoardController.getLeftStorageSeeds();
+            player.setPoints(score);
+
+            this.gameBoardController.updateScore(player.name, player.points);
+            
             if (!replay) {
                 this.turn = nextPlayer;
                 this.gameBoardController.highlightStorage(this.turn);
@@ -521,6 +535,14 @@ class GameBoardController {
         return this.board;
     }
 
+    getLeftStorageSeeds() {
+        return this.board.getLeftStorage().getCell().getSeeds();
+    }
+
+    getRightStorageSeeds() {
+        return this.board.getRightStorage().getCell().getSeeds();
+    }
+
     highlightStorage(turn) {
         let rightStorage = this.board.getRightStorage().getElement().firstChild;
         let leftStorage = this.board.getLeftStorage().getElement().firstChild;
@@ -531,6 +553,43 @@ class GameBoardController {
         } else {
             leftStorage.classList.add("highlighted");
             rightStorage.classList.remove("highlighted");
+        }
+    }
+
+    addScores(p1, p2) {
+        let p1Div = document.createElement('div'); p1Div.classList.add("score-div");
+        let p2Div = document.createElement('div'); p2Div.classList.add("score-div");
+
+        p1Div.style.alignSelf = "end";
+        p2Div.style.alignSelf = "start";
+        
+        let p1Name = document.createElement('p');
+        let p2Name = document.createElement('p');
+        p1Name.id = p1; p1Name.classList.add("score");
+        p2Name.id = p2; p2Name.classList.add("score")
+        p1Name.innerHTML = p1 + "<br>";
+        p2Name.innerHTML = p2 + "<br>";
+
+        let p1Score = document.createElement('p');
+        let p2Score = document.createElement('p');
+        p1Score.id = p1 + "-score"; p1Score.classList.add("score");
+        p2Score.id = p2 + "-score"; p2Score.classList.add("score");
+
+        p1Score.innerHTML = "0 seeds";
+        p2Score.innerHTML = "0 seeds";
+
+        p1Div.appendChild(p1Name); p1Div.appendChild(p1Score);
+        p2Div.appendChild(p2Name); p2Div.appendChild(p2Score);
+
+        this.board.getRightStorage().getElement().appendChild(p1Div);
+        this.board.getLeftStorage().getElement().appendChild(p2Div);
+    }
+
+    updateScore(name, score) {
+        let scoreP = document.getElementById(name + "-score");
+
+        if (scoreP != null) {
+            scoreP.innerHTML = score + " seeds";
         }
     }
 }
