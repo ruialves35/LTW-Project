@@ -1,7 +1,7 @@
 const $ = (selector) => document.querySelector(selector)
 
 class Seed {
-    #element;
+    element;
 
     constructor() {
         const angle = Math.floor(Math.random() * 360);
@@ -18,9 +18,9 @@ class Seed {
 }
 
 class Cell {
-    #seeds;
-    #element;
-    #id;
+    seeds;
+    element;
+    id;
 
     constructor(seeds, id, className) {
         this.seeds = seeds;
@@ -84,9 +84,9 @@ class Cell {
 }
 
 class StorageContainer {
-    #element;
-    #storageCell;
-    #id;
+    element;
+    storageCell;
+    id;
 
     constructor(id) {
         this.id = id;
@@ -117,11 +117,11 @@ class StorageContainer {
 }
 
 class CellContainer {
-    #element;
-    #numCavs;
-    #startId;
-    #cells;
-    #asc;
+    element;
+    numCavs;
+    startId;
+    cells;
+    asc;
 
     constructor(numCavs, startId, asc) {
         this.numCavs = numCavs;
@@ -159,14 +159,15 @@ class CellContainer {
 class GameBoard {
     static DEFAULT_SEEDS_NUM = 5;
     static DEFAULT_CAVS_NUM = 6;
-    #numSeeds;
-    #numCavs
-    #element;
-    #leftStorage;
-    #rightStorage;
-    #upCellContainer;
-    #downCellContainer;
-    #cells;
+    static GAMECODE;
+    numSeeds;
+    numCavs
+    element;
+    leftStorage;
+    rightStorage;
+    upCellContainer;
+    downCellContainer;
+    cells;
 
     constructor() {
         this.numSeeds = GameBoard.DEFAULT_SEEDS_NUM;
@@ -239,9 +240,9 @@ class GameBoard {
 
 
 class PlayerContainer {
-    #element;
-    #points;
-    #name;
+    element;
+    points;
+    name;
 
     constructor(name) {
         this.name = name;
@@ -265,13 +266,15 @@ class GameController {
     static DEFAULT_FIRST_PLAYER = "P1";
     static OPPONENT = "Player";
     static LEVEL = "Easy";
-    #player1Container;
-    #player2Container;
-    #gameBoardController;
-    #numCavs;
-    #numSeeds;
-    #turn;
-    #strategy;
+    static USER;
+    static GAME;
+    player1Container;
+    player2Container;
+    gameBoardController;
+    numCavs;
+    numSeeds;
+    turn;
+    strategy;
 
     constructor(board) {
         this.turn = GameController.DEFAULT_FIRST_PLAYER;
@@ -280,7 +283,6 @@ class GameController {
         this.setStrategy();
         this.build(board);
     }
-
 
     getComputerStrategy() {
         const strategy = new Strategy();         
@@ -396,7 +398,7 @@ class GameController {
 }
 
 class GameBoardController {
-    #board;
+    board;
 
     constructor(board) {
         this.board = board;
@@ -469,7 +471,7 @@ function load () {
     
     let board = new GameBoard();
     let gameController = new GameController(board);
-
+    
     if(container.hasChildNodes()) {
         container.replaceChild(gameController.getPlayer1Container().getElement(), container.children[0]); 
         container.replaceChild(gameController.getGameBoardController().getBoard().getElement(), container.children[1]);

@@ -14,6 +14,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet">
 
+    <script type="text/javascript" src="scripts/client.js" defer></script>
     <script type="text/javascript" src="scripts/classes.js" defer></script>
     <script type="text/javascript" src="scripts/gameHelpers.js" defer></script>
     <script type="text/javascript" src="scripts/side_menu.js" defer></script>
@@ -52,10 +53,10 @@
                 <br>
 
                 <div>
-                    <input type="radio" name="opponent" id="Computer"> <span class="opponent-field">Computer</span>
+                    <input type="radio" name="opponent" id="Computer" value="Computer"> <span class="opponent-field">Computer</span>
                 </div>
                 <div>
-                    <input type="radio" name="opponent" id="Player"> <span class="opponent-field">Player</span>
+                    <input type="radio" name="opponent" id="Player" value="Player"> <span class="opponent-field">Player</span>
                 </div>
 
                 <label>
@@ -90,7 +91,7 @@
             <i class="bi bi-x-circle" onclick="hide_login_form()"></i>
         </span>
         <div id="login-form">
-            <form action="save.php" method="get" id="login">
+            <form id="login">
                 <input class="field" type="text" name="username" id="username" placeholder="Username">
 
                 <br>
@@ -98,9 +99,10 @@
                 <input class="field" type="password" name="password" id="password" placeholder="Password">
 
                 <br>
-
-                <button type="submit" class="button">Login</button>
+            
+                <button type="button" class="button" onclick="makeRegister();">Login</button>
             </form>
+
         </div>
     </div> <!-- End of login -->
 
