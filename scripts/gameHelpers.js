@@ -56,7 +56,6 @@ function setOpponent() {
     for(let i = 0; i < opponent.length; i++) {
         if(opponent[i].checked)
             GameController.OPPONENT = opponent[i].value;
-            console.log(GameController.OPPONENT);
         }
 }
 

@@ -236,6 +236,22 @@ class GameBoard {
     getCells() { return this.cells; }
     
     getElement() { return this.element; }
+
+    updateCellsContainer(newCells, player) {
+        let cells = player == 1 ? this.downCellContainer.getCells() : this.upCellContainer.getCells().reverse();
+        for (let i = 0; i < newCells.length; i++) {
+            cells[i].setSeeds(newCells[i]);
+        }
+    }
+
+    updateStorage(value, player) {
+        if (player == 1){
+            this.rightStorage.getCell().setSeeds(value);
+        } else {
+            //player 2
+            this.leftStorage.getCell().setSeeds(value);
+        }
+    }
 }
 
 
@@ -264,9 +280,10 @@ class PlayerContainer {
 
 class GameController {
     static DEFAULT_FIRST_PLAYER = "P1";
-    static OPPONENT = "Player";
+    static OPPONENT = "NormalPlayer";
     static LEVEL = "Easy";
     static USER;
+    static USER2;
     static GAME;
     player1Container;
     player2Container;
@@ -284,6 +301,64 @@ class GameController {
         this.build(board);
     }
 
+    setStrategy() {
+        const strategy = new Strategy();
+        if (GameController.OPPONENT == "NormalPlayer") {
+            this.strategy = strategy.playerStrategy();
+        } else if (GameController.OPPONENT == "Computer") {    
+            this.strategy = (gameController, board, idx) => { 
+                gameController.getComputerStrategy()(gameController, board, idx); 
+            };
+        } else {
+            // Online Player
+            join(GROUP, GameController.USER.getUsername(), GameController.USER.getPassword(), GameBoard.DEFAULT_CAVS_NUM, GameBoard.DEFAULT_SEEDS_NUM)
+            .then((res) => {
+                if( res > 0 )
+                    this.update();
+                else {
+                    alert("Could not Join a Game");
+                }
+            });
+            this.strategy = strategy.onlinePlayerStrategy();
+        }
+    }
+
+    update() {
+        const url = server_url + "/update?nick=" + GameController.USER.getUsername() + "&game=" + GameController.GAME ;
+        const source = new EventSource(url);
+        source.onmessage = this.updateGame;
+    }
+
+    updateGame = (event) => {
+        const data = JSON.parse(event?.data);
+        console.log("Debug data:", data);
+        const board = data.board;
+        let currentBoard = this.gameBoardController.getBoard();
+
+        if (board) { // all good, received a board
+            const oldBoard = this.gameBoardController.board;
+            const oldScore = this.turn == "P1" ? oldBoard.getRightStorage() : oldBoard.getLeftStorage();
+            const nextTurn = board.turn == GameController.USER.getUsername() ? "P1" : "P2";
+
+            for (const [username, boards] of Object.entries(board.sides)) {
+                // means its player2
+                const player = username != GameController.USER.getUsername() ? 2 : 1;
+                if (GameController.USER2 == null && player == 2)
+                    GameController.USER2 = new User(username, null);
+                
+                for (const [type, value] of Object.entries(boards)) {
+                    if (type == "store") {
+                        //storageContainer
+                        currentBoard.updateStorage(value, player);
+                    } else {
+                        // cellsContainer
+                        currentBoard.updateCellsContainer(value, player)
+                    }
+                }
+            }
+        }
+    }
+
     getComputerStrategy() {
         const strategy = new Strategy();         
         if (GameController.LEVEL == "Easy") {   
@@ -295,17 +370,6 @@ class GameController {
         }
     }
 
-
-    setStrategy() {
-        if (GameController.OPPONENT == "Player") {
-            const strategy = new Strategy();
-            this.strategy = strategy.playerStrategy();
-        } else {
-            this.strategy = (gameController, board, idx) => { 
-                gameController.getComputerStrategy()(gameController, board, idx); 
-            };
-        }
-    }
 
     build(board) {
         this.player1Container = new PlayerContainer('player1');
