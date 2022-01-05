@@ -1,4 +1,5 @@
 var server_url = 'http://twserver.alunos.dcc.fc.up.pt:8008';
+var GROUP = 49;
 
 function makeRegister() {
     username = $("#username").value;
@@ -14,6 +15,9 @@ function makeJoin() {
     if (!GameController.USER) {
         alert("Error to join a server. Make sure you are logged in.");
         return;
+    } else {
+        // basically join the game, create a GameController and start the game
+        join(GROUP, GameController.USER.getUsername(), GameController.USER.getPassword(), GameBoard.DEFAULT_CAVS_NUM, GameBoard.DEFAULT_SEEDS_NUM);
     }
 }
 
@@ -24,10 +28,10 @@ function makeJoin() {
  * @param pass password
  * @returns true when sucessfully registed, false otherwhise
  */
- function register(nick, pass) {
+ async function register(nick, pass)  {
     let url = server_url + "/register";
     let success = false;
-    fetch(url,
+    await fetch(url,
     {
         method: "POST",
         body: JSON.stringify({
@@ -39,10 +43,10 @@ function makeJoin() {
     .then(function(data) {
         // TODO: Change this to message box when we do it instead of alerts
         if(data?.error) {
-            alert("Invalid credentials. Username is already registed with another password.");
+            alert(data.error);
         } else {
             success = true;
-            alert("Successfully logged in")
+            alert("Successfully logged in");
         }
     })
 
@@ -58,33 +62,38 @@ function makeJoin() {
  * @param size
  * @param initial
  */
-function join(group, nick, pass, size, initial) {
+async function join(group, nick, pass, size, initial) {
     let url = server_url + "/join";
-    fetch(url,
+    const res = await fetch(url,
     {
         method: "POST",
         body: JSON.stringify({
             group: group, 
             nick: nick, 
             password: pass,
-            size: size,
-            initial: initial
+            size: parseInt(size),
+            initial: parseInt(initial)
         })
     })
-    .then(function(res) { return res.json;})
+    .then(function(res) { return res.json();})
     .then(function(data) {
         // TODO: Change this to message box when we do it instead of alerts
         if(data?.error) {
-            alert("Error to join a server. Make sure you are logged in and have the right configurations.");
+            console.log(data.error);
+            alert(data.error);
+            return -1;
         } else {
             if (data?.game) {
-                GameController.GAMECODE = data.game;
-                alert("Successfully join a game");
+                GameController.GAME = data.game;
+                console.log("Joinned Game: ", GameController.GAME);
+                return 1;
             } else {
-                alert("Could not log in to a game")
+                alert("Couldn't join a game");
+                return -1;
             }
         }
     })
+    return res;
 }
 
 /**
@@ -95,7 +104,7 @@ function join(group, nick, pass, size, initial) {
  * @param game 
  * @param move 
  */
-function leave(nick, pass, game, move) {
+function leave(nick, pass, game) {
     let url = server_url + "/leave";
     fetch(url,
     {
@@ -104,17 +113,16 @@ function leave(nick, pass, game, move) {
             nick: nick, 
             password: pass,
             game: game,
-            move: move
         })
     })
-    .then(function(res) { return res.json;})
+    .then(function(res) { return res.json();})
     .then(function(data) {
         // debugging only
         console.log(JSON.stringify(data));
         console.log(data.error);
         
-        if (data.error == "User registered with a different password") {
-            alert("Invalid credentials. Username is already register with another password.");
+        if (data?.error) {
+            alert(data.error);
             result = false;
         }
     })
@@ -140,14 +148,14 @@ function notify(nick, pass, game, move) {
             move: move
         })
     })
-    .then(function(res) { return res.json;})
+    .then(function(res) { return res.json();})
     .then(function(data) {
         // debugging only
         console.log(JSON.stringify(data));
-        console.log(data.error);
         
-        if (data.error == "User registered with a different password") {
-            alert("Invalid credentials. Username is already register with another password.");
+        if (data?.error) {
+            console.log(data.error);
+            alert(data.error);
             result = false;
         }
     })
@@ -162,15 +170,7 @@ function ranking() {
     {
         method: "POST",
     })
-    .then(function(res) { return res.json; })
+    .then(function(res) { return res.json(); })
 }
 
 
-
-function update(nick, game) {
-    let url = server_url + "/update?nick=" + nick + "&game=" + game ;
-    let source = new EventSource(url);
-    source.onmessage = event => {
-        return event.data;
-    }
-}

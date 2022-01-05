@@ -236,6 +236,22 @@ class GameBoard {
     getCells() { return this.cells; }
     
     getElement() { return this.element; }
+
+    updateCellsContainer(newCells, player) {
+        let cells = player == 1 ? this.downCellContainer.getCells() : this.upCellContainer.getCells();
+        for (let i = 0, j = 5; i < newCells.length; i++, j--) {
+            cells[i].setSeeds(newCells[i]);
+        }
+    }
+
+    updateStorage(value, player) {
+        if (player == 1){
+            this.rightStorage.getCell().setSeeds(value);
+        } else {
+            //player 2
+            this.leftStorage.getCell().setSeeds(value);
+        }
+    }
 }
 
 
@@ -268,9 +284,10 @@ class PlayerContainer {
 
 class GameController {
     static DEFAULT_FIRST_PLAYER = "P1";
-    static OPPONENT = "Player";
+    static OPPONENT = "NormalPlayer";
     static LEVEL = "Easy";
     static USER;
+    static USER2;
     static GAME;
     player1Container;
     player2Container;
@@ -288,6 +305,72 @@ class GameController {
         this.build(board);
     }
 
+    setStrategy() {
+        const strategy = new Strategy();
+        if (GameController.OPPONENT == "NormalPlayer") {
+            this.strategy = strategy.playerStrategy();
+        } else if (GameController.OPPONENT == "Computer") {    
+            this.strategy = (gameController, board, idx) => { 
+                gameController.getComputerStrategy()(gameController, board, idx); 
+            };
+        } else {
+            // Online Player
+            join(GROUP, GameController.USER.getUsername(), GameController.USER.getPassword(), GameBoard.DEFAULT_CAVS_NUM, GameBoard.DEFAULT_SEEDS_NUM)
+            .then((res) => {
+                if( res > 0 )
+                    this.update();
+                else {
+                    alert("Could not Join a Game");
+                }
+            });
+            this.strategy = strategy.onlinePlayerStrategy();
+        }
+    }
+
+    update() {
+        const url = server_url + "/update?nick=" + GameController.USER.getUsername() + "&game=" + GameController.GAME ;
+        const source = new EventSource(url);
+        source.onmessage = this.updateGame;
+    }
+
+    updateGame = (event) => {
+        const data = JSON.parse(event?.data);
+        console.log("Debug data:", data);
+        const board = data.board;
+        let currentBoard = this.gameBoardController.getBoard();
+
+        if (board) { // all good, received a board
+
+            const oldBoard = this.gameBoardController.board;
+            
+            // TODO use this to update players scores 
+            const oldScore = this.turn == "P1" ? oldBoard.getRightStorage() : oldBoard.getLeftStorage();
+
+            // Use this to update Players Containers red color effect 
+            const nextTurn = board.turn == GameController.USER.getUsername() ? "P1" : "P2";
+            this.turn = nextTurn;
+
+            for (const [username, boards] of Object.entries(board.sides)) {
+                
+                const player = username == GameController.USER.getUsername() ? 1 : 2;
+                if (GameController.USER2 == null && player == 2)
+                    GameController.USER2 = new User(username, null);
+                
+                for (const [type, value] of Object.entries(boards)) {
+                    if (type == "store") {
+                        //storageContainer
+                        currentBoard.updateStorage(value, player);
+                    } else {
+                        // cellsContainer
+                        
+                        const newValue = (player == 2) ? value.reverse() : value;
+                        currentBoard.updateCellsContainer(newValue, player)
+                    }
+                }
+            }
+        }
+    }
+
     getComputerStrategy() {
         const strategy = new Strategy();         
         if (GameController.LEVEL == "Easy") {   
@@ -299,17 +382,6 @@ class GameController {
         }
     }
 
-
-    setStrategy() {
-        if (GameController.OPPONENT == "Player") {
-            const strategy = new Strategy();
-            this.strategy = strategy.playerStrategy();
-        } else {
-            this.strategy = (gameController, board, idx) => { 
-                gameController.getComputerStrategy()(gameController, board, idx); 
-            };
-        }
-    }
 
     build(board) {
         this.player1Container = new PlayerContainer('player1');
