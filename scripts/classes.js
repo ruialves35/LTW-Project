@@ -32,7 +32,6 @@ class Strategy {
 	onlinePlayerStrategy() {
 		let play = function (gameController, board, idx) {
 			const user = GameController.USER;
-			console.log("Idx: ", idx);
 			notify(user.getUsername(), user.getPassword(), GameController.GAME, idx - 1);
 		}
 		return play;

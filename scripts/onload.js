@@ -238,8 +238,8 @@ class GameBoard {
     getElement() { return this.element; }
 
     updateCellsContainer(newCells, player) {
-        let cells = player == 1 ? this.downCellContainer.getCells() : this.upCellContainer.getCells().reverse();
-        for (let i = 0; i < newCells.length; i++) {
+        let cells = player == 1 ? this.downCellContainer.getCells() : this.upCellContainer.getCells();
+        for (let i = 0, j = 5; i < newCells.length; i++, j--) {
             cells[i].setSeeds(newCells[i]);
         }
     }
@@ -336,13 +336,19 @@ class GameController {
         let currentBoard = this.gameBoardController.getBoard();
 
         if (board) { // all good, received a board
+
             const oldBoard = this.gameBoardController.board;
+            
+            // TODO use this to update players scores 
             const oldScore = this.turn == "P1" ? oldBoard.getRightStorage() : oldBoard.getLeftStorage();
+
+            // Use this to update Players Containers red color effect 
             const nextTurn = board.turn == GameController.USER.getUsername() ? "P1" : "P2";
+            this.turn = nextTurn;
 
             for (const [username, boards] of Object.entries(board.sides)) {
-                // means its player2
-                const player = username != GameController.USER.getUsername() ? 2 : 1;
+                
+                const player = username == GameController.USER.getUsername() ? 1 : 2;
                 if (GameController.USER2 == null && player == 2)
                     GameController.USER2 = new User(username, null);
                 
@@ -352,7 +358,9 @@ class GameController {
                         currentBoard.updateStorage(value, player);
                     } else {
                         // cellsContainer
-                        currentBoard.updateCellsContainer(value, player)
+                        
+                        const newValue = (player == 2) ? value.reverse() : value;
+                        currentBoard.updateCellsContainer(newValue, player)
                     }
                 }
             }
