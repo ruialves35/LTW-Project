@@ -8,15 +8,15 @@ function side_menu_close () {
     sm.style.left = "100%";
 }
 
-function show_login_form() {
+function show(id) {
     var bd = document.getElementById("container");
     var nav = document.getElementById("navbar");
-    var login = document.getElementById("login");
+    var element = document.getElementById(id);
 
 
     bd.classList.add("disable");
     nav.classList.add("disable");
-    login.classList.add("login-show");
+    element.classList.add(id + "-show");
 
     var div = document.createElement("div");
     div.id = "blur";
@@ -24,26 +24,10 @@ function show_login_form() {
     document.getElementById("body").appendChild(div);
 }
 
-function show_config_form() {
+function hide(id) {
     var bd = document.getElementById("container");
     var nav = document.getElementById("navbar");
-    var config = document.getElementById("config");
-    
-    
-    bd.classList.add("disable");
-    nav.classList.add("disable");
-    config.classList.add("config-show");
-
-    var div = document.createElement("div");
-    div.id = "blur";
-    div.classList.add("blur");
-    document.getElementById("body").appendChild(div);
-}
-
-function hide_login_form() {
-    var bd = document.getElementById("container");
-    var nav = document.getElementById("navbar");
-    var login = document.getElementById("login");
+    var element = document.getElementById(id);
     
     var div = document.getElementById("blur");
     div.style.animationName = "bg-rewind";
@@ -51,23 +35,7 @@ function hide_login_form() {
     
     bd.classList.remove("disable");
     nav.classList.remove("disable");
-    login.classList.remove("login-show");
-    
-    setTimeout(function () { div.parentElement.removeChild(div); }, 400);
-}
-
-function hide_config_form() {
-    var bd = document.getElementById("container");
-    var nav = document.getElementById("navbar");
-    var config = document.getElementById("config");
-
-    var div = document.getElementById("blur");
-    div.style.animationName = "bg-rewind";
-    div.style.animationPlayState = "running";
-
-    bd.classList.remove("disable");
-    nav.classList.remove("disable");
-    config.classList.remove("config-show");
+    element.classList.remove(id + "-show");
     
     setTimeout(function () { div.parentElement.removeChild(div); }, 400);
 }

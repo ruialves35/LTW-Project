@@ -38,7 +38,7 @@ input, label, select {
 
 .navbar {
     position: fixed;
-    z-index: 5;
+    z-index: 6;
     top: 0;
     left:0;
     
@@ -102,32 +102,6 @@ input, label, select {
 .navbar .item, .navbar .button {
     font-size: 20px;
     cursor: pointer;
-}
-
-#ranking, #instructions {
-    z-index: 4;
-    position: absolute;
-    font-size: 40px;
-    right: 10px;
-    border-radius: 1000px;
-    color: var(--bistre);
-    background-color: rgba(228, 179, 99, 0.5);
-    box-shadow: 0 0 10px 10px rgba(228, 179, 99, 0.5);
-    transition: 0.1s linear;
-}
-
-#ranking:hover, #instructions:hover {
-    color: var(--kobe);
-    box-shadow: 0 0 12px 12px rgba(228, 179, 99, 0.5);
-    cursor: pointer;
-}
-
-#ranking {
-    top: 50px;
-}
-
-#instructions {
-    bottom: 50px;
 }
 
 #container {

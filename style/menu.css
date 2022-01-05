@@ -1,6 +1,6 @@
 @import "color.css";
 
-.config, .login {
+.config, .login, .instructions {
     z-index: 50;
 
     position: absolute;
@@ -20,7 +20,16 @@
     color: var(--bistre);
 }
 
-.config-show, .login-show {
+.instructions {
+    left: 20% !important;
+    width: 60%;
+}
+
+.instructions-show {
+    bottom: 15%;
+}
+
+.config-show, .login-show, .instructions-show {
     opacity: 100%;
 }
 
@@ -41,6 +50,7 @@
     align-items: center;
     justify-content: space-between;
     font-family: "Rock Salt", cursive;
+    width: 100%;
 }
 
 .form-header i {
@@ -113,4 +123,30 @@
 .button:hover {
     background: var(--bistre);
     color: var(--sunray)
+}
+
+#ranking-btn, #instructions-btn {
+    z-index: 4;
+    position: absolute;
+    font-size: 40px;
+    right: 10px;
+    border-radius: 1000px;
+    color: var(--bistre);
+    background-color: rgba(228, 179, 99, 0.5);
+    box-shadow: 0 0 10px 10px rgba(228, 179, 99, 0.5);
+    transition: 0.1s linear;
+}
+
+#ranking-btn:hover, #instructions-btn:hover {
+    color: var(--kobe);
+    box-shadow: 0 0 12px 12px rgba(228, 179, 99, 0.5);
+    cursor: pointer;
+}
+
+#ranking-btn {
+    top: 50px;
+}
+
+#instructions-btn {
+    bottom: 50px;
 }
