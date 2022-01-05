@@ -1,6 +1,6 @@
 @import "color.css";
 
-.config, .login, .instructions, .ranking {
+.config, .login, .instructions, .ranking, .message {
     z-index: 50;
 
     position: absolute;
@@ -20,7 +20,7 @@
     color: var(--bistre);
 }
 
-.config-show, .login-show, .instructions-show, .ranking-show {
+.config-show, .login-show, .instructions-show, .ranking-show, .message-show {
     opacity: 100%;
 }
 
@@ -36,7 +36,7 @@
     bottom: 40%;
 }
 
-.ranking-show {
+.ranking-show, .message-show {
     bottom: 45%;
 }
 
@@ -46,6 +46,10 @@
 
 #ranking-table td, th {
     border: 2px solid var(--bistre);
+}
+
+.message {
+    left: 40% !important;
 }
 
 .instructions {
