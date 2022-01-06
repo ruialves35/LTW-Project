@@ -1,27 +1,27 @@
     import("./client.js");
 
 function show(id) {
-    var bd = document.getElementById("container");
-    var nav = document.getElementById("navbar");
-    var element = document.getElementById(id);
+    let bd = document.getElementById("container");
+    let nav = document.getElementById("navbar");
+    let element = document.getElementById(id);
 
 
     bd.classList.add("disable");
     nav.classList.add("disable");
     element.classList.add(id + "-show");
 
-    var div = document.createElement("div");
+    let div = document.createElement("div");
     div.id = "blur";
     div.classList.add("blur");
     document.getElementById("body").appendChild(div);
 }
 
 function hide(id) {
-    var bd = document.getElementById("container");
-    var nav = document.getElementById("navbar");
-    var element = document.getElementById(id);
+    let bd = document.getElementById("container");
+    let nav = document.getElementById("navbar");
+    let element = document.getElementById(id);
     
-    var div = document.getElementById("blur");
+    let div = document.getElementById("blur");
     div.style.animationName = "bg-rewind";
     div.style.animationPlayState = "running";
     
@@ -32,43 +32,62 @@ function hide(id) {
     setTimeout(function () { div.parentElement.removeChild(div); }, 400);
 }
 
-function sendMessage(text) {
-    var msg = document.createElement('div');
-    msg.id = "message";
-    msg.classList.add("message");
-
-    var header = document.createElement('span');
-    header.classList.add("form-header");
-
-    var title = document.createElement('h2');
-    title.innerHTML = "Server Message";
+function sendNotification(notificationTitle, notificationBody) {
+    let notifications = document.getElementById('notifications');
     
-    var icon = document.createElement('i');
+    if (notifications == null) {
+        console.log("Hello");
+        notifications = document.createElement('div');
+        notifications.id = "notifications";
+        document.getElementById("body").appendChild(notifications);
+    }
+
+    let notificationCount = notifications.childElementCount;
+
+    let notification = document.createElement('div');
+    notification.id = "notification" + notificationCount;
+    notification.classList.add("notification");
+
+    let header = document.createElement('span');
+    header.classList.add("notification-header");
+
+    let title = document.createElement('h3');
+    title.innerHTML = notificationTitle;
+    
+    let icon = document.createElement('i');
     icon.classList.add("bi", "bi-x-circle");
-    icon.onclick = function () { hide("message"); setTimeout(function () { document.getElementById("message").parentElement.removeChild(msg); }, 400); };
+    icon.onclick = function () {
+        notification.classList.add("notification-hide");
+        setTimeout(function () {
+            notifications.removeChild(notification);
+            if (notifications.childElementCount == 0) {
+                document.getElementById("body").removeChild(notifications);
+            }
+        }, 400);
+    };
 
     header.appendChild(title);
     header.appendChild(icon);
 
-    msg.appendChild(header);
-    msg.appendChild(document.createTextNode(text));
+    notification.appendChild(header);
+    notification.appendChild(document.createTextNode(notificationBody));
 
-    document.getElementById("body").appendChild(msg);
+    notifications.appendChild(notification);
 
-    setTimeout(function () { show("message"); });
+    setTimeout(function () { notification.classList.add("notification-show"); });
 }
 
 function generateInstructions() {
     let instructions = document.createElement('div');
     instructions.id = "instructions"; instructions.classList.add("instructions");
     
-    var header = document.createElement('span');
+    let header = document.createElement('span');
     header.classList.add("form-header");
 
-    var title = document.createElement('h2');
+    let title = document.createElement('h2');
     title.innerHTML = "Regras do Jogo";
     
-    var icon = document.createElement('i');
+    let icon = document.createElement('i');
     icon.classList.add("bi", "bi-x-circle");
     icon.onclick = function () { hide("instructions"); setTimeout(function () { document.getElementById("instructions").parentElement.removeChild(instructions); }, 400); };
 
@@ -77,26 +96,26 @@ function generateInstructions() {
 
     instructions.appendChild(header);
 
-    var t1 = document.createElement('h3');
+    let t1 = document.createElement('h3');
     t1.innerHTML = "Objetivo";
 
-    var p1 = document.createElement('p');
+    let p1 = document.createElement('p');
     p1.innerHTML = "O objetivo do jogo é coletar o máximo número de sementes. Para tal, cada jogador dispõe de um conjunto de cavidades, nas quais têm sementes em cada uma delas.";
 
-    var t2 = document.createElement('h3');
+    let t2 = document.createElement('h3');
     t2.innerHTML = "Forma de jogar e Semeadura";
 
-    var p2 = document.createElement('p');
+    let p2 = document.createElement('p');
     p2.innerHTML = "De forma a semear, o jogador deve escolher uma cavidade do seu lado do tabuleiro de onde serão recolhidas todas as sementes e semeadas, 1 a 1, nas cavidades seguintes, até o utilizador não ter mais sementes na mão. Esta semeadura é feita no sentido anti-horário e segundo as seguintes condições:";
 
-    var ul = document.createElement('ul');
-    var li1 = document.createElement('li');
+    let ul = document.createElement('ul');
+    let li1 = document.createElement('li');
     li1.innerHTML = "Se a cavidade seguinte for o seu armazém, também deve semear";
-    var li2 = document.createElement('li');
+    let li2 = document.createElement('li');
     li2.innerHTML = "Sobrando sementes, continuar no lado do adversário";
-    var li3 = document.createElement('li');
+    let li3 = document.createElement('li');
     li3.innerHTML = "Se atingir o armazém do adversário, não semear";
-    var li4 = document.createElement('li');
+    let li4 = document.createElement('li');
     li4.innerHTML = "Caso atinja o armazém do adversário e ainda tenha sementes para semear, continuar do seu lado";
 
     ul.appendChild(li1);
@@ -104,16 +123,16 @@ function generateInstructions() {
     ul.appendChild(li3);
     ul.appendChild(li4);
 
-    var t3 = document.createElement('h3');
+    let t3 = document.createElement('h3');
     t3.innerHTML = "Ultima semente no Armazem e em Cavidade";
 
-    var p3 = document.createElement('p');
+    let p3 = document.createElement('p');
     p3.innerHTML = "Caso a última semente for semeada no seu próprio armazém, o jogador volta a jogar. Por outro lado, se a última semente semeada calhar numa cavidade vazia do próprio jogador, então este deve colher tanto a ultima semente semeada como as sementes na cavidade oposta, ou seja, as sementes na cavidade do adversário, e transferi-las para o seu armazém.";
 
-    var t4 = document.createElement('h3');
+    let t4 = document.createElement('h3');
     t4.innerHTML = "Fim do jogo";
 
-    var p4 = document.createElement('p');
+    let p4 = document.createElement('p');
     p4.innerHTML = "O jogo termina quando um dos jogadores não pode jogar, ou seja, quando não tiver nenhuma semente nas suas cavidades. Quando isto acontece, o outro jogador recolhe todas as sementes das suas cavidades e coloca-as no armazém. Finalmente, ganha o jogador que tiver mais sementes no seu armazém.";
 
     instructions.appendChild(t1); instructions.appendChild(p1);
@@ -130,13 +149,13 @@ function generateLogin() {
     let login = document.createElement('div');
     login.id = "login"; login.classList.add("login");
     
-    var header = document.createElement('span');
+    let header = document.createElement('span');
     header.classList.add("form-header");
 
-    var title = document.createElement('h2');
+    let title = document.createElement('h2');
     title.innerHTML = "Login";
     
-    var icon = document.createElement('i');
+    let icon = document.createElement('i');
     icon.classList.add("bi", "bi-x-circle");
     icon.onclick = function () { hide("login"); setTimeout(function () { document.getElementById("login").parentElement.removeChild(login); }, 400); };
 
@@ -182,13 +201,13 @@ function generateConfiguration() {
     let configuration = document.createElement('div');
     configuration.id = "config"; configuration.classList.add("config");
     
-    var header = document.createElement('span');
+    let header = document.createElement('span');
     header.classList.add("form-header");
 
-    var title = document.createElement('h2');
+    let title = document.createElement('h2');
     title.innerHTML = "Configuration";
     
-    var icon = document.createElement('i');
+    let icon = document.createElement('i');
     icon.classList.add("bi", "bi-x-circle");
     icon.onclick = function () { hide("config"); setTimeout(function () { document.getElementById("config").parentElement.removeChild(configuration); }, 400); };
 

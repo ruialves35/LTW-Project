@@ -28,6 +28,57 @@
     color: var(--bistre);
 }
 
+#notifications {
+    z-index: 5000;
+
+    bottom: 1%;
+    left: 10%;
+
+    position: absolute;
+    display: flex;
+    flex-direction: column-reverse;
+
+    align-items:flex-start;
+    justify-content: center;
+}
+
+.notification {
+    position: relative;
+    padding: 10px;
+
+    background-color: rgba(228, 179, 99, 0.75);
+    border-radius: 10px;
+    border: 2px solid var(--bistre);
+
+    opacity: 0;
+
+    bottom: 50px;
+    left: 0;
+
+    transition: .4s linear;
+}
+
+.notification-header {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.notification-show {
+    opacity: 100%;
+    bottom: 0 !important;
+}
+
+.notification-hide {
+    opacity: 0;
+    left: 50px;
+}
+
+.notification * {
+    margin: 0;
+}
+
 .config-show, .login-show, .instructions-show, .ranking-show, .message-show {
     opacity: 100%;
     top: 0;
