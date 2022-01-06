@@ -33,9 +33,15 @@
     <div class="navbar" id="navbar">
         <h1 id="logo">Mancala</h1>
         <button type="button" class="button" id="play">Play</button>
-        <div class="item-list">
-            <p class="item" onclick="show('login')">Login</p>
-            <p class="item" onclick="show('config')">Configuration</p>
+        <div class="nav-items">
+            <div class="nav-item" onclick="show('login')">
+                <i class="bi bi-person-circle nav-icon"></i>
+                <p class="nav-label">Login</p>
+            </div>
+            <div class="nav-item" onclick="show('config')">
+                <i class="bi bi-gear nav-icon"></i>
+                <p class="nav-label">Configuration</p>
+            </div>
         </div>
     </div> <!-- End of Navbar -->
 

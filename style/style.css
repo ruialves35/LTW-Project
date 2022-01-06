@@ -45,20 +45,21 @@ input, label, select {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-between;
     padding: 0;
     height: 100%;
     width: 20%;
+
+    min-height: 0;
     
     background: linear-gradient(to right, var(--seal-brown) 25%, transparent 100%);
     color: var(--seashell);
 }
 
 .navbar #logo, .navbar .item, .navbar .button {
-    writing-mode: vertical-lr;
-    text-orientation: upright;
     margin-top: 20px;
     margin-bottom: 20px;
+    min-height: 0;
 }
 
 .navbar .item {
@@ -66,17 +67,43 @@ input, label, select {
     font-weight: bold;
 }
 
-.navbar #logo, .navbar .button, .navbar .item-list {
+.navbar #logo, .navbar .button, .navbar .nav-items {
     position: relative;
     right: 37%;
 }
 
-.navbar .item-list {
+.navbar .nav-items {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
 
     align-items: center;
+}
+
+.navbar .nav-items .nav-item {
+    display: flex;
+    flex-direction: column;
+    
+    align-items: center;
+    cursor: pointer;
+
+    transition: 0.1s linear;
+}
+
+.navbar .nav-items .nav-item:hover {
+    color: var(--sunray);
+}
+
+.navbar .nav-items .nav-item .nav-label {
+    margin-top: 0;
+}
+
+.navbar #logo {
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+    margin-top: 50px;
+    font-family:'Rock Salt', cursive;
+    min-height: 0 !important;
 }
 
 #play {
@@ -92,16 +119,6 @@ input, label, select {
 
 #play:hover {
     background: var(--bistre);
-}
-
-.navbar #logo {
-    margin-top: 50px;
-    font-family:'Rock Salt', cursive;
-}
-
-.navbar .item, .navbar .button {
-    font-size: 20px;
-    cursor: pointer;
 }
 
 #container {
