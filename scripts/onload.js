@@ -407,7 +407,10 @@ class GameController {
 
     sow_at(board, idx) {
         let nextPlayer = this.turn == "P1" ? "P2" : "P1";
-        if (onPlayerBounds(this.turn, idx, this.numCavs)) {
+        let cells = board.getCells();
+        let seeds = cells[idx].getSeeds();
+
+        if (onPlayerBounds(this.turn, idx, this.numCavs) && seeds != 0) {
             let replay = this.gameBoardController.sow_at(board, idx, this.turn);
 
             let player = this.turn == "P1" ? this.player1Container : this.player2Container;
