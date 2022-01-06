@@ -81,3 +81,17 @@ function makePlay(gameController, board, idx) {
     }
     return true;
 }
+
+
+function updatePlayerInfo(playerId, username) {
+    let playerInfo = document.getElementById(playerId);
+    playerInfo.innerHTML = username + "<br>"
+}
+
+function updateScore(name, score) {
+    let scoreP = document.getElementById(name + "-score");
+
+    if (scoreP != null) {
+        scoreP.innerHTML = score + " seeds";
+    }
+}

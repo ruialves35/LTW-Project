@@ -8,6 +8,7 @@ function makeRegister() {
 
     if (register(username, password)) {
         GameController.USER = new User(username, password); 
+        updatePlayerInfo("p1", GameController.USER.getUsername());
     };
 }
 
@@ -150,9 +151,6 @@ function notify(nick, pass, game, move) {
     })
     .then(function(res) { return res.json();})
     .then(function(data) {
-        // debugging only
-        console.log(JSON.stringify(data));
-        
         if (data?.error) {
             console.log(data.error);
             alert(data.error);

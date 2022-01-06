@@ -338,28 +338,25 @@ class GameController {
         console.log("Debug data:", data);
         const board = data.board;
         let currentBoard = this.gameBoardController.getBoard();
+        let playerId = this.turn == "P1" ? "p1" : "p2";
 
         if (board) { // all good, received a board
 
             const oldBoard = this.gameBoardController.board;
-            
-            // TODO use this to update players scores 
-            const oldScore = this.turn == "P1" ? oldBoard.getRightStorage() : oldBoard.getLeftStorage();
-
-            // Use this to update Players Containers red color effect 
-            const nextTurn = board.turn == GameController.USER.getUsername() ? "P1" : "P2";
-            this.turn = nextTurn;
 
             for (const [username, boards] of Object.entries(board.sides)) {
                 
                 const player = username == GameController.USER.getUsername() ? 1 : 2;
-                if (GameController.USER2 == null && player == 2)
+                if (GameController.USER2 == null && player == 2) {
                     GameController.USER2 = new User(username, null);
+                    updatePlayerInfo("p2", username);
+                }
                 
                 for (const [type, value] of Object.entries(boards)) {
                     if (type == "store") {
                         //storageContainer
                         currentBoard.updateStorage(value, player);
+                        
                     } else {
                         // cellsContainer
                         
@@ -368,6 +365,16 @@ class GameController {
                     }
                 }
             }
+
+            let player = this.turn == "P1" ? this.player1Container : this.player2Container;
+            let score = this.turn == "P1" ? this.gameBoardController.getRightStorageSeeds() : this.gameBoardController.getLeftStorageSeeds();
+            player.setPoints(score);
+            updateScore(playerId, player.points);
+
+            // Use this to update Players Containers red color effect 
+            const nextTurn = board.turn == GameController.USER.getUsername() ? "P1" : "P2";
+            this.turn = nextTurn;
+            this.gameBoardController.highlightStorage(this.turn);
         }
     }
 
@@ -418,7 +425,9 @@ class GameController {
             let score = this.turn == "P1" ? this.gameBoardController.getRightStorageSeeds() : this.gameBoardController.getLeftStorageSeeds();
             player.setPoints(score);
 
-            this.gameBoardController.updateScore(player.name, player.points);
+            let playerId = this.turn == "P1" ? "p1" : "p2";
+
+            updateScore(playerId, player.points);
             
             if (!replay) {
                 this.turn = nextPlayer;
@@ -568,15 +577,15 @@ class GameBoardController {
         
         let p1Name = document.createElement('p');
         let p2Name = document.createElement('p');
-        p1Name.id = p1; p1Name.classList.add("score");
-        p2Name.id = p2; p2Name.classList.add("score")
+        p1Name.id = "p1"; p1Name.classList.add("score");
+        p2Name.id = "p2"; p2Name.classList.add("score")
         p1Name.innerHTML = p1 + "<br>";
         p2Name.innerHTML = p2 + "<br>";
 
         let p1Score = document.createElement('p');
         let p2Score = document.createElement('p');
-        p1Score.id = p1 + "-score"; p1Score.classList.add("score");
-        p2Score.id = p2 + "-score"; p2Score.classList.add("score");
+        p1Score.id = "p1-score"; p1Score.classList.add("score");
+        p2Score.id = "p2-score"; p2Score.classList.add("score");
 
         p1Score.innerHTML = "0 seeds";
         p2Score.innerHTML = "0 seeds";
@@ -586,14 +595,6 @@ class GameBoardController {
 
         this.board.getRightStorage().getElement().appendChild(p1Div);
         this.board.getLeftStorage().getElement().appendChild(p2Div);
-    }
-
-    updateScore(name, score) {
-        let scoreP = document.getElementById(name + "-score");
-
-        if (scoreP != null) {
-            scoreP.innerHTML = score + " seeds";
-        }
     }
 }
 
@@ -614,6 +615,10 @@ function load () {
         container.appendChild(gameController.getPlayer1Container().getElement());
         container.appendChild(gameController.getGameBoardController().getBoard().getElement());
         container.appendChild(gameController.getPlayer2Container().getElement());
+    }
+
+    if (GameController.USER) {
+        updatePlayerInfo("p1", GameController.USER.getUsername());
     }
 };
 
