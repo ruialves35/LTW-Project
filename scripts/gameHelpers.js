@@ -81,3 +81,99 @@ function makePlay(gameController, board, idx) {
     }
     return true;
 }
+
+
+function updatePlayerInfo(playerId, username) {
+    let playerInfo = document.getElementById(playerId);
+    playerInfo.innerHTML = username + "<br>"
+}
+
+function updateScore(name, score) {
+    let scoreP = document.getElementById(name + "-score");
+
+    if (scoreP != null) {
+        scoreP.innerHTML = score + " seeds";
+    }
+}
+
+function createRanking() {
+    //limpar filhos
+    let table = document.getElementById('ranking-table');
+    let child = table.lastElementChild; 
+    while (child) {
+        table.removeChild(child);
+        child = table.lastElementChild;
+    }
+
+    //adicionar Header
+    let tableHeader = document.createElement("tr");
+    tableHeader.id = "ranking-table-header";
+    let nick = document.createElement("th");
+    let victories = document.createElement("th");
+    let games = document.createElement("th");
+
+    nick.innerHTML = "Nick";
+    victories.innerHTML = "Victories";
+    games.innerHTML = "Games";
+
+    tableHeader.appendChild(nick);
+    tableHeader.appendChild(victories);
+    tableHeader.appendChild(games);
+
+    table.appendChild(tableHeader);
+}
+
+function addRankingRow(username, victories, games) {
+    let table = document.getElementById('ranking-table');
+
+    let row = document.createElement("tr");
+    row.className = "ranking-table-entry";
+
+    let nick = document.createElement("td");
+    let vic = document.createElement("td");
+    let g = document.createElement("td");
+
+    //adicionar information
+    nick.innerHTML = username;
+    vic.innerHTML = victories;
+    g.innerHTML = games;
+
+    row.appendChild(nick);
+    row.appendChild(vic);
+    row.appendChild(g);
+
+    //adicionar row
+    table.appendChild(row);
+}
+
+function addLocalRanking() {
+    const data = localStorage.getItem('data');
+    let item;
+    if (data === null) {
+        //...
+        item = {nick: 'player', victories: 0, games: 0} ;
+        localStorage.setItem('data', JSON.stringify(item));
+    } else {
+        item = JSON.parse(data);
+    }
+    
+    addRankingRow(item["nick"], item["victories"], item["games"]);
+}
+
+function updateLocalRanking(win) {
+    const data = localStorage.getItem('data');
+    let item;
+    if (data === null) {
+        //...
+        item = {nick: 'player', victories: 0, games: 0} ;
+        localStorage.setItem('data', JSON.stringify(item));
+    } else {
+        item = JSON.parse(data);
+        const newItem = {
+            nick: 'player', 
+            victories: parseInt(item["victories"]) + win,
+            games: parseInt(item["games"]) + 1
+        };
+        localStorage.setItem('data', JSON.stringify(newItem));
+    }
+}

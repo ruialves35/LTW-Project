@@ -315,15 +315,19 @@ class GameController {
             };
         } else {
             // Online Player
-            join(GROUP, GameController.USER.getUsername(), GameController.USER.getPassword(), GameBoard.DEFAULT_CAVS_NUM, GameBoard.DEFAULT_SEEDS_NUM)
-            .then((res) => {
-                if( res > 0 )
-                    this.update();
-                else {
-                    alert("Could not Join a Game");
-                }
-            });
-            this.strategy = strategy.onlinePlayerStrategy();
+            if (GameController.USER){
+                join(GROUP, GameController.USER.getUsername(), GameController.USER.getPassword(), GameBoard.DEFAULT_CAVS_NUM, GameBoard.DEFAULT_SEEDS_NUM)
+                .then((res) => {
+                    if( res > 0 )
+                        this.update();
+                    else {
+                        alert("Could not Join a Game");
+                    }
+                });
+                this.strategy = strategy.onlinePlayerStrategy();
+            } else {
+                alert("You must login before you search for a game");
+            }
         }
     }
 
@@ -338,28 +342,23 @@ class GameController {
         console.log("Debug data:", data);
         const board = data.board;
         let currentBoard = this.gameBoardController.getBoard();
+        let playerId = this.turn == "P1" ? "p1" : "p2";
 
         if (board) { // all good, received a board
-
-            const oldBoard = this.gameBoardController.board;
-            
-            // TODO use this to update players scores 
-            const oldScore = this.turn == "P1" ? oldBoard.getRightStorage() : oldBoard.getLeftStorage();
-
-            // Use this to update Players Containers red color effect 
-            const nextTurn = board.turn == GameController.USER.getUsername() ? "P1" : "P2";
-            this.turn = nextTurn;
 
             for (const [username, boards] of Object.entries(board.sides)) {
                 
                 const player = username == GameController.USER.getUsername() ? 1 : 2;
-                if (GameController.USER2 == null && player == 2)
+                if (GameController.USER2 == null && player == 2) {
                     GameController.USER2 = new User(username, null);
+                    updatePlayerInfo("p2", username);
+                }
                 
                 for (const [type, value] of Object.entries(boards)) {
                     if (type == "store") {
                         //storageContainer
                         currentBoard.updateStorage(value, player);
+                        
                     } else {
                         // cellsContainer
                         
@@ -368,6 +367,21 @@ class GameController {
                     }
                 }
             }
+
+            let playerContainer = this.turn == "P1" ? this.player1Container : this.player2Container;
+            let score = this.turn == "P1" ? this.gameBoardController.getRightStorageSeeds() : this.gameBoardController.getLeftStorageSeeds();
+            playerContainer.setPoints(score);
+            updateScore(playerId, playerContainer.points);
+
+            // Use this to update Players Containers red color effect 
+            const nextTurn = board.turn == GameController.USER.getUsername() ? "P1" : "P2";
+            this.turn = nextTurn;
+            this.gameBoardController.highlightStorage(this.turn);
+        }
+
+        if (data.winner) {
+            this.endGame(currentBoard);
+            ranking();
         }
     }
 
@@ -385,7 +399,7 @@ class GameController {
 
     build(board) {
         this.player1Container = new PlayerContainer('player1');
-        this.player2Container = new PlayerContainer('player2'); // Must change the name after that;
+        this.player2Container = new PlayerContainer('player2'); 
         this.gameBoardController = new GameBoardController(board);
 
         this.gameBoardController.highlightStorage(this.turn);
@@ -407,7 +421,10 @@ class GameController {
 
     sow_at(board, idx) {
         let nextPlayer = this.turn == "P1" ? "P2" : "P1";
-        if (onPlayerBounds(this.turn, idx, this.numCavs)) {
+        let cells = board.getCells();
+        let seeds = cells[idx].getSeeds();
+
+        if (onPlayerBounds(this.turn, idx, this.numCavs) && seeds != 0) {
             let replay = this.gameBoardController.sow_at(board, idx, this.turn);
 
             let player = this.turn == "P1" ? this.player1Container : this.player2Container;
@@ -415,7 +432,9 @@ class GameController {
             let score = this.turn == "P1" ? this.gameBoardController.getRightStorageSeeds() : this.gameBoardController.getLeftStorageSeeds();
             player.setPoints(score);
 
-            this.gameBoardController.updateScore(player.name, player.points);
+            let playerId = this.turn == "P1" ? "p1" : "p2";
+
+            updateScore(playerId, player.points);
             
             if (!replay) {
                 this.turn = nextPlayer;
@@ -455,6 +474,7 @@ class GameController {
     endGame(board) {
         console.log("END GAME");
 
+        console.log(board);
         let p1StorageCell = board.getRightStorage();
 
         let downCells = board.getDownCellContainer().getCells();
@@ -464,6 +484,11 @@ class GameController {
             p1StorageCell.addSeeds(seeds);
             downCells[i].setSeeds(0);
         }
+
+        let playerContainer = this.turn == "P1" ? this.player1Container : this.player2Container;
+
+        playerContainer.setPoints(p1StorageCell.getCell().getSeeds());
+        updateScore("p1", playerContainer.points);
         console.log("P1: " + p1StorageCell.getCell().getSeeds());
 
         let p2StorageCell = board.getLeftStorage();
@@ -475,10 +500,20 @@ class GameController {
             p2StorageCell.addSeeds(seeds);
             upCells[i].setSeeds(0);
         }
+
+        playerContainer.setPoints(p2StorageCell.getCell().getSeeds());
+        updateScore("p2", playerContainer.points);
         console.log("P2: " + p2StorageCell.getCell().getSeeds());
 
         let winner = p1StorageCell.getCell().getSeeds() > p2StorageCell.getCell().getSeeds() ? "P1" : "P2";
+        let win = winner == "P1" ? 1 : 0;
         console.log("The winner is...", winner, "! Congratulations");
+
+        if (GameController.OPPONENT == "Computer") {
+            updateLocalRanking(win);
+            createRanking();
+            addLocalRanking();
+        }
     }
 
 }
@@ -565,15 +600,15 @@ class GameBoardController {
         
         let p1Name = document.createElement('p');
         let p2Name = document.createElement('p');
-        p1Name.id = p1; p1Name.classList.add("score");
-        p2Name.id = p2; p2Name.classList.add("score")
+        p1Name.id = "p1"; p1Name.classList.add("score");
+        p2Name.id = "p2"; p2Name.classList.add("score")
         p1Name.innerHTML = p1 + "<br>";
         p2Name.innerHTML = p2 + "<br>";
 
         let p1Score = document.createElement('p');
         let p2Score = document.createElement('p');
-        p1Score.id = p1 + "-score"; p1Score.classList.add("score");
-        p2Score.id = p2 + "-score"; p2Score.classList.add("score");
+        p1Score.id = "p1-score"; p1Score.classList.add("score");
+        p2Score.id = "p2-score"; p2Score.classList.add("score");
 
         p1Score.innerHTML = "0 seeds";
         p2Score.innerHTML = "0 seeds";
@@ -584,14 +619,6 @@ class GameBoardController {
         this.board.getRightStorage().getElement().appendChild(p1Div);
         this.board.getLeftStorage().getElement().appendChild(p2Div);
     }
-
-    updateScore(name, score) {
-        let scoreP = document.getElementById(name + "-score");
-
-        if (scoreP != null) {
-            scoreP.innerHTML = score + " seeds";
-        }
-    }
 }
 
 
@@ -599,6 +626,9 @@ function load () {
 
     document.getElementById("body").classList.remove("preload");
     const container = document.getElementById("container");
+
+    createRanking();
+    addLocalRanking();
     
     let board = new GameBoard();
     let gameController = new GameController(board);
@@ -611,6 +641,10 @@ function load () {
         container.appendChild(gameController.getPlayer1Container().getElement());
         container.appendChild(gameController.getGameBoardController().getBoard().getElement());
         container.appendChild(gameController.getPlayer2Container().getElement());
+    }
+
+    if (GameController.USER) {
+        updatePlayerInfo("p1", GameController.USER.getUsername());
     }
 };
 

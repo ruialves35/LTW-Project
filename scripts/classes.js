@@ -1,6 +1,6 @@
 class User {
-	#username;
-	#password;
+	username;
+	password;
 
 	constructor(username, password) {
 		this.username = username;
@@ -32,7 +32,11 @@ class Strategy {
 	onlinePlayerStrategy() {
 		let play = function (gameController, board, idx) {
 			const user = GameController.USER;
-			notify(user.getUsername(), user.getPassword(), GameController.GAME, idx - 1);
+			let cells = board.getCells();
+			let seeds = cells[idx].getSeeds();
+
+			if (seeds != 0 && GameController.USER2)
+				notify(user.getUsername(), user.getPassword(), GameController.GAME, idx - 1);
 		}
 		return play;
 	}

@@ -8,6 +8,7 @@ function makeRegister() {
 
     if (register(username, password)) {
         GameController.USER = new User(username, password); 
+        updatePlayerInfo("p1", GameController.USER.getUsername());
     };
 }
 
@@ -115,17 +116,6 @@ function leave(nick, pass, game) {
             game: game,
         })
     })
-    .then(function(res) { return res.json();})
-    .then(function(data) {
-        // debugging only
-        console.log(JSON.stringify(data));
-        console.log(data.error);
-        
-        if (data?.error) {
-            alert(data.error);
-            result = false;
-        }
-    })
 }
 
 /**
@@ -150,9 +140,6 @@ function notify(nick, pass, game, move) {
     })
     .then(function(res) { return res.json();})
     .then(function(data) {
-        // debugging only
-        console.log(JSON.stringify(data));
-        
         if (data?.error) {
             console.log(data.error);
             alert(data.error);
@@ -169,8 +156,27 @@ function ranking() {
     fetch(url,
     {
         method: "POST",
+        body: JSON.stringify({})
     })
     .then(function(res) { return res.json(); })
+    .then(function(data) {
+        if(data?.error) {
+            console.log(data.error);
+            alert(data.error);
+            return -1;
+        } else if (data?.ranking) {
+            createRanking();
+            let entry = Object.entries(data.ranking);
+            for (let i = 0; i < entry.length; i++) {
+                const information = entry[i][1];
+                const username = information["nick"];
+                const victories = information["victories"];
+                const games = information["games"];
+
+                addRankingRow(username, victories, games);
+            }
+        }
+    })
 }
 
 
