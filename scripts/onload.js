@@ -315,15 +315,19 @@ class GameController {
             };
         } else {
             // Online Player
-            join(GROUP, GameController.USER.getUsername(), GameController.USER.getPassword(), GameBoard.DEFAULT_CAVS_NUM, GameBoard.DEFAULT_SEEDS_NUM)
-            .then((res) => {
-                if( res > 0 )
-                    this.update();
-                else {
-                    alert("Could not Join a Game");
-                }
-            });
-            this.strategy = strategy.onlinePlayerStrategy();
+            if (GameController.USER){
+                join(GROUP, GameController.USER.getUsername(), GameController.USER.getPassword(), GameBoard.DEFAULT_CAVS_NUM, GameBoard.DEFAULT_SEEDS_NUM)
+                .then((res) => {
+                    if( res > 0 )
+                        this.update();
+                    else {
+                        alert("Could not Join a Game");
+                    }
+                });
+                this.strategy = strategy.onlinePlayerStrategy();
+            } else {
+                alert("You must login before you search for a game");
+            }
         }
     }
 
@@ -341,8 +345,6 @@ class GameController {
         let playerId = this.turn == "P1" ? "p1" : "p2";
 
         if (board) { // all good, received a board
-
-            const oldBoard = this.gameBoardController.board;
 
             for (const [username, boards] of Object.entries(board.sides)) {
                 
@@ -366,15 +368,19 @@ class GameController {
                 }
             }
 
-            let player = this.turn == "P1" ? this.player1Container : this.player2Container;
+            let playerContainer = this.turn == "P1" ? this.player1Container : this.player2Container;
             let score = this.turn == "P1" ? this.gameBoardController.getRightStorageSeeds() : this.gameBoardController.getLeftStorageSeeds();
-            player.setPoints(score);
-            updateScore(playerId, player.points);
+            playerContainer.setPoints(score);
+            updateScore(playerId, playerContainer.points);
 
             // Use this to update Players Containers red color effect 
             const nextTurn = board.turn == GameController.USER.getUsername() ? "P1" : "P2";
             this.turn = nextTurn;
             this.gameBoardController.highlightStorage(this.turn);
+        }
+
+        if (data.winner) {
+            this.endGame(currentBoard);
         }
     }
 
@@ -392,7 +398,7 @@ class GameController {
 
     build(board) {
         this.player1Container = new PlayerContainer('player1');
-        this.player2Container = new PlayerContainer('player2'); // Must change the name after that;
+        this.player2Container = new PlayerContainer('player2'); 
         this.gameBoardController = new GameBoardController(board);
 
         this.gameBoardController.highlightStorage(this.turn);
@@ -467,6 +473,7 @@ class GameController {
     endGame(board) {
         console.log("END GAME");
 
+        console.log(board);
         let p1StorageCell = board.getRightStorage();
 
         let downCells = board.getDownCellContainer().getCells();
@@ -476,6 +483,11 @@ class GameController {
             p1StorageCell.addSeeds(seeds);
             downCells[i].setSeeds(0);
         }
+
+        let playerContainer = this.turn == "P1" ? this.player1Container : this.player2Container;
+
+        playerContainer.setPoints(p1StorageCell.getCell().getSeeds());
+        updateScore("p1", playerContainer.points);
         console.log("P1: " + p1StorageCell.getCell().getSeeds());
 
         let p2StorageCell = board.getLeftStorage();
@@ -487,6 +499,9 @@ class GameController {
             p2StorageCell.addSeeds(seeds);
             upCells[i].setSeeds(0);
         }
+
+        playerContainer.setPoints(p2StorageCell.getCell().getSeeds());
+        updateScore("p2", playerContainer.points);
         console.log("P2: " + p2StorageCell.getCell().getSeeds());
 
         let winner = p1StorageCell.getCell().getSeeds() > p2StorageCell.getCell().getSeeds() ? "P1" : "P2";

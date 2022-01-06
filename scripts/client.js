@@ -118,13 +118,9 @@ function leave(nick, pass, game) {
     })
     .then(function(res) { return res.json();})
     .then(function(data) {
-        // debugging only
-        console.log(JSON.stringify(data));
-        console.log(data.error);
         
         if (data?.error) {
             alert(data.error);
-            result = false;
         }
     })
 }
