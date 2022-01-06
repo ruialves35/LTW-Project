@@ -38,66 +38,12 @@
                 <i class="bi bi-person-circle nav-icon"></i>
                 <p class="nav-label">Login</p>
             </div>
-            <div class="nav-item" onclick="show('config')">
+            <div class="nav-item" onclick="generateConfiguration()">
                 <i class="bi bi-gear nav-icon"></i>
                 <p class="nav-label">Configuration</p>
             </div>
         </div>
-    </div> <!-- End of Navbar -->
-
-    <!-- Start of configurations -->
-    <div class="config content" id="config">
-        <span class="form-header">
-            <h2>Configuration</h2>
-            <i class="bi bi-x-circle" onclick="hide('config');"></i>
-        </span>
-        <div id="config-div">
-            <form id="config-form">
-                <input class="field" type="number" id="cavs_number" name="cavs_number"
-                    placeholder="Initial cavities number" value="6" min="1" max="10">
-                <br>
-
-                <input class="field" type="number" id="seeds_number" name="seeds_number"
-                    placeholder="Initial seeds number per cavity" value="5" min="1" max="10">
-                <br>
-
-                <div>
-                    <input type="radio" name="opponent" id="Computer" value="Computer"> <span
-                        class="opponent-field">Computer</span>
-                </div>
-                <div>
-                    <input type="radio" name="opponent" id="Player" value="NormalPlayer"> <span
-                        class="opponent-field">Player</span>
-                </div>
-                <div>
-                    <input type="radio" name="opponent" id="Player" value="OnlinePlayer"> <span
-                        class="opponent-field">Online Player</span>
-                </div>
-
-                <label>
-                    First Turn: <br>
-                    <select name="first_turn" id="first_turn">
-                        <option value="P1">Player</option>
-                        <option value="P2">Opponent</option>
-                    </select>
-                </label>
-
-                <label>
-                    Computer Level: <br>
-                    <select name="AI_level" id="AI_level">
-                        <option value="Easy">Easy</option>
-                        <option value="Hard">Hard</option>
-                    </select>
-                </label>
-                <!--
-                    <button type="button" class="button" onclick="getNumSeeds(); getNumCavs(); hide_config_form();">Confirm</button>         
-                -->
-                <button type="button" class="button"
-                    onclick="setNumSeeds(); setNumCavs(); setOpponent(); setAILevel(); load(); hide('config');">Confirm</button>
-
-            </form>
-        </div>
-    </div> <!-- End of Configurations -->
+    </div> <!-- End of Navbar -->>
 
     <div id="ranking" class="ranking">
         <span class="form-header">

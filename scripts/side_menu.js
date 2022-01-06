@@ -162,7 +162,7 @@ function generateLogin() {
 
     let button = document.createElement("button");
     button.type = "button"; button.classList.add("button");
-    button.onclick = function () { makeRegister() };
+    button.onclick = function () { makeRegister(); };
     button.innerHTML = "Login";
 
     form.appendChild(username_input);
@@ -176,4 +176,136 @@ function generateLogin() {
     document.getElementById("body").appendChild(login);
 
     setTimeout(function () { show("login"); });
+}
+
+function generateConfiguration() {
+    let configuration = document.createElement('div');
+    configuration.id = "config"; configuration.classList.add("config");
+    
+    var header = document.createElement('span');
+    header.classList.add("form-header");
+
+    var title = document.createElement('h2');
+    title.innerHTML = "Configuration";
+    
+    var icon = document.createElement('i');
+    icon.classList.add("bi", "bi-x-circle");
+    icon.onclick = function () { hide("config"); setTimeout(function () { document.getElementById("config").parentElement.removeChild(configuration); }, 400); };
+
+    header.appendChild(title);
+    header.appendChild(icon);
+
+    configuration.appendChild(header);
+
+    let div = document.createElement('div');
+    div.id = "config-div";
+    let form = document.createElement('form');
+    form.id = "config-form";
+
+    let cavs = document.createElement('input');
+    cavs.classList.add('field'); cavs.type = "number";
+    cavs.id = "cavs_number"; cavs.name = "cavs_number";
+    cavs.placeholder = "Initial cavities number";
+    cavs.value = 6; cavs.min = 1; cavs.max = 10;
+
+    let seeds = document.createElement('input');
+    seeds.classList.add('field'); seeds.type = "number";
+    seeds.id = "seeds_number"; seeds.name = "seeds_number";
+    seeds.placeholder = "Initial seeds number per cavity";
+    seeds.value = 5; seeds.min = 1; seeds.max = 10;
+
+    let computerDiv = document.createElement('div');
+    let computer = document.createElement('input');
+    computer.type = "radio";
+    computer.id = "Computer"; computer.name = "opponent";
+    computer.value = "Computer";
+
+    let computerSpan = document.createElement('span');
+    computerSpan.classList.add("opponent-field");
+    computerSpan.innerHTML = "Computer";
+
+    computerDiv.appendChild(computer);
+    computerDiv.appendChild(computerSpan);
+
+    let playerDiv = document.createElement('div');
+    let player = document.createElement('input');
+    player.type = "radio";
+    player.id = "NormalPlayer"; player.name = "opponent";
+    player.value = "player";
+
+    let playerSpan = document.createElement('span');
+    playerSpan.classList.add("opponent-field");
+    playerSpan.innerHTML = "Player";
+
+    playerDiv.appendChild(player);
+    playerDiv.appendChild(playerSpan);
+
+    let onlinePlayerDiv = document.createElement('div');
+    let onlinePlayer = document.createElement('input');
+    onlinePlayer.type = "radio";
+    onlinePlayer.id = "OnlinePlayer"; onlinePlayer.name = "opponent";
+    onlinePlayer.value = "OnlinePlayer";
+
+    let onlinePlayerSpan = document.createElement('span');
+    onlinePlayerSpan.classList.add("opponent-field");
+    onlinePlayerSpan.innerHTML = "Online Player";
+
+    onlinePlayerDiv.appendChild(onlinePlayer);
+    onlinePlayerDiv.appendChild(onlinePlayerSpan);
+
+    let ft = document.createElement('p');
+    ft.innerHTML = "First Turn:";
+    let ftSelect = document.createElement('select');
+    ftSelect.id = "first_turn"; ftSelect.name = "first_turn";
+
+    let ftOpt1 = document.createElement('option');
+    let ftOpt2 = document.createElement('option');
+    
+    ftOpt1.innerHTML = "Player";
+    ftOpt1.value = "P1";
+    ftOpt2.innerHTML = "Opponent";
+    ftOpt2.value = "P2";
+
+    ftSelect.appendChild(ftOpt1);
+    ftSelect.appendChild(ftOpt2);
+
+    let lvl = document.createElement('p');
+    lvl.innerHTML = "Computer Level:";
+    let lvlSelect = document.createElement('select');
+    lvlSelect.id = "AI_level"; lvlSelect.name = "AI_level";
+
+    let lvlOpt1 = document.createElement('option');
+    let lvlOpt2 = document.createElement('option');
+    
+    lvlOpt1.innerHTML = "Easy";
+    lvlOpt1.value = "Easy";
+    lvlOpt2.innerHTML = "Hard";
+    lvlOpt2.value = "Hard";
+
+    lvlSelect.appendChild(lvlOpt1);
+    lvlSelect.appendChild(lvlOpt2);
+
+    let button = document.createElement("button");
+    button.type = "button"; button.classList.add("button");
+    button.onclick = function () { setNumSeeds(); setNumCavs(); setOpponent(); setAILevel(); load(); hide('config'); };
+    button.innerHTML = "Confirm";
+
+    form.appendChild(cavs);
+    form.appendChild(seeds);
+    form.appendChild(computerDiv);
+    form.appendChild(playerDiv);
+    form.appendChild(onlinePlayerDiv);
+    form.appendChild(ft);
+    form.appendChild(ftSelect);
+    form.appendChild(lvl);
+    form.appendChild(lvlSelect);
+    form.appendChild(button);
+
+    div.appendChild(form);
+
+    configuration.appendChild(div);
+
+    document.getElementById("body").appendChild(configuration);
+
+    setTimeout(function () { show("config"); });
 }
