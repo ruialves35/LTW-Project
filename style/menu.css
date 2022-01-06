@@ -4,9 +4,17 @@
     z-index: 50;
 
     position: absolute;
-    bottom: 110%;
-    left: 45%;
+    bottom: 150%;
+    top: -50%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
     opacity: 0;
+
+    width: fit-content;
+    height: fit-content;
+    max-width: 50%;
     
     padding: 10px;
     
@@ -22,22 +30,10 @@
 
 .config-show, .login-show, .instructions-show, .ranking-show, .message-show {
     opacity: 100%;
-}
-
-.config-show {
-    bottom: 30%;
-}
-
-.instructions-show, .ranking-show {
-    bottom: 15%;
-}
-
-.login-show {
-    bottom: 40%;
-}
-
-.ranking-show, .message-show {
-    bottom: 45%;
+    top: 0;
+    bottom: 0;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 #ranking-table {
@@ -46,15 +42,6 @@
 
 #ranking-table td, th {
     border: 2px solid var(--bistre);
-}
-
-.message {
-    left: 40% !important;
-}
-
-.instructions {
-    left: 20% !important;
-    width: 60%;
 }
 
 .login h2 {
