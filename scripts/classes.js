@@ -35,7 +35,7 @@ class Strategy {
 			let cells = board.getCells();
 			let seeds = cells[idx].getSeeds();
 
-			if (seeds != 0)
+			if (seeds != 0 && GameController.USER2)
 				notify(user.getUsername(), user.getPassword(), GameController.GAME, idx - 1);
 		}
 		return play;

@@ -116,13 +116,6 @@ function leave(nick, pass, game) {
             game: game,
         })
     })
-    .then(function(res) { return res.json();})
-    .then(function(data) {
-        
-        if (data?.error) {
-            alert(data.error);
-        }
-    })
 }
 
 /**
@@ -163,8 +156,43 @@ function ranking() {
     fetch(url,
     {
         method: "POST",
+        body: JSON.stringify({})
     })
     .then(function(res) { return res.json(); })
+    .then(function(data) {
+        if(data?.error) {
+            console.log(data.error);
+            alert(data.error);
+            return -1;
+        } else if (data?.ranking) {
+            createRanking();
+            let table = document.getElementById('ranking-table');
+            let entry = Object.entries(data.ranking);
+            for (let i = 0; i < entry.length; i++) {
+                console.log("Entry: ", entry[i]);
+                const username = entry[i][1]["nick"];
+                const victories = entry[i][1]["victories"];
+                const games = entry[i][1]["games"];
+
+                console.log("User:", username, " Vic: ", victories, " Games: ", games)
+                //adicionar Header
+                let row = document.createElement("tr");
+                let nick = document.createElement("td");
+                let vic = document.createElement("td");
+                let g = document.createElement("td");
+
+                nick.innerHTML = username;
+                vic.innerHTML = victories;
+                g.innerHTML = games;
+
+                row.appendChild(nick);
+                row.appendChild(vic);
+                row.appendChild(g);
+
+                table.appendChild(row);
+            }
+        }
+    })
 }
 
 

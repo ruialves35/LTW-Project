@@ -95,3 +95,29 @@ function updateScore(name, score) {
         scoreP.innerHTML = score + " seeds";
     }
 }
+
+function createRanking() {
+    //limpar filhos
+    let table = document.getElementById('ranking-table');
+    let child = table.lastElementChild; 
+    while (child) {
+        table.removeChild(child);
+        child = table.lastElementChild;
+    }
+
+    //adicionar Header
+    let tableHeader = document.createElement("tr");
+    let nick = document.createElement("th");
+    let victories = document.createElement("th");
+    let games = document.createElement("th");
+
+    nick.innerHTML = "Nick";
+    victories.innerHTML = "Victories";
+    games.innerHTML = "Games";
+
+    tableHeader.appendChild(nick);
+    tableHeader.appendChild(victories);
+    tableHeader.appendChild(games);
+
+    table.appendChild(tableHeader);
+}

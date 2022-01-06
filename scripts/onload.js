@@ -381,6 +381,7 @@ class GameController {
 
         if (data.winner) {
             this.endGame(currentBoard);
+            ranking();
         }
     }
 
