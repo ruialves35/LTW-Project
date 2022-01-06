@@ -166,30 +166,14 @@ function ranking() {
             return -1;
         } else if (data?.ranking) {
             createRanking();
-            let table = document.getElementById('ranking-table');
             let entry = Object.entries(data.ranking);
             for (let i = 0; i < entry.length; i++) {
-                console.log("Entry: ", entry[i]);
-                const username = entry[i][1]["nick"];
-                const victories = entry[i][1]["victories"];
-                const games = entry[i][1]["games"];
+                const information = entry[i][1];
+                const username = information["nick"];
+                const victories = information["victories"];
+                const games = information["games"];
 
-                console.log("User:", username, " Vic: ", victories, " Games: ", games)
-                //adicionar Header
-                let row = document.createElement("tr");
-                let nick = document.createElement("td");
-                let vic = document.createElement("td");
-                let g = document.createElement("td");
-
-                nick.innerHTML = username;
-                vic.innerHTML = victories;
-                g.innerHTML = games;
-
-                row.appendChild(nick);
-                row.appendChild(vic);
-                row.appendChild(g);
-
-                table.appendChild(row);
+                addRankingRow(username, victories, games);
             }
         }
     })

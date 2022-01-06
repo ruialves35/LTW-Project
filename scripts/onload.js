@@ -506,7 +506,14 @@ class GameController {
         console.log("P2: " + p2StorageCell.getCell().getSeeds());
 
         let winner = p1StorageCell.getCell().getSeeds() > p2StorageCell.getCell().getSeeds() ? "P1" : "P2";
+        let win = winner == "P1" ? 1 : 0;
         console.log("The winner is...", winner, "! Congratulations");
+
+        if (GameController.OPPONENT == "Computer") {
+            updateLocalRanking(win);
+            createRanking();
+            addLocalRanking();
+        }
     }
 
 }
@@ -619,6 +626,9 @@ function load () {
 
     document.getElementById("body").classList.remove("preload");
     const container = document.getElementById("container");
+
+    createRanking();
+    addLocalRanking();
     
     let board = new GameBoard();
     let gameController = new GameController(board);
