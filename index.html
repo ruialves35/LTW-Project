@@ -34,7 +34,7 @@
         <h1 id="logo">Mancala</h1>
         <button type="button" class="button" id="play">Play</button>
         <div class="nav-items">
-            <div class="nav-item" onclick="show('login')">
+            <div class="nav-item" onclick="generateLogin()">
                 <i class="bi bi-person-circle nav-icon"></i>
                 <p class="nav-label">Login</p>
             </div>
@@ -51,8 +51,8 @@
             <h2>Configuration</h2>
             <i class="bi bi-x-circle" onclick="hide('config');"></i>
         </span>
-        <div id="config-form">
-            <form id="configuration">
+        <div id="config-div">
+            <form id="config-form">
                 <input class="field" type="number" id="cavs_number" name="cavs_number"
                     placeholder="Initial cavities number" value="6" min="1" max="10">
                 <br>
@@ -139,29 +139,7 @@
     </div>
 
     <i id="ranking-btn" onclick="show('ranking');" class="bi bi-trophy"></i>
-    <i id="instructions-btn" onclick="generate_instructions();" class="bi bi-info-circle"></i>
-
-    <!-- Start of Login -->
-    <div class="login content" id="login">
-        <span class="form-header">
-            <h2>Login</h2>
-            <i class="bi bi-x-circle" onclick="hide('login');"></i>
-        </span>
-        <div id="login-form">
-            <form id="login">
-                <input class="field" type="text" name="username" id="username" placeholder="Username">
-
-                <br>
-
-                <input class="field" type="password" name="password" id="password" placeholder="Password">
-
-                <br>
-
-                <button type="button" class="button" onclick="makeRegister();">Login</button>
-            </form>
-
-        </div>
-    </div> <!-- End of login -->
+    <i id="instructions-btn" onclick="generateInstructions();" class="bi bi-info-circle"></i>
 
     <div id="container"></div>
 

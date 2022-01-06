@@ -1,3 +1,37 @@
+    import("./client.js");
+
+function show(id) {
+    var bd = document.getElementById("container");
+    var nav = document.getElementById("navbar");
+    var element = document.getElementById(id);
+
+
+    bd.classList.add("disable");
+    nav.classList.add("disable");
+    element.classList.add(id + "-show");
+
+    var div = document.createElement("div");
+    div.id = "blur";
+    div.classList.add("blur");
+    document.getElementById("body").appendChild(div);
+}
+
+function hide(id) {
+    var bd = document.getElementById("container");
+    var nav = document.getElementById("navbar");
+    var element = document.getElementById(id);
+    
+    var div = document.getElementById("blur");
+    div.style.animationName = "bg-rewind";
+    div.style.animationPlayState = "running";
+    
+    bd.classList.remove("disable");
+    nav.classList.remove("disable");
+    element.classList.remove(id + "-show");
+    
+    setTimeout(function () { div.parentElement.removeChild(div); }, 400);
+}
+
 function sendMessage(text) {
     var msg = document.createElement('div');
     msg.id = "message";
@@ -24,7 +58,7 @@ function sendMessage(text) {
     setTimeout(function () { show("message"); });
 }
 
-function generate_instructions() {
+function generateInstructions() {
     let instructions = document.createElement('div');
     instructions.id = "instructions"; instructions.classList.add("instructions");
     
@@ -92,34 +126,54 @@ function generate_instructions() {
     setTimeout(function () { show("instructions"); });
 }
 
-function show(id) {
-    var bd = document.getElementById("container");
-    var nav = document.getElementById("navbar");
-    var element = document.getElementById(id);
-
-
-    bd.classList.add("disable");
-    nav.classList.add("disable");
-    element.classList.add(id + "-show");
-
-    var div = document.createElement("div");
-    div.id = "blur";
-    div.classList.add("blur");
-    document.getElementById("body").appendChild(div);
-}
-
-function hide(id) {
-    var bd = document.getElementById("container");
-    var nav = document.getElementById("navbar");
-    var element = document.getElementById(id);
+function generateLogin() {
+    let login = document.createElement('div');
+    login.id = "login"; login.classList.add("login");
     
-    var div = document.getElementById("blur");
-    div.style.animationName = "bg-rewind";
-    div.style.animationPlayState = "running";
+    var header = document.createElement('span');
+    header.classList.add("form-header");
+
+    var title = document.createElement('h2');
+    title.innerHTML = "Login";
     
-    bd.classList.remove("disable");
-    nav.classList.remove("disable");
-    element.classList.remove(id + "-show");
-    
-    setTimeout(function () { div.parentElement.removeChild(div); }, 400);
+    var icon = document.createElement('i');
+    icon.classList.add("bi", "bi-x-circle");
+    icon.onclick = function () { hide("login"); setTimeout(function () { document.getElementById("login").parentElement.removeChild(login); }, 400); };
+
+    header.appendChild(title);
+    header.appendChild(icon);
+
+    login.appendChild(header);
+
+    let div = document.createElement('div');
+    div.id = "login-div";
+    let form = document.createElement('form');
+    form.id = "login-form";
+
+    let username_input = document.createElement('input');
+    username_input.classList.add("field");
+    username_input.name = "username"; username_input.id = "username";
+    username_input.type = "text"; username_input.placeholder = "Username";
+
+    let password_input = document.createElement('input');
+    password_input.classList.add("field");
+    password_input.name = "password"; password_input.id = "password";
+    password_input.type = "password"; password_input.placeholder = "Password";
+
+    let button = document.createElement("button");
+    button.type = "button"; button.classList.add("button");
+    button.onclick = function () { makeRegister() };
+    button.innerHTML = "Login";
+
+    form.appendChild(username_input);
+    form.appendChild(password_input);
+    form.appendChild(button);
+
+    div.appendChild(form);
+
+    login.appendChild(div);
+
+    document.getElementById("body").appendChild(login);
+
+    setTimeout(function () { show("login"); });
 }

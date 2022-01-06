@@ -99,7 +99,7 @@
     pointer-events: none;
 }
 
-#config-form, #configuration, #login-form, #login {
+#config-div, #config-form, #login-div, #login-form {
     display: flex;
     flex-direction: column;
 }
