@@ -85,7 +85,7 @@ async function join(group, nick, pass, size, initial) {
         } else {
             if (data?.game) {
                 GameController.GAME = data.game;
-                sendNotification("Join", "You joinned a game successfully" + data.game);
+                sendNotification("Join", "You joinned a game successfully");
                 return 1;
             } else {
                 sendNotification("Join Error", "Couldn't join a game");
