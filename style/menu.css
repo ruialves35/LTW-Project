@@ -15,7 +15,7 @@
     width: fit-content;
     height: fit-content;
     max-width: 50%;
-    
+          
     padding: 10px;
     
     background-color: rgba(228, 179, 99, 0.75);
@@ -26,6 +26,11 @@
 
     transition: 0.4s linear;
     color: var(--bistre);
+}
+
+.instructions {
+    max-height: 80%;
+    overflow-y: scroll;  
 }
 
 #notifications {

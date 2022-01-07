@@ -102,7 +102,7 @@ input, label, select {
 .navbar #logo {
     writing-mode: vertical-lr;
     text-orientation: upright;
-    margin-top: 50px;
+    margin-top: 2%;
     font-family:'Rock Salt', cursive;
     min-height: 0 !important;
 }

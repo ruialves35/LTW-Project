@@ -1,5 +1,3 @@
-    import("./client.js");
-
 function show(id) {
     let bd = document.getElementById("container");
     let nav = document.getElementById("navbar");
@@ -36,7 +34,6 @@ function sendNotification(notificationTitle, notificationBody) {
     let notifications = document.getElementById('notifications');
     
     if (notifications == null) {
-        console.log("Hello");
         notifications = document.createElement('div');
         notifications.id = "notifications";
         document.getElementById("body").appendChild(notifications);
@@ -181,7 +178,7 @@ function generateLogin() {
 
     let button = document.createElement("button");
     button.type = "button"; button.classList.add("button");
-    button.onclick = function () { makeRegister(); };
+    button.onclick = function () { makeRegister(); hide('login'); };
     button.innerHTML = "Login";
 
     form.appendChild(username_input);
@@ -306,7 +303,7 @@ function generateConfiguration() {
 
     let button = document.createElement("button");
     button.type = "button"; button.classList.add("button");
-    button.onclick = function () { setNumSeeds(); setNumCavs(); setOpponent(); setAILevel(); load(); hide('config'); };
+    button.onclick = function () { setNumSeeds(); setNumCavs(); setOpponent(); setFirstPlayer(); setAILevel(); load(); hide('config'); };
     button.innerHTML = "Confirm";
 
     form.appendChild(cavs);

@@ -14,14 +14,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand+SC&display=swap" rel="stylesheet">
+
     <script type="text/javascript" src="scripts/client.js" defer></script>
     <script type="text/javascript" src="scripts/classes.js" defer></script>
     <script type="text/javascript" src="scripts/gameHelpers.js" defer></script>
     <script type="text/javascript" src="scripts/side_menu.js" defer></script>
     <script type="text/javascript" src="scripts/onload.js" defer></script>
-    <!--
-    	<script type="text/javascript" src="scripts/side_menu.js" defer></script>
-        -->
+
 </head>
 
 
@@ -32,7 +31,7 @@
     <!-- Start of Navbar -->
     <div class="navbar" id="navbar">
         <h1 id="logo">Mancala</h1>
-        <button type="button" class="button" id="play">Play</button>
+        <button type="button" class="button" id="play" onclick="load(1);">Play</button>
         <div class="nav-items">
             <div class="nav-item" onclick="generateLogin()">
                 <i class="bi bi-person-circle nav-icon"></i>

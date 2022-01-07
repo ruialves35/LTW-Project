@@ -34,7 +34,7 @@ function setNumSeeds () {
     if (seeds > 0) {
         GameBoard.DEFAULT_SEEDS_NUM = seeds;
     } else {
-        alert("You must have at least 1 seed in each cavity");
+        sendNotification("Error", "You must have at least 1 seed in each cavity");
     }
     
 }
@@ -46,7 +46,7 @@ function setNumCavs() {
     if (cavs > 1) { 
         GameBoard.DEFAULT_CAVS_NUM = cavs;
     } else {
-        alert("You must have at least 2 cavity on each side");
+        sendNotification("Error", "You must have at least 2 cavity on each side");
     }
 }
 

@@ -14,7 +14,7 @@ function makeRegister() {
 
 function makeJoin() {
     if (!GameController.USER) {
-        alert("Error to join a server. Make sure you are logged in.");
+        sendNotification("Error", "Error to join a server. Make sure you are logged in.");
         return;
     } else {
         // basically join the game, create a GameController and start the game
@@ -44,10 +44,10 @@ function makeJoin() {
     .then(function(data) {
         // TODO: Change this to message box when we do it instead of alerts
         if(data?.error) {
-            alert(data.error);
+            sendNotification("Login Error", data.error);
         } else {
             success = true;
-            alert("Successfully logged in");
+            sendNotification("Login", "Successfully logged in");
         }
     })
 
@@ -80,16 +80,15 @@ async function join(group, nick, pass, size, initial) {
     .then(function(data) {
         // TODO: Change this to message box when we do it instead of alerts
         if(data?.error) {
-            console.log(data.error);
-            alert(data.error);
+            sendNotification("Join Error", data.error);
             return -1;
         } else {
             if (data?.game) {
                 GameController.GAME = data.game;
-                console.log("Joinned Game: ", GameController.GAME);
+                sendNotification("Join", "You joinned a game successfully" + data.game);
                 return 1;
             } else {
-                alert("Couldn't join a game");
+                sendNotification("Join Error", "Couldn't join a game");
                 return -1;
             }
         }
@@ -141,8 +140,7 @@ function notify(nick, pass, game, move) {
     .then(function(res) { return res.json();})
     .then(function(data) {
         if (data?.error) {
-            console.log(data.error);
-            alert(data.error);
+            sendNotification("Erro", data.error);
             result = false;
         }
     })
@@ -161,8 +159,7 @@ function ranking() {
     .then(function(res) { return res.json(); })
     .then(function(data) {
         if(data?.error) {
-            console.log(data.error);
-            alert(data.error);
+            sendNotification("Ranking error", data.error);
             return -1;
         } else if (data?.ranking) {
             createRanking();

@@ -297,11 +297,11 @@ class GameController {
     turn;
     strategy;
 
-    constructor(board) {
+    constructor(board, play) {
         this.turn = GameController.DEFAULT_FIRST_PLAYER;
         this.numCavs = board.getNumCavs();
         this.numSeeds = board.getNumSeeds();
-        this.setStrategy();
+        if (play) this.setStrategy();
         this.build(board);
     }
 
@@ -321,12 +321,12 @@ class GameController {
                     if( res > 0 )
                         this.update();
                     else {
-                        alert("Could not Join a Game");
+                        sendNotification("Join error", "Could not Join a Game");
                     }
                 });
                 this.strategy = strategy.onlinePlayerStrategy();
             } else {
-                alert("You must login before you search for a game");
+                sendNotification("Join error", "You must login before you search for a game");
             }
         }
     }
@@ -339,7 +339,6 @@ class GameController {
 
     updateGame = (event) => {
         const data = JSON.parse(event?.data);
-        console.log("Debug data:", data);
         const board = data.board;
         let currentBoard = this.gameBoardController.getBoard();
         let playerId = this.turn == "P1" ? "p1" : "p2";
@@ -380,7 +379,7 @@ class GameController {
         }
 
         if (data.winner) {
-            this.endGame(currentBoard);
+            this.endGame(currentBoard, data.winner);
             ranking();
         }
     }
@@ -471,10 +470,8 @@ class GameController {
         return !(canPlayP1 && canPlayP2);
     }
 
-    endGame(board) {
-        console.log("END GAME");
+    endGame(board, currentWinner = null) {
 
-        console.log(board);
         let p1StorageCell = board.getRightStorage();
 
         let downCells = board.getDownCellContainer().getCells();
@@ -489,7 +486,6 @@ class GameController {
 
         playerContainer.setPoints(p1StorageCell.getCell().getSeeds());
         updateScore("p1", playerContainer.points);
-        console.log("P1: " + p1StorageCell.getCell().getSeeds());
 
         let p2StorageCell = board.getLeftStorage();
 
@@ -503,12 +499,22 @@ class GameController {
 
         playerContainer.setPoints(p2StorageCell.getCell().getSeeds());
         updateScore("p2", playerContainer.points);
-        console.log("P2: " + p2StorageCell.getCell().getSeeds());
 
+        let p1Points = p1StorageCell.getCell().getSeeds();
+        let p2Points = p2StorageCell.getCell().getSeeds();
         let winner = p1StorageCell.getCell().getSeeds() > p2StorageCell.getCell().getSeeds() ? "P1" : "P2";
         let win = winner == "P1" ? 1 : 0;
-        console.log("The winner is...", winner, "! Congratulations");
 
+        let result = "The game is over...  ";
+        let user1 = GameController.USER ? GameController.USER.getUsername() : "Player1"
+        let user2 = GameController.USER2 ? GameController.USER2.getUsername() : (GameController.OPPONENT == "Computer" ? "Computer" : "Player2")
+        let winnerPlayer = winner == "P1" ? user1 : (p1Points == p2Points ? "Oh! It's a draw! Amazing game!" : user2);
+        result += user1 + ": " + p1StorageCell.getCell().getSeeds() + " points! ";
+        result += user2 + ": " + p2StorageCell.getCell().getSeeds() + " points!  ";
+        result += "The winner is ... " + (currentWinner == null ? winnerPlayer : currentWinner) +"!!!! Congratulations!  ";
+        result += "Hope you enjoyed the game and play another one!";
+
+        sendNotification("End Game", result);
         if (GameController.OPPONENT == "Computer") {
             updateLocalRanking(win);
             createRanking();
@@ -622,7 +628,7 @@ class GameBoardController {
 }
 
 
-function load () {
+function load(play = null) {
 
     document.getElementById("body").classList.remove("preload");
     const container = document.getElementById("container");
@@ -631,7 +637,7 @@ function load () {
     addLocalRanking();
     
     let board = new GameBoard();
-    let gameController = new GameController(board);
+    let gameController = new GameController(board, play);
     
     if(container.hasChildNodes()) {
         container.replaceChild(gameController.getPlayer1Container().getElement(), container.children[0]); 
