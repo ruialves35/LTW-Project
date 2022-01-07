@@ -1,8 +1,18 @@
+PRAGMA foreign_keys=ON;
+
+DROP TABLE IF EXISTS game_request;
 DROP TABLE IF EXISTS user;
 
 CREATE TABLE user (
     username TEXT PRIMARY KEY,
     password TEXT NOT NULL,
     victories INTEGER NOT NULL DEFAULT 0,
-    game INTEGER NOT NULL DEFAULT 0
+    games INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE game_request (
+    id INTEGER PRIMARY KEY,
+    seeds INTEGER NOT NULL,
+    cavs INTEGER NOT NULL,
+    user REFERENCES user ON DELETE CASCADE ON UPDATE CASCADE
 );
