@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS user;
+
+CREATE TABLE IF NOT EXISTS user {
+    username TEXT PRIMARY KEY,
+    password TEXT NOT NULL,
+    victories INTEGER NOT NULL DEFAULT 0,
+};
