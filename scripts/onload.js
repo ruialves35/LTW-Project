@@ -379,7 +379,7 @@ class GameController {
         }
 
         if (data.winner) {
-            this.endGame(currentBoard, data.winner);
+            this.endGame(currentBoard, data.winner + ". The opponent quit the game");
             ranking();
         }
     }
@@ -509,8 +509,8 @@ class GameController {
         let user1 = GameController.USER ? GameController.USER.getUsername() : "Player1"
         let user2 = GameController.USER2 ? GameController.USER2.getUsername() : (GameController.OPPONENT == "Computer" ? "Computer" : "Player2")
         let winnerPlayer = winner == "P1" ? user1 : (p1Points == p2Points ? "Oh! It's a draw! Amazing game!" : user2);
-        result += user1 + ": " + p1StorageCell.getCell().getSeeds() + " points! ";
-        result += user2 + ": " + p2StorageCell.getCell().getSeeds() + " points!  ";
+        result += user1 + ": " + p1Points + " points! ";
+        result += user2 + ": " + p2Points + " points!  ";
         result += "The winner is ... " + (currentWinner == null ? winnerPlayer : currentWinner) +"!!!! Congratulations!  ";
         result += "Hope you enjoyed the game and play another one!";
 
