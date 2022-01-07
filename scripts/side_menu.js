@@ -247,7 +247,7 @@ function generateConfiguration() {
     let player = document.createElement('input');
     player.type = "radio";
     player.id = "NormalPlayer"; player.name = "opponent";
-    player.value = "player";
+    player.value = "NormalPlayer";
 
     let playerSpan = document.createElement('span');
     playerSpan.classList.add("opponent-field");

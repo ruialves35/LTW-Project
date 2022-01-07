@@ -301,7 +301,7 @@ class GameController {
         this.turn = GameController.DEFAULT_FIRST_PLAYER;
         this.numCavs = board.getNumCavs();
         this.numSeeds = board.getNumSeeds();
-        if (play) this.setStrategy();
+        if (play || GameController.OPPONENT == "NormalPlayer") this.setStrategy();
         this.build(board);
     }
 
@@ -566,9 +566,11 @@ class GameBoardController {
     }
 
     addCellOnClick(gameController, fn) {
-        let cells = this.board.getCells();
-        for (let i = 0; i < cells.length; i++) {
-            cells[i].addCellOnClick(gameController, fn, this.board, i);
+        if (fn != null) {
+            let cells = this.board.getCells();
+            for (let i = 0; i < cells.length; i++) {
+                cells[i].addCellOnClick(gameController, fn, this.board, i);
+            }
         }
     }
 
