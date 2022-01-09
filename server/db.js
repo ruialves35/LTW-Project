@@ -35,6 +35,76 @@ async function verifyUser(username, hashedPassword, newUser, success, error) {
     })
 }
 
+async function authenticateUser(username, hashedPassword, success, error) {
+    const connect = await connectDb();
+    const query = 'SELECT username, password FROM user WHERE username = ?';
+    connect.all(query, [username], (err, rows) => {
+        if (err) return console.error(err.message);
+
+        if (rows.length == 0) {
+            error();
+        } else {
+            if (rows[0].password == hashedPassword) {
+                success();
+            } else {
+                error();
+            }
+        }
+    })
+}
+
+async function getGameRequest(user, seeds, cavs, success) {
+    const connect = await connectDb();
+    const query = 'SELECT game, user FROM game_request WHERE seeds = ? AND cavs = ?';
+    connect.all(query, [seeds, cavs], (err, rows) => {
+        if (err) return console.error(err.message);
+
+        if (rows.length == 0) {
+            insertGameRequest(user, seeds, cavs);
+            return getGameRequest(user, seeds, cavs, success);
+        } else {
+            if (user != rows[0].user) {
+                setMatchedGameRequest(rows[0].game);
+            }
+            success(rows[0].game);
+        }
+    })
+}
+
+async function insertGameRequest(user, seeds, cavs) {
+    const connect = await connectDb();
+    const query = 'INSERT INTO game_request(game, seeds, cavs, user) VALUES (?, ?, ?, ?)'
+
+    const hash = crypto
+               .createHash('md5')
+               .update(user + seeds + cavs)
+               .digest('hex');
+
+    return connect.run(
+        query, 
+        [hash, seeds, cavs, user],
+        (err) => {
+            if (err) return console.error(err.message);
+
+            console.log("A new row has been created");
+        }); 
+}
+
+async function setMatchedGameRequest(game) {
+    const connect = await connectDb();
+    const query = 'UPDATE game_request SET match = True WHERE game_request.game = ?;';
+
+    return connect.run(
+        query,
+        [game],
+        (err) => {
+            if (err) return console.error(err.message);
+
+            console.log("A row was updated");
+        }
+    )
+}
+
 async function removeUser(username) {
     const connect = await connectDb();
     const query = 'DELETE FROM user WHERE username = ?'
@@ -88,7 +158,7 @@ async function getRanking(fn) {
 
 }
 
-module.exports = { connectDb, insertUser, removeUser, updateUser, getRanking, verifyUser, }//authenticateUser, getGameRequest }
+module.exports = { connectDb, insertUser, removeUser, updateUser, getRanking, verifyUser, authenticateUser, getGameRequest }
 
 /*
 let db = new sqlite3.Database(':memory:', (err) => {

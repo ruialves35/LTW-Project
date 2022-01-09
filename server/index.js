@@ -2,7 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const ranking = require('./ranking');
 const register = require('./register');
-//const join = require('./join');
+const join = require('./join');
 
 const server = http.createServer(async (req, res) => {
 
@@ -14,7 +14,7 @@ const server = http.createServer(async (req, res) => {
             });
             req.on('end', async () => {
                 let obj = JSON.parse(data);
-                //await join.process(res, obj.nick, obj.password, obj.size, obj.initial);
+                await join.process(res, obj.nick, obj.password, obj.size, obj.initial);
             })
         } else if (req.url === "/leave") {
 
