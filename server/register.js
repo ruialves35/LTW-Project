@@ -10,7 +10,6 @@ async function process(res, nick, password) {
                .createHash('md5')
                .update(password)
         .digest('hex');
-    
     await db.verifyUser(nick, hash, register, correctCredentials, wrongCredentials);
 }
 

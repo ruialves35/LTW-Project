@@ -24,6 +24,8 @@ async function verifyUser(username, hashedPassword, newUser, success, error) {
         if (rows.length == 0) {
             newUser(username, hashedPassword);
         } else {
+            console.log(rows[0].password);
+            console.log(hashedPassword);
             if (rows[0].password == hashedPassword) {
                 success();
             } else {
@@ -50,14 +52,9 @@ async function insertUser(username, password) {
     const connect = await connectDb();
     const query = 'INSERT INTO user(username, password, victories, games) VALUES (?, ?, ?, ?)'
 
-    const hash = crypto
-               .createHash('md5')
-               .update(password)
-               .digest('hex');
-
     return connect.run(
         query, 
-        [username, hash, 0, 0],
+        [username, password, 0, 0],
         (err) => {
             if (err) return console.error(err.message);
 
@@ -91,7 +88,7 @@ async function getRanking(fn) {
 
 }
 
-module.exports = { connectDb, insertUser, removeUser, updateUser, getRanking, verifyUser}
+module.exports = { connectDb, insertUser, removeUser, updateUser, getRanking, verifyUser, }//authenticateUser, getGameRequest }
 
 /*
 let db = new sqlite3.Database(':memory:', (err) => {
