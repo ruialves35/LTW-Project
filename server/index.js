@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const ranking = require('./ranking');
+const register = require('./register');
 
 const server = http.createServer(async (req, res) => {
 
@@ -10,10 +11,18 @@ const server = http.createServer(async (req, res) => {
         } else if (req.url === "/leave") {
 
         } else if (req.rul === "notify") {
-
+            
         } else if (req.url === "/ranking") {
             await ranking.get(res);
         } else if (req.url === "/register") {
+            let data = '';
+            req.on('data', chunk => {
+                data += chunk;
+            });
+            req.on('end', async () => {
+                let obj = JSON.parse(data);
+                await register.process(res, obj.username, obj.password);
+            })
         }
     } else if (req.method == "GET") {
         if (req.url === "/") {

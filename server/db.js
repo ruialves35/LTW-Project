@@ -15,6 +15,24 @@ async function connectDb() {
     }
 }
 
+async function verifyUser(username, hashedPassword, newUser, success, error) {
+    const connect = await connectDb();
+    const query = 'SELECT username, password FROM user WHERE username = ?';
+    connect.all(query, [username], (err, rows) => {
+        if (err) return console.error(err.message);
+
+        if (rows.length == 0) {
+            newUser(username, hashedPassword);
+        } else {
+            if (rows[0].password == hashedPassword) {
+                success();
+            } else {
+                error();
+            }
+        }
+    })
+}
+
 async function removeUser(username) {
     const connect = await connectDb();
     const query = 'DELETE FROM user WHERE username = ?'
@@ -73,7 +91,7 @@ async function getRanking(fn) {
 
 }
 
-module.exports = { connectDb, insertUser, removeUser, updateUser, getRanking }
+module.exports = { connectDb, insertUser, removeUser, updateUser, getRanking, verifyUser}
 
 /*
 let db = new sqlite3.Database(':memory:', (err) => {
