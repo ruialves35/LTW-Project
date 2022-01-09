@@ -1,13 +1,8 @@
-const sqlite3 = require('sqlite3').verbose();
-const { open } = require('sqlite');
+const sqlite3 = require('sqlite3');
 const crypto = require('crypto');
 
-
 function createDbConnection(filename) {
-    return open({
-        filename,
-        driver: sqlite3.Database
-    });
+    return new sqlite3.Database(filename);
 }
 
 async function connectDb() {
@@ -29,7 +24,7 @@ async function removeUser(username) {
         (err) => {
             if (err) return console.error(err.message);
 
-            console.log("A new row has been created");
+            console.log("A new row has been deleted");
         }); 
 }
 
@@ -37,22 +32,14 @@ async function insertUser(username, password) {
     const connect = await connectDb();
     const query = 'INSERT INTO user(username, password, victories, games) VALUES (?, ?, ?, ?)'
 
-    const algorithm = "aes-256-cbc"; 
-    // generate 16 bytes of random data
-    const initVector = crypto.randomBytes(16);
-    // secret key generate 32 bytes of random data
-    const Securitykey = crypto.randomBytes(32);
-    // the cipher function
-    const cipher = crypto.createCipheriv(algorithm, Securitykey, initVector);
-    // encrypt the message
-    // input encoding
-    // output encoding
-    let encryptedPassword = cipher.update(password, "utf-8", "hex");
-    encryptedPassword += cipher.final("hex");
+    const hash = crypto
+               .createHash('md5')
+               .update(password)
+               .digest('hex');
 
-    connect.run(
+    return connect.run(
         query, 
-        [username, encryptedPassword, 0, 0],
+        [username, hash, 0, 0],
         (err) => {
             if (err) return console.error(err.message);
 
@@ -60,21 +47,33 @@ async function insertUser(username, password) {
         }); 
 }
 
-async function selectUsersByWins() {
+async function updateUser(username, victories, games) {
     const connect = await connectDb();
-    const query = 'SELECT * FROM user ORDER BY victories LIMIT 10;' // just get the first 10 players
+    const query = 'UPDATE user SET victories = ?, games = ? WHERE user.username = ?;';
+
+    return connect.run(
+        query,
+        [victories, games, username],
+        (err) => {
+            if (err) return console.error(err.message);
+
+            console.log("A row was updated");
+        }
+    )
+}
+
+async function getRanking(fn) {
+    const connect = await connectDb();
+    const query = 'SELECT username as nick, victories, games FROM user ORDER BY victories DESC, games ASC, username ASC LIMIT 10;' // just get the first 10 players
     connect.all(query, [], (err, rows) => {
 
         if (err) return console.error(err.message);
-
-        rows.forEach((row) => {
-            console.log("Ola");
-            console.log(row);
-        });
+        fn(rows);
     });
+
 }
 
-module.exports = { connectDb, insertUser, removeUser, selectUsersByWins }
+module.exports = { connectDb, insertUser, removeUser, updateUser, getRanking }
 
 /*
 let db = new sqlite3.Database(':memory:', (err) => {

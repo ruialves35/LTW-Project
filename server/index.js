@@ -1,7 +1,9 @@
 const http = require('http');
 const fs = require('fs');
+const ranking = require('./ranking');
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
+
     if (req.method == "POST") {
         if (req.url === "/join") {
 
@@ -10,9 +12,8 @@ const server = http.createServer((req, res) => {
         } else if (req.rul === "notify") {
 
         } else if (req.url === "/ranking") {
-
+            await ranking.get(res);
         } else if (req.url === "/register") {
-            
         }
     } else if (req.method == "GET") {
         if (req.url === "/") {
