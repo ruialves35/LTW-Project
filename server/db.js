@@ -24,8 +24,6 @@ async function verifyUser(username, hashedPassword, newUser, success, error) {
         if (rows.length == 0) {
             newUser(username, hashedPassword);
         } else {
-            console.log(rows[0].password);
-            console.log(hashedPassword);
             if (rows[0].password == hashedPassword) {
                 success();
             } else {
