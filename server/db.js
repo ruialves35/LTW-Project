@@ -1,36 +1,26 @@
-const sqlite3 = require('sqlite3');
 const crypto = require('crypto');
+const fs = require('fs');
 
-function createDbConnection(filename) {
-    return new sqlite3.Database(filename);
-}
-
-async function connectDb() {
-    try {
-        const connection = await createDbConnection('mancalaDb.db');
-        console.log('Connected to mancalaDb.db SQlite database.');
-        return connection;
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-async function verifyUser(username, hashedPassword, newUser, success, error) {
-    const connect = await connectDb();
-    const query = 'SELECT username, password FROM user WHERE username = ?';
-    connect.all(query, [username], (err, rows) => {
-        if (err) return console.error(err.message);
-
-        if (rows.length == 0) {
-            newUser(username, hashedPassword);
+function verifyUser(username, hashedPassword, newUser, success, errorFunc) {
+    fs.readFile('./db/users.json', function (error, data) {
+        if (error) {
+            res.writeHead(404);
+            res.write('Whoops! File not found!');
         } else {
-            if (rows[0].password == hashedPassword) {
-                success();
+
+            if (data.username){
+                if (data.username.password == hashedPassword)
+                    success();
+                else
+                    errorFunc();
             } else {
-                error();
+                newUser(username, hashedPassword);
             }
+          
         }
-    })
+        res.end();
+    });
+
 }
 
 async function authenticateUser(username, hashedPassword, success, error) {
@@ -117,17 +107,27 @@ async function removeUser(username) {
 }
 
 async function insertUser(username, password) {
-    const connect = await connectDb();
-    const query = 'INSERT INTO user(username, password, victories, games) VALUES (?, ?, ?, ?)'
 
-    return connect.run(
-        query, 
-        [username, password, 0, 0],
-        (err) => {
-            if (err) return console.error(err.message);
-
-            console.log("A new row has been created");
-        }); 
+    fs.readFile('./db/users.json', function (error, data) {
+        if (error) {
+            console.log("Error in InsertUser");
+        } else {
+            const newData = {
+                    "password": password,
+                    "victories": 0,
+                    "games": 0
+                }
+            //JSON.stringify(newData)
+            let dados = JSON.parse(data);
+            dados[username] = newData;
+            
+            fs.writeFile('./db/users.json', JSON.stringify(dados), function(err) {
+                if (err) {
+                    console.log("Error in InsertUser");
+                }
+            })
+        }
+    });
 }
 
 async function updateUser(username, victories, games) {
@@ -156,15 +156,5 @@ async function getRanking(fn) {
 
 }
 
-module.exports = { connectDb, insertUser, removeUser, updateUser, getRanking, verifyUser, authenticateUser, getGameRequest }
-
-/*
-let db = new sqlite3.Database(':memory:', (err) => {
-    if (err) {
-        return console.error(err.message);
-    }
-    console.log('Connected to the in-memory SQlite database.');
-    db.close();
-});
-*/
+module.exports = { insertUser, removeUser, updateUser, getRanking, verifyUser, authenticateUser, getGameRequest }
 

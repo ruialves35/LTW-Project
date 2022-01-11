@@ -4,13 +4,13 @@ const crypto = require('crypto');
 
 let response;
 
-async function process(res, nick, password) {
+function process(res, nick, password) {
     response = res;
     const hash = crypto
                .createHash('md5')
                .update(password)
         .digest('hex');
-    await db.verifyUser(nick, hash, register, correctCredentials, wrongCredentials);
+    db.verifyUser(nick, hash, register, correctCredentials, wrongCredentials);
 }
 
 function register(nick, hashedPassword) {

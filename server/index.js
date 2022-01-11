@@ -1,5 +1,6 @@
 const http = require('http');
 const fs = require('fs');
+const db = require('./db');
 const ranking = require('./ranking');
 const register = require('./register');
 const join = require('./join');
@@ -47,7 +48,7 @@ const server = http.createServer(async (req, res) => {
                 res.end();
             });
         } else if (req.url === "/update") {
-
+            db.insertUser("rui", "123");
         } else {
             fs.readFile("./static/" + req.url, null, function (error, data) {
                 if (error) {
