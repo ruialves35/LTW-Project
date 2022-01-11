@@ -316,6 +316,7 @@ class GameController {
         } else {
             // Online Player
             if (GameController.USER){
+                sendNotification("Wait", "Waiting for a player to join our game");
                 join(GROUP, GameController.USER.getUsername(), GameController.USER.getPassword(), GameBoard.DEFAULT_CAVS_NUM, GameBoard.DEFAULT_SEEDS_NUM)
                 .then((res) => {
                     if( res > 0 )

@@ -177,3 +177,32 @@ function updateLocalRanking(win) {
         localStorage.setItem('data', JSON.stringify(newItem));
     }
 }
+
+function leaveGame() {
+    if (GameController.OPPONENT == "Computer") {
+        updateLocalRanking(0);
+        createRanking();
+        addLocalRanking();        
+        const body = "Player quit the game! Computer won!";
+        sendNotification("End Game", body);
+    } else if ( GameController.OPPONENT == "NormalPlayer") {
+        const body = "The game was finished.";
+        sendNotification("End Game", body);
+    } else {  // onlinePlayer
+        leave( GameController.USER.getUsername(), GameController.USER.getPassword(), GameController.GAME);
+    }
+
+    load(1);
+}
+
+function changeButton() {
+    const button = document.getElementById("play");
+    if (button.innerHTML === "Play") {
+        button.innerHTML = "Leave";
+        button.onclick = () => { leaveGame(); changeButton() };
+    } else {
+        button.innerHTML = "Play";
+        button.onclick = () => { load(1); changeButton(); }
+    }
+
+}
