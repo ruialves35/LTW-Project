@@ -54,6 +54,7 @@ async function authenticateUser(username, hashedPassword, success, error) {
 async function getGameRequest(user, seeds, cavs, success) {
     const connect = await connectDb();
     const query = 'SELECT game, user FROM game_request WHERE seeds = ? AND cavs = ?';
+    
     connect.all(query, [seeds, cavs], (err, rows) => {
         if (err) return console.error(err.message);
 
