@@ -182,7 +182,7 @@ function leaveGame() {
     if (GameController.OPPONENT == "Computer") {
         updateLocalRanking(0);
         createRanking();
-        addLocalRanking();        
+        addLocalRanking();
         const body = "Player quit the game! Computer won!";
         sendNotification("End Game", body);
     } else if ( GameController.OPPONENT == "NormalPlayer") {
@@ -190,19 +190,23 @@ function leaveGame() {
         sendNotification("End Game", body);
     } else {  // onlinePlayer
         leave( GameController.USER.getUsername(), GameController.USER.getPassword(), GameController.GAME);
+        GameController.LISTENER.close();
+        GameController.USER2 = null;
+        const body = "You left in the middle game so you lost it";
+        sendNotification("Leave Game", body);
     }
 
-    load(1);
+    load(0);
 }
 
 function changeButton() {
     const button = document.getElementById("play");
     if (button.innerHTML === "Play") {
         button.innerHTML = "Leave";
-        button.onclick = () => { leaveGame(); changeButton() };
+        button.onclick = () => { leaveGame(); changeButton(); };
     } else {
         button.innerHTML = "Play";
-        button.onclick = () => { load(1); changeButton(); }
+        button.onclick = () => { load(1); changeButton(); };
     }
 
 }

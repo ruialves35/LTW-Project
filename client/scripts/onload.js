@@ -289,6 +289,7 @@ class GameController {
     static USER;
     static USER2;
     static GAME;
+    static LISTENER;
     player1Container;
     player2Container;
     gameBoardController;
@@ -334,8 +335,8 @@ class GameController {
 
     update() {
         const url = server_url + "/update?nick=" + GameController.USER.getUsername() + "&game=" + GameController.GAME ;
-        const source = new EventSource(url);
-        source.onmessage = this.updateGame;
+        GameController.LISTENER = new EventSource(url);
+        GameController.LISTENER.onmessage = this.updateGame;
     }
 
     updateGame = (event) => {
@@ -515,7 +516,11 @@ class GameController {
         result += "The winner is ... " + (currentWinner == null ? winnerPlayer : currentWinner) +"!!!! Congratulations!  ";
         result += "Hope you enjoyed the game and play another one!";
 
+        GameController.USER2 = null;
+
         sendNotification("End Game", result);
+
+        changeButton();
         if (GameController.OPPONENT == "Computer") {
             updateLocalRanking(win);
             createRanking();
