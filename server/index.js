@@ -47,8 +47,6 @@ const server = http.createServer(async (req, res) => {
                 }
                 res.end();
             });
-        } else if (req.url === "/update") {
-            db.insertUser("rui", "123");
         } else {
             fs.readFile("./static/" + req.url, null, function (error, data) {
                 if (error) {
