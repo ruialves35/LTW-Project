@@ -1,6 +1,5 @@
 const http = require('http');
 const fs = require('fs');
-const db = require('./db');
 const ranking = require('./ranking');
 const register = require('./register');
 const join = require('./join');
@@ -30,11 +29,12 @@ const server = http.createServer(async (req, res) => {
             });
             req.on('end', async () => {
                 let obj = JSON.parse(data);
-                await register.process(res, obj.nick, obj.password);
+                register.process(res, obj.nick, obj.password);
             })
         }
     } else if (req.method == "GET") {
         if (req.url === "/") {
+
             res.writeHead(200, {
                 'Content-Type': 'text/html',
             });

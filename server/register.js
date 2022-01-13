@@ -7,10 +7,11 @@ let response;
 function process(res, nick, password) {
     response = res;
     const hash = crypto
-               .createHash('md5')
-               .update(password)
+        .createHash('md5')
+        .update(password)
         .digest('hex');
-    db.verifyUser(nick, hash, register, correctCredentials, wrongCredentials);
+
+    db.verifyUser(response, nick, hash, register, correctCredentials, wrongCredentials);
 }
 
 function register(nick, hashedPassword) {

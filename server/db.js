@@ -1,26 +1,54 @@
 const crypto = require('crypto');
 const fs = require('fs');
 
-function verifyUser(username, hashedPassword, newUser, success, errorFunc) {
-    fs.readFile('./db/users.json', function (error, data) {
-        if (error) {
-            res.writeHead(404);
-            res.write('Whoops! File not found!');
-        } else {
+let response;
 
-            if (data.username){
-                if (data.username.password == hashedPassword)
+function verifyUser(res, username, hashedPassword, newUser, success, errorFunc) {
+    response = res;
+    fs.readFile('./db/users.json', function (error, data) {
+        const dados = JSON.parse(data);
+        if (error) {
+            response.writeHead(404);
+            response.write('Whoops! File not found!');
+        } else {
+            if (dados[username]){
+                if (dados[username]["password"] == hashedPassword){
                     success();
-                else
+                }
+                else {
                     errorFunc();
+                }
             } else {
                 newUser(username, hashedPassword);
             }
           
         }
-        res.end();
+        response.end();
     });
+}
 
+function insertUser(username, password) {
+
+    fs.readFile('./db/users.json', function (error, data) {
+        if (error) {
+            console.log("Error in InsertUser");
+        } else {
+            const newData = {
+                    "password": password,
+                    "victories": 0,
+                    "games": 0
+                }
+            //JSON.stringify(newData)
+            let dados = JSON.parse(data);
+            dados[username] = newData;
+            
+            fs.writeFile('./db/users.json', JSON.stringify(dados, null, 2), function(err) {
+                if (err) {
+                    console.log("Error in InsertUser");
+                }
+            })
+        }
+    });
 }
 
 async function authenticateUser(username, hashedPassword, success, error) {
@@ -106,29 +134,6 @@ async function removeUser(username) {
         }); 
 }
 
-async function insertUser(username, password) {
-
-    fs.readFile('./db/users.json', function (error, data) {
-        if (error) {
-            console.log("Error in InsertUser");
-        } else {
-            const newData = {
-                    "password": password,
-                    "victories": 0,
-                    "games": 0
-                }
-            //JSON.stringify(newData)
-            let dados = JSON.parse(data);
-            dados[username] = newData;
-            
-            fs.writeFile('./db/users.json', JSON.stringify(dados), function(err) {
-                if (err) {
-                    console.log("Error in InsertUser");
-                }
-            })
-        }
-    });
-}
 
 async function updateUser(username, victories, games) {
     const connect = await connectDb();
