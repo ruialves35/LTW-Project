@@ -151,12 +151,20 @@ async function updateUser(username, victories, games) {
 }
 
 async function getRanking(fn) {
-    const connect = await connectDb();
-    const query = 'SELECT username as nick, victories, games FROM user ORDER BY victories DESC, games ASC, username ASC LIMIT 10;' // just get the first 10 players
-    connect.all(query, [], (err, rows) => {
 
-        if (err) return console.error(err.message);
-        fn(rows);
+    fs.readFile('./db/users.json', function (error, data) {
+        if (error) {
+            console.log("Error in InsertUser");
+        } else {
+            //JSON.stringify(newData)
+            let json = JSON.parse(data);
+
+            const rankingData = Object.keys(json).map(function(key) {
+                return { nick: key, victories: json[key].victories, games: json[key].games };
+            }).sort( (itemA, itemB) => itemB.victories - itemA.victories );
+
+            fn(rankingData)
+        }
     });
 
 }

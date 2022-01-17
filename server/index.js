@@ -21,7 +21,7 @@ const server = http.createServer(async (req, res) => {
         } else if (req.rul === "notify") {
             
         } else if (req.url === "/ranking") {
-            await ranking.get(res);
+            ranking.get(res);
         } else if (req.url === "/register") {
             let data = '';
             req.on('data', chunk => {

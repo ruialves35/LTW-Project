@@ -5,14 +5,14 @@ let response;
 
 async function get(res) {
     response = res;
-    await db.getRanking(handleRows);
+    db.getRanking(handleRows);
 }
 
 function handleRows(rows) {
     response.writeHead(200, {
         'Content-Type': 'application/json',
     });
-
+    
     response.write(JSON.stringify({
         "ranking": rows,
     }));

@@ -4,9 +4,19 @@
     "victories": 0,
     "games": 0
   },
+  "rui1235": {
+    "password": "87082bf03f11f85e2fe1719ff7d427ec",
+    "victories": 3,
+    "games": 15
+  },
   "rui123": {
     "password": "87082bf03f11f85e2fe1719ff7d427ec",
     "victories": 0,
     "games": 0
+  },
+  "rui1234": {
+    "password": "87082bf03f11f85e2fe1719ff7d427ec",
+    "victories": 10,
+    "games": 10
   }
 }
