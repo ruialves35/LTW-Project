@@ -1,4 +1,3 @@
-const http = require('http');
 const db = require('./db');
 const crypto = require('crypto');
 
@@ -25,6 +24,7 @@ function register(nick, hashedPassword) {
 }
 
 function correctCredentials() {
+
     response.writeHead(200, {
         'Content-Type': 'application/json',
     });
@@ -33,6 +33,7 @@ function correctCredentials() {
 }
 
 function wrongCredentials() {
+
     response.writeHead(401, {
         'Content-Type': 'application/json',
     });

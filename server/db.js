@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 
 let response;
+let games = []; // games -> [[gameId, size, initial, nick1, nick2, board], [gameId, size, initial, nick1, nick2, board]...]
 
 function verifyUser(res, username, hashedPassword, newUser, success, errorFunc) {
     response = res;
@@ -12,16 +13,10 @@ function verifyUser(res, username, hashedPassword, newUser, success, errorFunc) 
             response.write('Whoops! File not found!');
         } else {
             if (dados[username]){
-                if (dados[username]["password"] == hashedPassword){
-                    success();
-                }
-                else {
-                    errorFunc();
-                }
+                dados[username]["password"] == hashedPassword ? success() : errorFunc();
             } else {
                 newUser(username, hashedPassword);
             }
-          
         }
         response.end();
     });
@@ -51,106 +46,7 @@ function insertUser(username, password) {
     });
 }
 
-async function authenticateUser(username, hashedPassword, success, error) {
-    const connect = await connectDb();
-    const query = 'SELECT username, password FROM user WHERE username = ?';
-    connect.all(query, [username], (err, rows) => {
-        if (err) return console.error(err.message);
-
-        if (rows.length == 0) {
-            error();
-        } else {
-            if (rows[0].password == hashedPassword) {
-                success();
-            } else {
-                error();
-            }
-        }
-    })
-}
-
-async function getGameRequest(user, seeds, cavs, success) {
-    const connect = await connectDb();
-    const query = 'SELECT game, user FROM game_request WHERE seeds = ? AND cavs = ?';
-    connect.all(query, [seeds, cavs], (err, rows) => {
-        if (err) return console.error(err.message);
-
-        if (rows.length == 0) {
-            insertGameRequest(user, seeds, cavs);
-            return getGameRequest(user, seeds, cavs, success);
-        } else {
-            if (user != rows[0].user) {
-                setMatchedGameRequest(rows[0].game);
-            }
-            success(rows[0].game);
-        }
-    })
-}
-
-async function insertGameRequest(user, seeds, cavs) {
-    const connect = await connectDb();
-    const query = 'INSERT INTO game_request(game, seeds, cavs, user) VALUES (?, ?, ?, ?)'
-
-    const hash = crypto
-               .createHash('md5')
-               .update(user + seeds + cavs)
-               .digest('hex');
-
-    return connect.run(
-        query, 
-        [hash, seeds, cavs, user],
-        (err) => {
-            if (err) return console.error(err.message);
-
-            console.log("A new row has been created");
-        }); 
-}
-
-async function setMatchedGameRequest(game) {
-    const connect = await connectDb();
-    const query = 'UPDATE game_request SET match = True WHERE game_request.game = ?;';
-
-    return connect.run(
-        query,
-        [game],
-        (err) => {
-            if (err) return console.error(err.message);
-
-            console.log("A row was updated");
-        }
-    )
-}
-
-async function removeUser(username) {
-    const connect = await connectDb();
-    const query = 'DELETE FROM user WHERE username = ?'
-    connect.run(
-        query, 
-        [username],
-        (err) => {
-            if (err) return console.error(err.message);
-
-            console.log("A new row has been deleted");
-        }); 
-}
-
-
-async function updateUser(username, victories, games) {
-    const connect = await connectDb();
-    const query = 'UPDATE user SET victories = ?, games = ? WHERE user.username = ?;';
-
-    return connect.run(
-        query,
-        [victories, games, username],
-        (err) => {
-            if (err) return console.error(err.message);
-
-            console.log("A row was updated");
-        }
-    )
-}
-
-async function getRanking(fn) {
+function getRanking(fn) {
 
     fs.readFile('./db/users.json', function (error, data) {
         if (error) {
@@ -166,8 +62,45 @@ async function getRanking(fn) {
             fn(rankingData)
         }
     });
-
 }
 
-module.exports = { insertUser, removeUser, updateUser, getRanking, verifyUser, authenticateUser, getGameRequest }
+function getGameRequest(nick, size, initial) {
+    let foundGame = false;
+    let gameId;
+    for (let game of games) {
+        if (game[3] == nick || game[4] == nick) {
+            foundGame = true;
+            gameId = game[0];
+            break;
+        }
+    }
+
+    if (!foundGame) {
+        for (let game of games) {
+            if (game[1] == size && game[2] == initial && game[4] == null){
+                game[4] = nick;
+                gameId = game[0];
+                foundGame = true;
+                break;
+            }
+        }
+    }
+
+    if (!foundGame) {
+        gameId = crypto
+               .createHash('md5')
+               .update(Date.now().toString())
+               .update(size.toString())
+               .update(initial.toString())
+               .digest('hex');
+
+        console.log("Pushing: ", [gameId, size, initial, nick]);
+        games.push([gameId, size, initial, nick, null]);
+    }
+
+    console.log(games[0]);
+    return gameId;
+}
+
+module.exports = { insertUser, getRanking, verifyUser, getGameRequest }
 

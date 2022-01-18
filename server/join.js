@@ -1,43 +1,45 @@
-const http = require('http');
 const db = require('./db');
 const crypto = require('crypto');
+const errors = require('./errors');
 
 let response;
 let user;
 let seeds;
 let cavs;
 
-async function process(res, nick, password, size, initial) {
+function process(res, nick, password, size, initial) {
     response = res;
     user = nick;
-    seeds = size;
-    cavs = initial;
+    cavs = size;
+    seeds = initial;
+    
+    if (typeof nick !== "string") {
+        wrongArgument(res, "nick", nick);
+        return;
+    } else if (typeof password !== "string") {
+        wrongArgument(res, "password", password);
+        return;
+    } else if (typeof size !== "string" && typeof size !== "number") {
+        wrongArgument(res, "size", "oi");
+        return;
+    } else if (typeof initial !== "string" && typeof initial !== "number") {
+        wrongArgument(res, "initial", initial);
+    }        
 
     const hash = crypto
-               .createHash('md5')
-               .update(password)
+        .createHash('md5')
+        .update(password)
         .digest('hex');
     
-    await db.authenticateUser(nick, hash, correctCredentials, wrongCredentials);
+    db.verifyUser(response, nick, hash, wrongCredentials, correctCredentials, wrongCredentials);
 }
 
-async function correctCredentials() {
-    await db.getGameRequest(user, seeds, cavs, answer);
-}
+function correctCredentials() {
 
-function wrongCredentials() {
-    response.writeHead(401, {
-        'Content-Type': 'application/json',
-    });
+    // check if there is any game that has that seeds or cavs
+    // games -> [[gameId, size, initial, nick1, nick2], [gameId, size, initial, nick1, nick2]...]
+    let gameId = db.getGameRequest(user, cavs, seeds);
 
-    response.write(JSON.stringify({
-        "error": "Invalid Credentials",
-    }));
-
-    response.end();
-}
-
-function answer(gameId) {
     response.writeHead(200, {
         'Content-Type': 'application/json',
     });
@@ -48,5 +50,19 @@ function answer(gameId) {
 
     response.end();
 }
+
+function wrongCredentials() {
+
+    response.writeHead(401, {
+        'Content-Type': 'application/json',
+    });
+
+    response.write(JSON.stringify({
+        "error": "User registered with a different password",
+    }));
+
+    response.end();
+}
+
 
 module.exports = { process };

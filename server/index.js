@@ -14,7 +14,7 @@ const server = http.createServer(async (req, res) => {
             });
             req.on('end', async () => {
                 let obj = JSON.parse(data);
-                await join.process(res, obj.nick, obj.password, obj.size, obj.initial);
+                join.process(res, obj.nick, obj.password, obj.size, obj.initial);
             })
         } else if (req.url === "/leave") {
 
@@ -30,7 +30,10 @@ const server = http.createServer(async (req, res) => {
             req.on('end', async () => {
                 let obj = JSON.parse(data);
                 register.process(res, obj.nick, obj.password);
-            })
+            });
+        } else {
+            res.writeHead(404);
+            res.write('Pedido Desconhecido!');
         }
     } else if (req.method == "GET") {
         if (req.url === "/") {

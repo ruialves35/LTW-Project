@@ -1,4 +1,3 @@
-const http = require('http');
 const db = require('./db');
 
 let response;
