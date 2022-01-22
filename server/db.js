@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 
 let response;
-let games = []; // games -> [[gameId, size, initial, nick1, nick2, board], [gameId, size, initial, nick1, nick2, board]...]
+let games = []; // games -> [[gameId, size, initial, nick1, nick2, board, turn], [gameId, size, initial, nick1, nick2, board, turn]...]
 
 function verifyUser(res, username, hashedPassword, newUser, success, errorFunc) {
     response = res;
@@ -67,6 +67,8 @@ function getRanking(fn) {
 function getGameRequest(nick, size, initial) {
     let foundGame = false;
     let gameId;
+
+    console.log(games);
     for (let game of games) {
         if (game[3] == nick || game[4] == nick) {
             foundGame = true;
@@ -93,12 +95,29 @@ function getGameRequest(nick, size, initial) {
                .update(size.toString())
                .update(initial.toString())
                .digest('hex');
+        
+        let range = n => [...Array(size).keys()]
+        // p2 storage
+        let board = [0];
 
-        console.log("Pushing: ", [gameId, size, initial, nick]);
-        games.push([gameId, size, initial, nick, null]);
+        // p1 cavities
+        for(let i = 0; i < size; i++) {
+            board.push(initial);
+        }
+
+        // p1 storage
+        board.push(0); 
+        // p2 cavities
+        for(let i = 0; i < size; i++) {
+            board.push(initial);
+        }
+
+        // turn is set to 1 for player1, 2 for player2
+        console.log("Pushing: ", [gameId, size, initial, nick, null, board, 1]);   
+        games.push([gameId, size, initial, nick, null, board, 1]);
     }
 
-    console.log(games[0]);
+    console.log(games);
     return gameId;
 }
 
