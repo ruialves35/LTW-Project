@@ -1,0 +1,52 @@
+{
+  "user123": {
+    "password": "6ad14ba9986e3615423dfca256d04e3f",
+    "victories": 0,
+    "games": 0
+  },
+  "rui1235": {
+    "password": "87082bf03f11f85e2fe1719ff7d427ec",
+    "victories": 3,
+    "games": 15
+  },
+  "rui123": {
+    "password": "87082bf03f11f85e2fe1719ff7d427ec",
+    "victories": 0,
+    "games": 0
+  },
+  "rui1234": {
+    "password": "87082bf03f11f85e2fe1719ff7d427ec",
+    "victories": 10,
+    "games": 10
+  },
+  "rui12345": {
+    "password": "e3cd503e3b03d743e5107dbe76f9de1c",
+    "victories": 0,
+    "games": 0
+  },
+  "rui1243": {
+    "password": "87082bf03f11f85e2fe1719ff7d427ec",
+    "victories": 0,
+    "games": 0
+  },
+  "teste500": {
+    "password": "aa1bf4646de67fd9086cf6c79007026c",
+    "victories": 0,
+    "games": 0
+  },
+  "user1234": {
+    "password": "b5b73fae0d87d8b4e2573105f8fbe7bc",
+    "victories": 0,
+    "games": 0
+  },
+  "user1": {
+    "password": "24c9e15e52afc47c225b757e7bee1f9d",
+    "victories": 0,
+    "games": 0
+  },
+  "user12": {
+    "password": "d781eaae8248db6ce1a7b82e58e60435",
+    "victories": 0,
+    "games": 0
+  }
+}
