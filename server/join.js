@@ -30,6 +30,14 @@ function process(res, nick, password, size, initial) {
         .createHash('md5')
         .update(password)
         .digest('hex');
+
+    if (typeof size === "string") {
+        size = parseInt(size);
+    }
+
+    if (typeof initial === "string") {
+        initial = parseInt(initial);
+    }
     
     db.verifyUser(response, nick, hash, wrongCredentials, correctCredentials, wrongCredentials);
 }
