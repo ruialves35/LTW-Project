@@ -21,7 +21,9 @@ function wrongArgument(response, key, value) {
             break;
     }
 
-    response.write(error);
+    response.write(JSON.stringify({
+        "error": error,
+    }));
 
     response.end();
 }

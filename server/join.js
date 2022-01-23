@@ -24,6 +24,7 @@ function process(res, nick, password, size, initial) {
         return;
     } else if (typeof initial !== "string" && typeof initial !== "number") {
         errors.wrongArgument(res, "initial", initial);
+        return;
     }        
 
     const hash = crypto
@@ -32,11 +33,19 @@ function process(res, nick, password, size, initial) {
         .digest('hex');
 
     if (typeof size === "string") {
-        size = parseInt(size);
+        checkSize = parseInt(size);
+        if (isNaN(checkSize)) {
+            errors.wrongArgument(res, "size", size);
+            return;
+        }
     }
 
     if (typeof initial === "string") {
-        initial = parseInt(initial);
+        checkInitial = parseInt(initial);
+        if (isNaN(checkInitial)) {
+            errors.wrongArgument(res, "initial", initial);
+            return;
+        }
     }
     
     db.verifyUser(response, nick, hash, wrongCredentials, correctCredentials, wrongCredentials);

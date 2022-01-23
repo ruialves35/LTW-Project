@@ -68,7 +68,6 @@ function getGameRequest(nick, size, initial) {
     let foundGame = false;
     let gameId;
 
-    console.log(games);
     for (let game of games) {
         if (game[3] == nick || game[4] == nick) {
             foundGame = true;
@@ -113,11 +112,9 @@ function getGameRequest(nick, size, initial) {
         }
 
         // turn is set to 1 for player1, 2 for player2
-        console.log("Pushing: ", [gameId, size, initial, nick, null, board, 1]);   
         games.push([gameId, size, initial, nick, null, board, 1]);
     }
 
-    console.log(games);
     return gameId;
 }
 

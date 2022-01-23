@@ -34,6 +34,8 @@ function process(res, nick, password, game, move) {
 
     if (typeof move === "string") {
         move = parseInt(move);
+        if (isNaN(move)) 
+            errors.wrongArgument(res, "move", move);
     }
     
     db.verifyUser(response, nick, hash, wrongCredentials, correctCredentials, wrongCredentials);
