@@ -1,4 +1,6 @@
-var server_url = 'http://localhost:5000';
+var server_url = 'http://twserver.alunos.dcc.fc.up.pt:8008';
+//var server_url = 'http://localhost:5000';
+
 var GROUP = 49;
 
 function makeRegister() {

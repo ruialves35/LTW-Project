@@ -3,6 +3,7 @@ const db = require('./db');
 function process(response, nick, gameId) {
     const game = db.getGameByNick(nick, gameId);
     if (game == -1) {
+        console.log(nick);
         response.writeHead(400, {    
             'Content-Type': 'text/event-stream',
             'Cache-Control': 'no-cache',
@@ -63,14 +64,20 @@ function process(response, nick, gameId) {
         if (!hasMoveP1 || !hasMoveP2) {
             winner = {"winner" : points1 > points2 ? user1 : user2};
         }
-        
-        response.writeHead(400, {    
+
+        response.writeHead(200, {    
             'Content-Type': 'text/event-stream',
             'Cache-Control': 'no-cache',
             'Access-Control-Allow-Origin': '*',
             'Connection': 'keep-alive'
         });
     
+        console.log(JSON.stringify({ 
+            "board": boardInfo,
+            "turn": turn == 1 ? user1 : user2,
+            winner
+        }));
+
         response.write(JSON.stringify({ 
             "board": boardInfo,
             "turn": turn == 1 ? user1 : user2,

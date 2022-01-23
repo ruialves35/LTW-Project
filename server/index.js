@@ -68,7 +68,7 @@ const server = http.createServer(async (req, res) => {
             update.process(res, nick, game);
             
         } else {
-            fs.readFile("./static/" + req.url, null, function (error, data) {
+            fs.readFile("./client/" + req.url, null, function (error, data) {
                 if (error) {
                     res.writeHead(404);
                     res.write('Whoops! File not found!');
