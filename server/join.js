@@ -14,16 +14,16 @@ function process(res, nick, password, size, initial) {
     seeds = initial;
     
     if (typeof nick !== "string") {
-        wrongArgument(res, "nick", nick);
+        errors.wrongArgument(res, "nick", nick);
         return;
     } else if (typeof password !== "string") {
-        wrongArgument(res, "password", password);
+        errors.wrongArgument(res, "password", password);
         return;
     } else if (typeof size !== "string" && typeof size !== "number") {
-        wrongArgument(res, "size", "oi");
+        errors.wrongArgument(res, "size", size);
         return;
     } else if (typeof initial !== "string" && typeof initial !== "number") {
-        wrongArgument(res, "initial", initial);
+        errors.wrongArgument(res, "initial", initial);
     }        
 
     const hash = crypto

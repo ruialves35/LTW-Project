@@ -14,12 +14,16 @@ function wrongArgument(response, key, value) {
             error = "password is not a valid string";
             break;
         case "size":
-            error = "Invalid size: ", value;
+            error = "Invalid size: " +  value;
             break;
         case "initial":
-            error = "Invalid initial: ", value;
+            error = "Invalid initial: " + value;
             break;
     }
 
+    response.write(error);
+
     response.end();
 }
+
+module.exports = { wrongArgument };
