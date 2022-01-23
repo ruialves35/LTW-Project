@@ -121,5 +121,18 @@ function getGameRequest(nick, size, initial) {
     return gameId;
 }
 
-module.exports = { insertUser, getRanking, verifyUser, getGameRequest }
+// Returns game in case it is an ongoing game, -1 if the player isn't in a game, -2 if the player is waiting for an opponent
+function getGame(nick, gameId) {
+    for (let game of games) {
+        if ((game[3] == nick || game[4] == nick) && game[0] == gameId) {
+            if (game[3] == null || game[4] == null) {
+                return -2;
+            }
+            return game;
+        }
+    }
+    return -1;
+}
+
+module.exports = { insertUser, getRanking, verifyUser, getGameRequest, getGame }
 
