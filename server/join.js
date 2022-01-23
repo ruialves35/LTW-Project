@@ -10,8 +10,6 @@ let cavs;
 function process(res, nick, password, size, initial) {
     response = res;
     user = nick;
-    cavs = size;
-    seeds = initial;
     
     if (typeof nick !== "string") {
         errors.wrongArgument(res, "nick", nick);
@@ -25,7 +23,10 @@ function process(res, nick, password, size, initial) {
     } else if (typeof initial !== "string" && typeof initial !== "number") {
         errors.wrongArgument(res, "initial", initial);
         return;
-    }        
+    }    
+    
+    cavs = parseInt(size);
+    seeds = parseInt(initial);
 
     const hash = crypto
         .createHash('md5')

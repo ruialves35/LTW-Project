@@ -112,7 +112,7 @@ function getGameRequest(nick, size, initial) {
         }
 
         // turn is set to 1 for player1, 2 for player2
-        games.push([gameId, size, initial, nick, null, board, 1]);
+        games.push([gameId, size, initial, nick, null, board, nick]);
     }
 
     return gameId;
@@ -131,5 +131,37 @@ function getGame(nick, gameId) {
     return -1;
 }
 
-module.exports = { insertUser, getRanking, verifyUser, getGameRequest, getGame }
+// Returns game in case it is an ongoing game, 
+// -1 if the game is invalid, 
+function getGameByNick(nick, gameId) {
+    for (let game of games) {
+        if (game[3] == nick || game[4] == nick) {
+            if (game[0] != gameId) {
+                return -1
+            } 
+            return game;
+        }
+    }
+    return -1;
+}
+
+function updateGame(response, game) {
+    for (const idx in games) {
+        if (games[idx][0] == game[0]) {
+            games[idx] = game;
+
+            // updated the game and send correct message
+            response.writeHead(200, {
+                'Content-Type': 'application/json',
+            });
+        
+            response.write(JSON.stringify({}));
+        
+            response.end();
+            return;
+        }
+    }
+}
+
+module.exports = { insertUser, getRanking, verifyUser, getGameRequest, getGame, updateGame, getGameByNick }
 

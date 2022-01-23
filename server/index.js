@@ -1,8 +1,11 @@
 const http = require('http');
 const fs = require('fs');
+const url = require('url');
 const ranking = require('./ranking');
 const register = require('./register');
 const join = require('./join');
+const notify = require('./notify');
+const update = require('./update');
 
 const server = http.createServer(async (req, res) => {
 
@@ -18,8 +21,15 @@ const server = http.createServer(async (req, res) => {
             })
         } else if (req.url === "/leave") {
 
-        } else if (req.rul === "notify") {
-            
+        } else if (req.url === "/notify") {
+            let data = '';
+            req.on('data', chunk => {
+                data += chunk;
+            });
+            req.on('end', async () => {
+                let obj = JSON.parse(data);
+                notify.process(res, obj.nick, obj.password, obj.game, obj.move);
+            })
         } else if (req.url === "/ranking") {
             ranking.get(res);
         } else if (req.url === "/register") {
@@ -50,6 +60,13 @@ const server = http.createServer(async (req, res) => {
                 }
                 res.end();
             });
+        } else if (url.parse(req.url,true).pathname === "/update"){
+
+            const params = url.parse(req.url,true).query;
+            let nick = params.nick;
+            let game = params.game;
+            update.process(res, nick, game);
+            
         } else {
             fs.readFile("./static/" + req.url, null, function (error, data) {
                 if (error) {
